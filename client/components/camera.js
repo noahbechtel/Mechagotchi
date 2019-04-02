@@ -90,15 +90,26 @@ class Camera extends Component {
             drawingCtx,
             { color: 'red', lineWidth: 3 }
           )
+
           submit(result.codeResult.code)
         }
       }
     })
-    const submit = result => {
-      this.props.setCode(result)
-      setInterval(() => {}, 10000)
-      this.props.history.push('/home')
-      Quagga.stop()
+
+    const sleep = miliseconds => {
+      var currentTime = new Date().getTime()
+
+      while (currentTime + miliseconds >= new Date().getTime()) {}
+    }
+    let i = 0
+    const submit = async result => {
+      if (i > 20) {
+        this.props.setCode(result)
+        this.props.history.push('/home')
+        Quagga.stop()
+      } else {
+        i++
+      }
     }
   }
   render () {
