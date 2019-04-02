@@ -1,16 +1,108 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {
+  User,
+  Mech,
+  rightWeapon,
+  leftWeapon,
+  Armor,
+  Base
+} = require('../server/db/models')
 
-async function seed() {
-  await db.sync({force: true})
+async function seed () {
+  await db.sync({ force: true })
   console.log('db synced!')
+  const mechs = await Promise.all([
+    // USERS
+    User.create({ email: 'cody@email.com', password: '123', mechId: 1 }),
+    User.create({ email: 'murphy@email.com', password: '123', mechId: 3 }),
+    User.create({ email: 'noah', password: 'yeet', mechId: 2 }),
+    //
+    // PARTS
+    //
 
-  const users = await Promise.all([
-    User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
+    // BASES
+    Base.create({
+      class: 'Light Mech',
+      name: 'Scout',
+      rarity: 0,
+      defense: 10,
+      imgUrl: './Scout.png'
+    }),
+    Base.create({
+      class: 'Medium Mech',
+      name: 'Puma',
+      rarity: 1,
+      defense: 10,
+      imgUrl: './Puma.png'
+    }),
+
+    // Weapons
+
+    rightWeapon.create({
+      name: 'Chaingun',
+      damage: 15,
+      rarity: 1,
+      imgUrl: './Puma.png'
+    }),
+    rightWeapon.create({
+      name: 'Gauss Rifle',
+      damage: 50,
+      rarity: 4,
+      imgUrl: './Puma.png'
+    }),
+    leftWeapon.create({
+      name: 'Chaingun',
+      damage: 15,
+      rarity: 1,
+      imgUrl: './Puma.png'
+    }),
+    leftWeapon.create({
+      name: 'Gauss Rifle',
+      damage: 50,
+      rarity: 4,
+      imgUrl: './Puma.png'
+    }),
+
+    // Armor
+
+    Armor.create({
+      name: 'Scavenger Armor MkI',
+      defense: 30,
+      rarity: 1,
+      imgUrl: './ScavMkI.png'
+    }),
+    Armor.create({
+      name: 'Commander Armor Mk II',
+      defense: 50,
+      rarity: 4,
+      imgUrl: './CommanderMkII.png'
+    }),
+    // Mechs
+    Mech.create({
+      baseId: 1,
+      rightWeaponId: 1,
+      leftWeaponId: 1,
+      armorId: 1,
+      level: 1
+    }),
+    Mech.create({
+      baseId: 2,
+      rightWeaponId: 1,
+      leftWeaponId: 2,
+      armorId: 1,
+      level: 15
+    }),
+    Mech.create({
+      baseId: 2,
+      rightWeaponId: 2,
+      leftWeaponId: 2,
+      armorId: 2,
+      level: 11
+    })
   ])
+  const users = await Promise.all([])
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
@@ -19,7 +111,7 @@ async function seed() {
 // We've separated the `seed` function from the `runSeed` function.
 // This way we can isolate the error handling and exit trapping.
 // The `seed` function is concerned only with modifying the database.
-async function runSeed() {
+async function runSeed () {
   console.log('seeding...')
   try {
     await seed()

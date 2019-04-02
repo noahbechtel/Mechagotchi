@@ -397,7 +397,7 @@ function (_Component) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
-                  if (i > 20) {
+                  if (i > 0) {
                     _this2.props.setCode(result);
 
                     _this2.props.history.push('/home');
@@ -615,11 +615,14 @@ var UserHome = function UserHome(props) {
     }
   };
 
+  var mech = props.user.mech;
   return _react.default.createElement("div", null, _react.default.createElement("div", {
     className: "hanger"
   }, _react.default.createElement("img", {
-    src: "./mech-1.png"
+    src: mech.base.imgUrl
   })), _react.default.createElement("div", {
+    className: "hanger"
+  }, _react.default.createElement("p", null, mech.base.name), _react.default.createElement("p", null, mech.level)), _react.default.createElement("div", {
     className: "hanger"
   }, _react.default.createElement("button", {
     onClick: scan
@@ -634,7 +637,8 @@ exports.UserHome = UserHome;
 
 var mapState = function mapState(state) {
   return {
-    email: state.user.email,
+    mech: state.user.mech,
+    user: state.user,
     info: state.info
   };
 };
@@ -1071,13 +1075,6 @@ var getUser = function getUser(user) {
 var removeUser = function removeUser() {
   return {
     type: REMOVE_USER
-  };
-};
-
-var getCode = function getCode(code) {
-  return {
-    type: GET_CODE,
-    code: code
   };
 };
 /**

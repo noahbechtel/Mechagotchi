@@ -103,7 +103,7 @@ class Camera extends Component {
     }
     let i = 0
     const submit = async result => {
-      if (i > 20) {
+      if (i > 0) {
         this.props.setCode(result)
         this.props.history.push('/home')
         Quagga.stop()

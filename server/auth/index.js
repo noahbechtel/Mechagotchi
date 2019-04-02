@@ -1,10 +1,30 @@
 const router = require('express').Router()
 const User = require('../db/models/user')
+const Mech = require('../db/models/mech')
+const Base = require('../db/models/base')
+const rightWeapon = require('../db/models/rightWeapon')
+const leftWeapon = require('../db/models/leftWeapon')
+const Armor = require('../db/models/armor')
 module.exports = router
 
 router.post('/login', async (req, res, next) => {
   try {
-    const user = await User.findOne({where: {email: req.body.email}})
+    let user = await User.findOne({
+      where: { email: req.body.email },
+      include: [
+        {
+          model: Mech,
+          attributes: ['id', 'level'],
+          include: [
+            { model: Base },
+            { model: Armor },
+            { model: rightWeapon },
+            { model: leftWeapon }
+          ]
+        }
+      ]
+    })
+
     if (!user) {
       console.log('No such user found:', req.body.email)
       res.status(401).send('Wrong username and/or password')
@@ -38,8 +58,14 @@ router.post('/logout', (req, res) => {
   res.redirect('/')
 })
 
-router.get('/me', (req, res) => {
-  res.json(req.user)
+router.get('/me', async (req, res) => {
+  const mech = await Mech.findById(req.user.mechId)
+  console.log(mech.base)
+  const user = {
+    ...req.user,
+    mech
+  }
+  res.json(user)
 })
 
 router.use('/google', require('./google'))

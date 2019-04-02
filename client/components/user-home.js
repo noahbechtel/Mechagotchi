@@ -13,10 +13,16 @@ export const UserHome = props => {
       props.history.push('/home')
     }
   }
+  const mech = props.user.mech
+
   return (
     <div>
       <div className='hanger'>
-        <img src='./mech-1.png' />
+        <img src={mech.base.imgUrl} />
+      </div>
+      <div className='hanger'>
+        <p>{mech.base.name}</p>
+        <p>{mech.level}</p>
       </div>
 
       <div className='hanger'>
@@ -32,7 +38,8 @@ export const UserHome = props => {
  */
 const mapState = state => {
   return {
-    email: state.user.email,
+    mech: state.user.mech,
+    user: state.user,
     info: state.info
   }
 }

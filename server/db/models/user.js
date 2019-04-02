@@ -27,24 +27,6 @@ const User = db.define('user', {
   googleId: {
     type: Sequelize.STRING
   }
-  // base: {
-  //   type: Sequelize.STRING
-  // },
-  // rightWeapon: {
-  //   type: Sequelize.STRING
-  // },
-  // leftWeapon: {
-  //   type: Sequelize.STRING
-  // },
-  // armor: {
-  //   type: Sequelize.STRING
-  // },
-  // unlocks: {
-  //   type: Sequelize.STRING
-  // },
-  // level: {
-  //   type: Sequelize.INTEGER
-  // }
 })
 
 module.exports = User
