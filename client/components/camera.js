@@ -16,18 +16,22 @@ class Camera extends Component {
   componentDidMount () {
     Quagga.init(
       {
-        numOfWorkers: 4,
-
         inputStream: {
-          name: 'Live',
           type: 'LiveStream',
           target: document.querySelector('#cameraViewport'),
           constraints: {
-            width: 640,
-            height: 480,
-            facingMode: 'environment'
+            width: { min: 640 },
+            height: { min: 480 },
+            facingMode: 'environment',
+            aspectRatio: { min: 1, max: 2 }
           }
         },
+        locator: {
+          patchSize: 'medium',
+          halfSample: true
+        },
+        numOfWorkers: 2,
+        frequency: 10,
         decoder: {
           readers: [
             'upc_reader',
@@ -35,7 +39,8 @@ class Camera extends Component {
             'upc_reader',
             'upc_e_reader'
           ]
-        }
+        },
+        locate: true
       },
       function (err) {
         if (err) {
@@ -46,28 +51,71 @@ class Camera extends Component {
         console.log('Initialization finished. Ready to start')
       }
     )
-  }
-  render () {
-    Quagga.onDetected(data => {
-      if (!this.state.done) {
-        this.props.setCode(data.codeResult.code)
-        Quagga.stop()
-        this.props.history.push('/home')
+    Quagga.onProcessed(function (result) {
+      var drawingCtx = Quagga.canvas.ctx.overlay
+
+      var drawingCanvas = Quagga.canvas.dom.overlay
+
+      if (result) {
+        if (result.boxes) {
+          drawingCtx.clearRect(
+            0,
+            0,
+            parseInt(drawingCanvas.getAttribute('width')),
+            parseInt(drawingCanvas.getAttribute('height'))
+          )
+          result.boxes
+            .filter(function (box) {
+              return box !== result.box
+            })
+            .forEach(function (box) {
+              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+                color: 'green',
+                lineWidth: 2
+              })
+            })
+        }
+
+        if (result.box) {
+          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+            color: '#00F',
+            lineWidth: 2
+          })
+        }
+
+        if (result.codeResult && result.codeResult.code) {
+          Quagga.ImageDebug.drawPath(
+            result.line,
+            { x: 'x', y: 'y' },
+            drawingCtx,
+            { color: 'red', lineWidth: 3 }
+          )
+          submit(result.codeResult.code)
+        }
       }
     })
-
+    const submit = result => {
+      this.props.setCode(result)
+      setInterval(() => {}, 10000)
+      this.props.history.push('/home')
+      Quagga.stop()
+    }
+  }
+  render () {
     return (
-      <div className='hanger'>
+      <div>
         <div id='cameraViewport' />
 
-        <button
-          onClick={() => {
-            Quagga.stop()
-            this.props.history.push('/home')
-          }}
-        >
-          Back
-        </button>
+        <div className='hanger'>
+          <button
+            onClick={() => {
+              Quagga.stop()
+              this.props.history.push('/home')
+            }}
+          >
+            Back
+          </button>
+        </div>
       </div>
     )
   }

@@ -1,7 +1,6 @@
 body {
   font-family: sans-serif;
   background-color: slategrey;
-  display: flex;
   flex-direction: column;
 }
 
@@ -23,17 +22,30 @@ form div {
   display: inline-block;
 }
 #cameraViewport{
-  height: 400px;
-  width:400px;
+  width: 640px;
+  height: 480px;
 }
 .hanger{
   display: flex;
-  align-content: center;
   justify-content: center;
   height: 100%;
   width: 100%;
   
 }
+.info{
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+
+canvas {
+  margin-left: -640px;
+  position: sticky;
+}
+
 img {
   height: 10%;
   width: 10%;

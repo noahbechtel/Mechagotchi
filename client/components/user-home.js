@@ -1,10 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Camera from './camera'
 
 export const UserHome = props => {
-  const { mech } = props
   let scanning = false
   const scan = () => {
     if (!scanning) {
@@ -23,6 +21,7 @@ export const UserHome = props => {
 
       <div className='hanger'>
         <button onClick={scan}>scan</button>
+        <h3>{props.info}</h3>
       </div>
     </div>
   )
@@ -33,7 +32,8 @@ export const UserHome = props => {
  */
 const mapState = state => {
   return {
-    email: state.user.email
+    email: state.user.email,
+    info: state.info
   }
 }
 

@@ -290,21 +290,36 @@ function (_Component) {
   _createClass(Camera, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
+
       _quagga.default.init({
-        numOfWorkers: 4,
         inputStream: {
-          name: 'Live',
           type: 'LiveStream',
           target: document.querySelector('#cameraViewport'),
           constraints: {
-            width: 400,
-            height: 400,
-            facingMode: 'environment'
+            width: {
+              min: 640
+            },
+            height: {
+              min: 480
+            },
+            facingMode: 'environment',
+            aspectRatio: {
+              min: 1,
+              max: 2
+            }
           }
         },
+        locator: {
+          patchSize: 'medium',
+          halfSample: true
+        },
+        numOfWorkers: 2,
+        frequency: 10,
         decoder: {
           readers: ['upc_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader']
-        }
+        },
+        locate: true
       }, function (err) {
         if (err) {
           console.log(err);
@@ -315,33 +330,77 @@ function (_Component) {
 
         console.log('Initialization finished. Ready to start');
       });
+
+      _quagga.default.onProcessed(function (result) {
+        var drawingCtx = _quagga.default.canvas.ctx.overlay;
+        var drawingCanvas = _quagga.default.canvas.dom.overlay;
+
+        if (result) {
+          if (result.boxes) {
+            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width')), parseInt(drawingCanvas.getAttribute('height')));
+            result.boxes.filter(function (box) {
+              return box !== result.box;
+            }).forEach(function (box) {
+              _quagga.default.ImageDebug.drawPath(box, {
+                x: 0,
+                y: 1
+              }, drawingCtx, {
+                color: 'green',
+                lineWidth: 2
+              });
+            });
+          }
+
+          if (result.box) {
+            _quagga.default.ImageDebug.drawPath(result.box, {
+              x: 0,
+              y: 1
+            }, drawingCtx, {
+              color: '#00F',
+              lineWidth: 2
+            });
+          }
+
+          if (result.codeResult && result.codeResult.code) {
+            _quagga.default.ImageDebug.drawPath(result.line, {
+              x: 'x',
+              y: 'y'
+            }, drawingCtx, {
+              color: 'red',
+              lineWidth: 3
+            });
+
+            submit(result.codeResult.code);
+          }
+        }
+      });
+
+      var submit = function submit(result) {
+        _this2.props.setCode(result);
+
+        setInterval(function () {}, 10000);
+
+        _this2.props.history.push('/home');
+
+        _quagga.default.stop();
+      };
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
-      _quagga.default.onDetected(function (data) {
-        if (!_this2.state.done) {
-          _this2.props.setCode(data.codeResult.code);
-
-          _quagga.default.stop();
-
-          _this2.props.history.push('/home');
-        }
-      });
-
-      return _react.default.createElement("div", {
-        className: "hanger"
-      }, _react.default.createElement("div", {
+      return _react.default.createElement("div", null, _react.default.createElement("div", {
         id: "cameraViewport"
-      }), _react.default.createElement("button", {
+      }), _react.default.createElement("div", {
+        className: "hanger"
+      }, _react.default.createElement("button", {
         onClick: function onClick() {
           _quagga.default.stop();
 
-          _this2.props.history.push('/home');
+          _this3.props.history.push('/home');
         }
-      }, "Back"));
+      }, "Back")));
     }
   }]);
 
@@ -506,12 +565,9 @@ var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ ".
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-var _camera = _interopRequireDefault(__webpack_require__(/*! ./camera */ "./client/components/camera.js"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var UserHome = function UserHome(props) {
-  var mech = props.mech;
   var scanning = false;
 
   var scan = function scan() {
@@ -532,7 +588,7 @@ var UserHome = function UserHome(props) {
     className: "hanger"
   }, _react.default.createElement("button", {
     onClick: scan
-  }, "scan")));
+  }, "scan"), _react.default.createElement("h3", null, props.info)));
 };
 /**
  * CONTAINER
@@ -543,7 +599,8 @@ exports.UserHome = UserHome;
 
 var mapState = function mapState(state) {
   return {
-    email: state.user.email
+    email: state.user.email,
+    info: state.info
   };
 };
 
@@ -914,7 +971,7 @@ var setCode = function setCode(code) {
 exports.setCode = setCode;
 
 function _default() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
