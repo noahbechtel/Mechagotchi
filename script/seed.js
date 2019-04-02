@@ -16,7 +16,7 @@ async function seed () {
   const mechs = await Promise.all([
     // USERS
     User.create({ email: 'cody@email.com', password: '123', mechId: 1 }),
-    User.create({ email: 'murphy@email.com', password: '123', mechId: 3 }),
+    User.create({ email: 'murphy@email.com', password: '123', mechId: 2 }),
     User.create({ email: 'noah', password: 'yeet', mechId: 2 }),
     //
     // PARTS
