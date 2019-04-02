@@ -1,0 +1,40 @@
+body {
+  font-family: sans-serif;
+  background-color: slategrey;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}
+#cameraViewport{
+  height: 400px;
+  width:400px;
+}
+.hanger{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  
+}
+img {
+  height: 10%;
+  width: 10%;
+}
