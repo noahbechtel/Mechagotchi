@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Quagga from 'quagga'
 import { setCode } from '../store/info'
+import adapter from 'webrtc-adapter'
 
 class Camera extends Component {
   constructor () {
