@@ -48,6 +48,7 @@
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
+    "pixi.js": "^4.8.7",
     "prop-types": "^15.6.2",
     "quagga": "^0.12.1",
     "react": "^16.4.2",

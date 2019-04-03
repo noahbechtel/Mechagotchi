@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Hanger from './hanger'
 
 export const UserHome = props => {
   const mech = props.user.mech
@@ -11,28 +12,7 @@ export const UserHome = props => {
         {mech ? (
           <div>
             <div className='hanger'>
-              <div className='topHalf'>
-                <div className='topHalf_stats'>
-                  <p>Left Side:{mech.leftWeapon.name}</p>
-                  <p>Damage:{mech.leftWeapon.damage}</p>
-                </div>
-                <div className='mechViewport'>
-                  <img src={mech.base.imgUrl} />
-                </div>
-                <div className='mechViewportArms'>
-                  <img src='./assets/weapons/MissilePodLeft.png' />
-
-                  <img src='./assets/weapons/MissilePodLeft.png' />
-                </div>
-                <div className='topHalf_stats'>
-                  <p>Right Side:{mech.rightWeapon.name}</p>
-                  <p>Damage:{mech.rightWeapon.damage}</p>
-                </div>
-              </div>
-              <div className='stats'>
-                <p>Model:{mech.base.name}</p>
-                <p>Level:{mech.level}</p>
-              </div>
+              <Hanger />
             </div>
           </div>
         ) : (
@@ -61,4 +41,25 @@ export default connect(mapState)(UserHome)
  */
 UserHome.propTypes = {
   email: PropTypes.string
+}
+
+{
+  /* <div className='topHalf'>
+                <div className='topHalf_stats'>
+                  <p>Left Side:{mech.leftWeapon.name}</p>
+                  <p>Damage:{mech.leftWeapon.damage}</p>
+                </div>
+                <div className='mechViewport'>
+                  <img src={mech.base.imgUrl} />
+                </div>
+                <div className='mechViewportArms'>
+                  <img src='./assets/weapons/MissilePodLeft.png' />
+
+                  <img src='./assets/weapons/MissilePodLeft.png' />
+                </div>
+                <div className='topHalf_stats'>
+                  <p>Right Side:{mech.rightWeapon.name}</p>
+                  <p>Damage:{mech.rightWeapon.damage}</p>
+                </div>
+              </div> */
 }
