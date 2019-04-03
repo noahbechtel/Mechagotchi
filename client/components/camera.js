@@ -20,8 +20,8 @@ class Camera extends Component {
           type: 'LiveStream',
           target: document.querySelector('#cameraViewport'),
           constraints: {
-            width: window.screen.availWidth,
-            height: window.screen.availHeight * 0.9,
+            width: { min: window.screen.availWidth },
+            height: { min: window.screen.availHeight * 0.9 },
             facingMode: 'environment',
             aspectRatio: { min: 1, max: 2 }
           }
