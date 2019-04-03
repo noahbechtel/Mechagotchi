@@ -14,7 +14,7 @@ const Navbar = props => {
             <Link to='/home'>Home</Link>
             <Link to='/scan'>Scan Code</Link>
 
-            <h3>{props.info}</h3>
+            <h3>{props.info.code}</h3>
           </div>
         ) : (
           <div>

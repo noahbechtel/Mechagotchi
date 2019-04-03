@@ -28,6 +28,10 @@ async function seed () {
       name: 'Scout',
       rarity: 0,
       defense: 10,
+      rightArm_X: 110,
+      rightArm_Y: 40,
+      leftArm_X: -10,
+      leftArm_Y: 40,
       imgUrl: './assets/bases/Scout.png'
     }),
     Base.create({
@@ -35,6 +39,10 @@ async function seed () {
       name: 'Puma',
       rarity: 1,
       defense: 10,
+      rightArm_X: 110,
+      rightArm_Y: 40,
+      leftArm_X: -10,
+      leftArm_Y: 40,
       imgUrl: './assets/bases/Puma.png'
     }),
 
@@ -44,25 +52,25 @@ async function seed () {
       name: 'Chaingun',
       damage: 15,
       rarity: 1,
-      imgUrl: './assets/bases/Puma.png'
+      imgUrl: './assets/weapons/MissilePodLeft.png'
     }),
     rightWeapon.create({
       name: 'Gauss Rifle',
       damage: 50,
       rarity: 4,
-      imgUrl: './assets/bases/Puma.png'
+      imgUrl: './assets/weapons/MissilePodLeft.png'
     }),
     leftWeapon.create({
       name: 'Chaingun',
       damage: 15,
       rarity: 1,
-      imgUrl: './assets/bases/Puma.png'
+      imgUrl: './assets/weapons/MissilePodLeft.png'
     }),
     leftWeapon.create({
       name: 'Gauss Rifle',
       damage: 50,
       rarity: 4,
-      imgUrl: './assets/bases/Puma.png'
+      imgUrl: './assets/weapons/MissilePodLeft.png'
     }),
 
     // Armor

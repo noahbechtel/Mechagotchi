@@ -10,7 +10,24 @@ const Base = db.define('base', {
     type: Sequelize.STRING,
     allowNull: false
   },
+
   rarity: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  rightArm_X: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  rightArm_Y: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  leftArm_X: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  leftArm_Y: {
     type: Sequelize.INTEGER,
     allowNull: false
   },
