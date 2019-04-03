@@ -22,8 +22,8 @@ class Camera extends Component {
           constraints: {
             width: window.screen.availWidth,
             height: window.screen.availHeight * 0.9,
-            facingMode: 'environment'
-            // aspectRatio: { min: 1, max: 2 }
+            facingMode: 'environment',
+            aspectRatio: { min: 1, max: 2 }
           }
         },
         locator: {
