@@ -8,8 +8,8 @@ class Hanger extends Component {
   }
   componentDidMount () {
     let app = new PIXI.Application({
-      width: screen.width, // default: 800
-      height: screen.height, // default: 600
+      width: window.innerWidth, // default: 800
+      height: window.innerHeight, // default: 600
       antialias: true, // default: false
       transparent: false, // default: false
       resolution: 1 // default: 1
@@ -19,7 +19,11 @@ class Hanger extends Component {
     element.append(app.view)
   }
   render () {
-    return <div id='mechViewport'>{'   '}</div>
+    return (
+      <div className='pixi'>
+        <div id='mechViewport'>{'   '}</div>
+      </div>
+    )
   }
 }
 

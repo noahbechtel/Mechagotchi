@@ -11,7 +11,10 @@ a {
 label {
   display: block;
 }
-
+nav{
+  position:absolute;
+  height:10%
+}
 nav a {
   display: inline-block;
   margin: 1em;
@@ -70,6 +73,11 @@ form div {
 .camera canvas {
   margin-left: -640px;
   position: sticky;
+}
+.pixi{
+  width: 95%;
+  padding-right: 1%;
+  height: 90%
 }
 
 img {

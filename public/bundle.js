@@ -522,9 +522,9 @@ function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var app = new PIXI.Application({
-        width: screen.width,
+        width: window.innerWidth,
         // default: 800
-        height: screen.height,
+        height: window.innerHeight,
         // default: 600
         antialias: true,
         // default: false
@@ -541,8 +541,10 @@ function (_Component) {
     key: "render",
     value: function render() {
       return _react.default.createElement("div", {
+        className: "pixi"
+      }, _react.default.createElement("div", {
         id: "mechViewport"
-      }, '   ');
+      }, '   '));
     }
   }]);
 
