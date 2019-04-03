@@ -28,14 +28,14 @@ async function seed () {
       name: 'Scout',
       rarity: 0,
       defense: 10,
-      imgUrl: './Scout.png'
+      imgUrl: './assets/bases/Scout.png'
     }),
     Base.create({
       class: 'Medium Mech',
       name: 'Puma',
       rarity: 1,
       defense: 10,
-      imgUrl: './Puma.png'
+      imgUrl: './assets/bases/Puma.png'
     }),
 
     // Weapons
@@ -44,25 +44,25 @@ async function seed () {
       name: 'Chaingun',
       damage: 15,
       rarity: 1,
-      imgUrl: './Puma.png'
+      imgUrl: './assets/bases/Puma.png'
     }),
     rightWeapon.create({
       name: 'Gauss Rifle',
       damage: 50,
       rarity: 4,
-      imgUrl: './Puma.png'
+      imgUrl: './assets/bases/Puma.png'
     }),
     leftWeapon.create({
       name: 'Chaingun',
       damage: 15,
       rarity: 1,
-      imgUrl: './Puma.png'
+      imgUrl: './assets/bases/Puma.png'
     }),
     leftWeapon.create({
       name: 'Gauss Rifle',
       damage: 50,
       rarity: 4,
-      imgUrl: './Puma.png'
+      imgUrl: './assets/bases/Puma.png'
     }),
 
     // Armor
@@ -71,13 +71,13 @@ async function seed () {
       name: 'Scavenger Armor MkI',
       defense: 30,
       rarity: 1,
-      imgUrl: './ScavMkI.png'
+      imgUrl: './assets/bases/ScavMkI.png'
     }),
     Armor.create({
       name: 'Commander Armor Mk II',
       defense: 50,
       rarity: 4,
-      imgUrl: './CommanderMkII.png'
+      imgUrl: './assets/bases/CommanderMkII.png'
     }),
     // Mechs
     Mech.create({
