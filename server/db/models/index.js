@@ -4,6 +4,7 @@ const rightWeapon = require('./rightWeapon')
 const leftWeapon = require('./leftWeapon')
 const Armor = require('./armor')
 const Base = require('./base')
+const Inventory = require('./inventory')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -16,8 +17,18 @@ Mech.hasOne(User)
 User.belongsTo(Mech)
 Mech.belongsTo(rightWeapon)
 Mech.belongsTo(leftWeapon)
-
+User.belongsTo(Inventory)
 Mech.belongsTo(Armor)
+
+Inventory.belongsToMany(rightWeapon, { through: 'rightItem' })
+Inventory.belongsToMany(leftWeapon, { through: 'leftItem' })
+Inventory.belongsToMany(Armor, { through: 'armorItem' })
+Inventory.belongsToMany(Base, { through: 'baseItem' })
+
+leftWeapon.belongsToMany(Inventory, { through: 'leftItem' })
+rightWeapon.belongsToMany(Inventory, { through: 'rightItem' })
+Base.belongsToMany(Inventory, { through: 'baseItem' })
+Armor.belongsToMany(Inventory, { through: 'armorItem' })
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
@@ -31,5 +42,6 @@ module.exports = {
   Base,
   rightWeapon,
   leftWeapon,
-  Armor
+  Armor,
+  Inventory
 }

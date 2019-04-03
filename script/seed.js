@@ -7,17 +7,24 @@ const {
   rightWeapon,
   leftWeapon,
   Armor,
-  Base
+  Base,
+  Inventory
 } = require('../server/db/models')
 
 async function seed () {
   await db.sync({ force: true })
   console.log('db synced!')
+  const inv1 = await Inventory.create()
+  const armor1 = await Armor.create({
+    name: 'Commander Armor Mk II',
+    defense: 50,
+    rarity: 4,
+    imgUrl: './assets/bases/CommanderMkII.png'
+  })
   const mechs = await Promise.all([
-    // USERS
-    User.create({ email: 'cody@email.com', password: '123', mechId: 1 }),
-    User.create({ email: 'murphy@email.com', password: '123', mechId: 2 }),
-    User.create({ email: 'noah', password: 'yeet', mechId: 2 }),
+    Inventory.create(),
+    Inventory.create(),
+    Inventory.create(),
     //
     // PARTS
     //
@@ -81,12 +88,7 @@ async function seed () {
       rarity: 1,
       imgUrl: './assets/bases/ScavMkI.png'
     }),
-    Armor.create({
-      name: 'Commander Armor Mk II',
-      defense: 50,
-      rarity: 4,
-      imgUrl: './assets/bases/CommanderMkII.png'
-    }),
+
     // Mechs
     Mech.create({
       baseId: 1,
@@ -108,11 +110,23 @@ async function seed () {
       leftWeaponId: 2,
       armorId: 2,
       level: 11
+    }),
+    // USERS
+    User.create({
+      email: 'cody@email.com',
+      password: '123',
+      mechId: 1,
+      inventoryId: 1
+    }),
+    User.create({
+      email: 'noah@email.com',
+      password: 'yeet',
+      mechId: 2,
+      inventoryId: 2
     })
   ])
-  const users = await Promise.all([])
+  await inv1.addArmor(armor1)
 
-  console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
 }
 

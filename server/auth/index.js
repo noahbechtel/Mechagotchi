@@ -5,6 +5,8 @@ const Base = require('../db/models/base')
 const rightWeapon = require('../db/models/rightWeapon')
 const leftWeapon = require('../db/models/leftWeapon')
 const Armor = require('../db/models/armor')
+const Inventory = require('../db/models/inventory')
+
 module.exports = router
 
 router.post('/login', async (req, res, next) => {
@@ -21,7 +23,8 @@ router.post('/login', async (req, res, next) => {
             { model: rightWeapon },
             { model: leftWeapon }
           ]
-        }
+        },
+        { model: Inventory }
       ]
     })
 
@@ -48,10 +51,12 @@ router.post('/signup', async (req, res, next) => {
       leftWeaponId: 1,
       armorId: 1
     })
+    const inv = Inventory.create({})
     const user = await User.create({
       email: req.body.email,
       password: req.body.password,
-      mechId: mech.id
+      mechId: mech.id,
+      inventoryId: inv.id
     })
     req.login(user, err => (err ? next(err) : res.json({ user })))
   } catch (err) {
@@ -70,6 +75,8 @@ router.post('/logout', (req, res) => {
 })
 
 router.get('/me', async (req, res) => {
+  const inv = await Inventory.findById(req.user.inventoryId)
+
   const mech = await Mech.findById(req.user.mechId, {
     attributes: ['id', 'level'],
     include: [
@@ -79,14 +86,20 @@ router.get('/me', async (req, res) => {
       { model: leftWeapon }
     ]
   })
-  req.user.mech = mech
+
+  const right = await inv.getBases()
+  const armor = await inv.getArmors()
+  const base = await inv.getRightWeapons()
+  const left = await inv.getLeftWeapons()
+  const inventory = { right, armor, base, left }
 
   res.json({
     email: req.user.email,
     id: req.user.id,
     mechId: req.user.mechId,
     googleId: req.user.googleId,
-    mech
+    mech,
+    inventory
   })
 })
 
