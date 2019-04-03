@@ -21,7 +21,7 @@ class Camera extends Component {
           target: document.querySelector('#cameraViewport'),
           constraints: {
             width: { min: window.screen.availWidth },
-            height: { min: window.screen.availHeight * 0.9 },
+            height: { min: window.screen.availHeight },
             facingMode: 'environment',
             aspectRatio: { min: 1, max: 2 }
           }
