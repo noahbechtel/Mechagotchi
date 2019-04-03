@@ -41,8 +41,19 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
-    const user = await User.create(req.body)
-    req.login(user, err => (err ? next(err) : res.json(user)))
+    const mech = await Mech.create({
+      level: 0,
+      baseId: 1,
+      rightWeaponId: 1,
+      leftWeaponId: 1,
+      armorId: 1
+    })
+    const user = await User.create({
+      email: req.body.email,
+      password: req.body.password,
+      mechId: mech.id
+    })
+    req.login(user, err => (err ? next(err) : res.json({ user })))
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(401).send('User already exists')
@@ -59,13 +70,24 @@ router.post('/logout', (req, res) => {
 })
 
 router.get('/me', async (req, res) => {
-  const mech = await Mech.findById(req.user.mechId)
-  console.log(mech.base)
-  const user = {
-    ...req.user,
+  const mech = await Mech.findById(req.user.mechId, {
+    attributes: ['id', 'level'],
+    include: [
+      { model: Base },
+      { model: Armor },
+      { model: rightWeapon },
+      { model: leftWeapon }
+    ]
+  })
+  req.user.mech = mech
+
+  res.json({
+    email: req.user.email,
+    id: req.user.id,
+    mechId: req.user.mechId,
+    googleId: req.user.googleId,
     mech
-  }
-  res.json(user)
+  })
 })
 
 router.use('/google', require('./google'))

@@ -3,31 +3,41 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 export const UserHome = props => {
-  let scanning = false
-  const scan = () => {
-    if (!scanning) {
-      scanning = true
-      props.history.push('/scan')
-    } else {
-      scanning = false
-      props.history.push('/home')
-    }
-  }
   const mech = props.user.mech
 
   return (
     <div>
-      <div className='hanger'>
-        <img src={mech.base.imgUrl} />
-      </div>
-      <div className='hanger'>
-        <p>{mech.base.name}</p>
-        <p>{mech.level}</p>
-      </div>
+      <div>
+        {mech ? (
+          <div>
+            <div className='hanger'>
+              <div className='topHalf'>
+                <div className='topHalf_stats'>
+                  <p>Left Side:{mech.leftWeapon.name}</p>
+                  <p>Damage:{mech.leftWeapon.damage}</p>
+                </div>
+                <div className='mechViewport'>
+                  <img src={mech.base.imgUrl} />
+                </div>
+                <div className='mechViewportArms'>
+                  <img src='./assets/weapons/MissilePodLeft.png' />
 
-      <div className='hanger'>
-        <button onClick={scan}>scan</button>
-        <h3>{props.info}</h3>
+                  <img src='./assets/weapons/MissilePodLeft.png' />
+                </div>
+                <div className='topHalf_stats'>
+                  <p>Right Side:{mech.rightWeapon.name}</p>
+                  <p>Damage:{mech.rightWeapon.damage}</p>
+                </div>
+              </div>
+              <div className='stats'>
+                <p>Model:{mech.base.name}</p>
+                <p>Level:{mech.level}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   )

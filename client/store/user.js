@@ -55,14 +55,7 @@ export const logout = () => async dispatch => {
     console.error(err)
   }
 }
-export const setCode = code => async dispatch => {
-  try {
-    dispatch(setCode(code))
-    history.push('/')
-  } catch (err) {
-    console.error(err)
-  }
-}
+
 /**
  * REDUCER
  */

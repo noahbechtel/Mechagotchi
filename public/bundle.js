@@ -105,10 +105,12 @@ var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_mod
 
 var _routes = _interopRequireDefault(__webpack_require__(/*! ./routes */ "./client/routes.js"));
 
+var _navbar = _interopRequireDefault(__webpack_require__(/*! ./components/navbar */ "./client/components/navbar.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var App = function App() {
-  return _react.default.createElement("div", null, _react.default.createElement(_routes.default, null));
+  return _react.default.createElement("div", null, _react.default.createElement(_routes.default, null), _react.default.createElement(_navbar.default, null));
 };
 
 var _default = App;
@@ -530,17 +532,30 @@ var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_module
 
 var _store = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Navbar = function Navbar(_ref) {
-  var handleClick = _ref.handleClick,
-      isLoggedIn = _ref.isLoggedIn;
-  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "BOILERMAKER"), _react.default.createElement("nav", null, isLoggedIn ? _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
+var Navbar = function Navbar(props) {
+  var scanning = false;
+
+  var scan = function scan() {
+    if (!scanning) {
+      scanning = true;
+
+      _history.default.push('/scan');
+    } else {
+      scanning = false;
+
+      _history.default.push('/home');
+    }
+  };
+
+  return _react.default.createElement("div", null, _react.default.createElement("nav", null, props.isLoggedIn ? _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
     to: "/home"
-  }, "Home"), _react.default.createElement("a", {
-    href: "#",
-    onClick: handleClick
-  }, "Logout")) : _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
+  }, "Home"), _react.default.createElement(_reactRouterDom.Link, {
+    to: "/scan"
+  }, "Scan Code"), _react.default.createElement("h3", null, props.info)) : _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
     to: "/login"
   }, "Login"), _react.default.createElement(_reactRouterDom.Link, {
     to: "/signup"
@@ -553,7 +568,10 @@ var Navbar = function Navbar(_ref) {
 
 var mapState = function mapState(state) {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    mech: state.user.mech,
+    user: state.user,
+    info: state.info
   };
 };
 
@@ -603,30 +621,28 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var UserHome = function UserHome(props) {
-  var scanning = false;
-
-  var scan = function scan() {
-    if (!scanning) {
-      scanning = true;
-      props.history.push('/scan');
-    } else {
-      scanning = false;
-      props.history.push('/home');
-    }
-  };
-
   var mech = props.user.mech;
-  return _react.default.createElement("div", null, _react.default.createElement("div", {
+  return _react.default.createElement("div", null, _react.default.createElement("div", null, mech ? _react.default.createElement("div", null, _react.default.createElement("div", {
     className: "hanger"
+  }, _react.default.createElement("div", {
+    className: "topHalf"
+  }, _react.default.createElement("div", {
+    className: "topHalf_stats"
+  }, _react.default.createElement("p", null, "Left Side:", mech.leftWeapon.name), _react.default.createElement("p", null, "Damage:", mech.leftWeapon.damage)), _react.default.createElement("div", {
+    className: "mechViewport"
   }, _react.default.createElement("img", {
     src: mech.base.imgUrl
   })), _react.default.createElement("div", {
-    className: "hanger"
-  }, _react.default.createElement("p", null, mech.base.name), _react.default.createElement("p", null, mech.level)), _react.default.createElement("div", {
-    className: "hanger"
-  }, _react.default.createElement("button", {
-    onClick: scan
-  }, "scan"), _react.default.createElement("h3", null, props.info)));
+    className: "mechViewportArms"
+  }, _react.default.createElement("img", {
+    src: "./assets/weapons/MissilePodLeft.png"
+  }), _react.default.createElement("img", {
+    src: "./assets/weapons/MissilePodLeft.png"
+  })), _react.default.createElement("div", {
+    className: "topHalf_stats"
+  }, _react.default.createElement("p", null, "Right Side:", mech.rightWeapon.name), _react.default.createElement("p", null, "Damage:", mech.rightWeapon.damage))), _react.default.createElement("div", {
+    className: "stats"
+  }, _react.default.createElement("p", null, "Model:", mech.base.name), _react.default.createElement("p", null, "Level:", mech.level)))) : _react.default.createElement("div", null)));
 };
 /**
  * CONTAINER
@@ -807,9 +823,7 @@ function (_Component) {
         exact: true,
         path: "/scan",
         component: _camera.default
-      })), _react.default.createElement(_reactRouterDom.Route, {
-        component: _components.Navbar
-      }));
+      })));
     }
   }]);
 
@@ -1038,7 +1052,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _default;
-exports.setCode = exports.logout = exports.auth = exports.me = void 0;
+exports.logout = exports.auth = exports.me = void 0;
 
 var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -1225,48 +1239,12 @@ var logout = function logout() {
     }()
   );
 };
-
-exports.logout = logout;
-
-var setCode = function setCode(code) {
-  return (
-    /*#__PURE__*/
-    function () {
-      var _ref4 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4(dispatch) {
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                try {
-                  dispatch(setCode(code));
-
-                  _history.default.push('/');
-                } catch (err) {
-                  console.error(err);
-                }
-
-              case 1:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-
-      return function (_x4) {
-        return _ref4.apply(this, arguments);
-      };
-    }()
-  );
-};
 /**
  * REDUCER
  */
 
 
-exports.setCode = setCode;
+exports.logout = logout;
 
 function _default() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultUser;
