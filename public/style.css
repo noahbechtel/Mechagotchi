@@ -65,20 +65,9 @@ form div {
   width: 50%;
   /* padding: 17%; */
 }
-.mechViewportArms{
-  display: flex;
-  position: absolute;
-  /* height: 30%; */
-  justify-content: center;
-  width: 50%;
-  /* padding: 17%; */
-}
-.topHalf_stats{
-  padding-left: 5%;
-  padding-right: 5%;
-}
 
-canvas {
+
+.camera canvas {
   margin-left: -640px;
   position: sticky;
 }

@@ -118,7 +118,9 @@ class Camera extends Component {
   render () {
     return (
       <div>
-        <div id='cameraViewport' />
+        <div className='camera'>
+          <div id='cameraViewport' />
+        </div>
 
         <div className='hanger'>
           <button

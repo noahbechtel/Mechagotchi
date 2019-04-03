@@ -433,8 +433,10 @@ function (_Component) {
       var _this3 = this;
 
       return _react.default.createElement("div", null, _react.default.createElement("div", {
+        className: "camera"
+      }, _react.default.createElement("div", {
         id: "cameraViewport"
-      }), _react.default.createElement("div", {
+      })), _react.default.createElement("div", {
         className: "hanger"
       }, _react.default.createElement("button", {
         onClick: function onClick() {
@@ -520,9 +522,9 @@ function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var app = new PIXI.Application({
-        width: window.innerWidth,
+        width: screen.width,
         // default: 800
-        height: window.innerHeight,
+        height: screen.height,
         // default: 600
         antialias: true,
         // default: false
