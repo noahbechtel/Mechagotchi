@@ -303,17 +303,10 @@ function (_Component) {
           type: 'LiveStream',
           target: document.querySelector('#cameraViewport'),
           constraints: {
-            width: {
-              min: 640
-            },
-            height: {
-              min: 480
-            },
-            facingMode: 'environment',
-            aspectRatio: {
-              min: 1,
-              max: 2
-            }
+            width: window.screen.availWidth,
+            height: window.screen.availHeight * 0.9,
+            facingMode: 'environment' // aspectRatio: { min: 1, max: 2 }
+
           }
         },
         locator: {
@@ -399,7 +392,7 @@ function (_Component) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
-                  if (i > 0) {
+                  if (i > 3) {
                     _this2.props.setCode(result);
 
                     _this2.props.history.push('/home');
@@ -407,6 +400,7 @@ function (_Component) {
                     _quagga.default.stop();
                   } else {
                     i++;
+                    sleep(100);
                   }
 
                 case 1:
@@ -631,8 +625,6 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
 var _store = __webpack_require__(/*! ../store */ "./client/store/index.js");
-
-var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

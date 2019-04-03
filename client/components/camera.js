@@ -20,10 +20,10 @@ class Camera extends Component {
           type: 'LiveStream',
           target: document.querySelector('#cameraViewport'),
           constraints: {
-            width: { min: 640 },
-            height: { min: 480 },
-            facingMode: 'environment',
-            aspectRatio: { min: 1, max: 2 }
+            width: window.screen.availWidth,
+            height: window.screen.availHeight * 0.9,
+            facingMode: 'environment'
+            // aspectRatio: { min: 1, max: 2 }
           }
         },
         locator: {
@@ -103,12 +103,13 @@ class Camera extends Component {
     }
     let i = 0
     const submit = async result => {
-      if (i > 0) {
+      if (i > 3) {
         this.props.setCode(result)
         this.props.history.push('/home')
         Quagga.stop()
       } else {
         i++
+        sleep(100)
       }
     }
   }
