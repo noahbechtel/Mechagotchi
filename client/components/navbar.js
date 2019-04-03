@@ -6,17 +6,6 @@ import { logout } from '../store'
 import history from '../history'
 
 const Navbar = props => {
-  let scanning = false
-  const scan = () => {
-    if (!scanning) {
-      scanning = true
-      history.push('/scan')
-    } else {
-      scanning = false
-      history.push('/home')
-    }
-  }
-
   return (
     <div>
       <nav>

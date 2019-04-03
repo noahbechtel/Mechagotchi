@@ -430,21 +430,11 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
       return _react.default.createElement("div", null, _react.default.createElement("div", {
         className: "camera"
       }, _react.default.createElement("div", {
         id: "cameraViewport"
-      })), _react.default.createElement("div", {
-        className: "hanger"
-      }, _react.default.createElement("button", {
-        onClick: function onClick() {
-          _quagga.default.stop();
-
-          _this3.props.history.push('/home');
-        }
-      }, "Back")));
+      })));
     }
   }]);
 
@@ -522,9 +512,9 @@ function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var app = new PIXI.Application({
-        width: window.innerWidth,
+        width: window.screen.availWidth,
         // default: 800
-        height: window.innerHeight,
+        height: window.screen.availHeight * 0.9,
         // default: 600
         antialias: true,
         // default: false
@@ -647,20 +637,6 @@ var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./c
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Navbar = function Navbar(props) {
-  var scanning = false;
-
-  var scan = function scan() {
-    if (!scanning) {
-      scanning = true;
-
-      _history.default.push('/scan');
-    } else {
-      scanning = false;
-
-      _history.default.push('/home');
-    }
-  };
-
   return _react.default.createElement("div", null, _react.default.createElement("nav", null, props.isLoggedIn ? _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
     to: "/home"
   }, "Home"), _react.default.createElement(_reactRouterDom.Link, {

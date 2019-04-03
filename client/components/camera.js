@@ -121,17 +121,6 @@ class Camera extends Component {
         <div className='camera'>
           <div id='cameraViewport' />
         </div>
-
-        <div className='hanger'>
-          <button
-            onClick={() => {
-              Quagga.stop()
-              this.props.history.push('/home')
-            }}
-          >
-            Back
-          </button>
-        </div>
       </div>
     )
   }

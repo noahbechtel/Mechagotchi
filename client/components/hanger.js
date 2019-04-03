@@ -8,8 +8,8 @@ class Hanger extends Component {
   }
   componentDidMount () {
     let app = new PIXI.Application({
-      width: window.innerWidth, // default: 800
-      height: window.innerHeight, // default: 600
+      width: window.screen.availWidth, // default: 800
+      height: window.screen.availHeight * 0.9, // default: 600
       antialias: true, // default: false
       transparent: false, // default: false
       resolution: 1 // default: 1
