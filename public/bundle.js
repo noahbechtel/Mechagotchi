@@ -423,6 +423,11 @@ function (_Component) {
       }();
     }
   }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      _quagga.default.stop();
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this3 = this;
@@ -514,7 +519,7 @@ function (_Component) {
   _createClass(Hanger, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var pixi = new PIXI.Application({
+      var app = new PIXI.Application({
         width: window.innerWidth,
         // default: 800
         height: window.innerHeight,
@@ -526,8 +531,9 @@ function (_Component) {
         resolution: 1 // default: 1
 
       });
+      app.renderer.backgroundColor = 0x061639;
       var element = document.getElementById('mechViewport');
-      element.append(pixi.view);
+      element.append(app.view);
     }
   }, {
     key: "render",
@@ -724,9 +730,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var UserHome = function UserHome(props) {
   var mech = props.user.mech;
-  return _react.default.createElement("div", null, _react.default.createElement("div", null, mech ? _react.default.createElement("div", null, _react.default.createElement("div", {
-    className: "hanger"
-  }, _react.default.createElement(_hanger.default, null))) : _react.default.createElement("div", null)));
+  return _react.default.createElement("div", null, _react.default.createElement("div", null, mech ? _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement(_hanger.default, null))) : _react.default.createElement("div", null)));
 };
 /**
  * CONTAINER

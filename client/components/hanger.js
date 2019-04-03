@@ -7,15 +7,16 @@ class Hanger extends Component {
     super()
   }
   componentDidMount () {
-    let pixi = new PIXI.Application({
+    let app = new PIXI.Application({
       width: window.innerWidth, // default: 800
       height: window.innerHeight, // default: 600
       antialias: true, // default: false
       transparent: false, // default: false
       resolution: 1 // default: 1
     })
+    app.renderer.backgroundColor = 0x061639
     let element = document.getElementById('mechViewport')
-    element.append(pixi.view)
+    element.append(app.view)
   }
   render () {
     return <div id='mechViewport'>{'   '}</div>

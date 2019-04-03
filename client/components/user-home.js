@@ -11,7 +11,7 @@ export const UserHome = props => {
       <div>
         {mech ? (
           <div>
-            <div className='hanger'>
+            <div>
               <Hanger />
             </div>
           </div>

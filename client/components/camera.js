@@ -112,6 +112,9 @@ class Camera extends Component {
       }
     }
   }
+  componentWillUnmount () {
+    Quagga.stop()
+  }
   render () {
     return (
       <div>
