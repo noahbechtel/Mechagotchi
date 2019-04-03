@@ -514,7 +514,7 @@ function (_Component) {
       var app = new PIXI.Application({
         width: window.screen.availWidth,
         // default: 800
-        height: window.screen.availHeight * 0.9,
+        height: window.screen.availHeight * 0.7,
         // default: 600
         antialias: true,
         // default: false
