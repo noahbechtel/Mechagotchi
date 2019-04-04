@@ -51,7 +51,7 @@ router.post('/signup', async (req, res, next) => {
       leftWeaponId: 1,
       armorId: 1
     })
-    const inv = Inventory.create({})
+    const inv = await Inventory.create({})
     const user = await User.create({
       email: req.body.email,
       password: req.body.password,
