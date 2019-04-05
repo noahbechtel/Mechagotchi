@@ -1,26 +1,35 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Hanger from './hanger'
+import { me, setMech, setInv } from '../store'
 
-export const UserHome = props => {
-  const mech = props.user.mech
-
-  return (
-    <div>
+class UserHome extends Component {
+  constructor () {
+    super()
+    this.state = { mech: null }
+  }
+  componentDidMount () {
+    this.setState({ mech: this.props.mech })
+  }
+  render () {
+    const mech = this.state.mech
+    return (
       <div>
-        {mech ? (
-          <div>
+        <div>
+          {mech !== null ? (
             <div>
-              <Hanger />
+              <div>
+                <Hanger />
+              </div>
             </div>
-          </div>
-        ) : (
-          <div />
-        )}
+          ) : (
+            <div />
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 /**
@@ -33,8 +42,21 @@ const mapState = state => {
     info: state.info
   }
 }
+const mapDispatch = dispatch => {
+  return {
+    setMech (id) {
+      dispatch(setMech(id))
+    },
+    setInv (id) {
+      dispatch(setInv(id))
+    }
+  }
+}
 
-export default connect(mapState)(UserHome)
+export default connect(
+  mapState,
+  mapDispatch
+)(UserHome)
 
 /**
  * PROP TYPES

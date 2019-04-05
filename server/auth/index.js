@@ -13,19 +13,7 @@ router.post('/login', async (req, res, next) => {
   try {
     let user = await User.findOne({
       where: { email: req.body.email },
-      include: [
-        {
-          model: Mech,
-          attributes: ['id', 'level'],
-          include: [
-            { model: Base },
-            { model: Armor },
-            { model: rightWeapon },
-            { model: leftWeapon }
-          ]
-        },
-        { model: Inventory }
-      ]
+      include: { model: Mech }
     })
 
     if (!user) {
@@ -44,21 +32,44 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/signup', async (req, res, next) => {
   try {
-    const mech = await Mech.create({
+    const newMech = await Mech.create({
       level: 0,
       baseId: 1,
       rightWeaponId: 1,
       leftWeaponId: 1,
       armorId: 1
     })
+    const mech = await Mech.findById(newMech.id, {
+      include: [
+        { model: Base },
+        { model: rightWeapon },
+        { model: leftWeapon },
+        { model: Armor }
+      ]
+    })
     const inv = await Inventory.create({})
-    const user = await User.create({
+    const right = await inv.getBases()
+    const armor = await inv.getArmors()
+    const base = await inv.getRightWeapons()
+    const left = await inv.getLeftWeapons()
+    const inventory = { right, armor, base, left }
+    const newUser = await User.create({
       email: req.body.email,
       password: req.body.password,
       mechId: mech.id,
       inventoryId: inv.id
     })
-    req.login(user, err => (err ? next(err) : res.json({ user })))
+    const user = {
+      email: newUser.email,
+      id: newUser.id,
+      inventoryId: newUser.inventoryId,
+      mechId: newUser.mechId,
+      googleId: newUser.googleId,
+      mech,
+      inventory
+    }
+
+    req.login(user, err => (err ? next(err) : res.json(user)))
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(401).send('User already exists')
@@ -75,32 +86,35 @@ router.post('/logout', (req, res) => {
 })
 
 router.get('/me', async (req, res) => {
-  const inv = await Inventory.findById(req.user.inventoryId)
+  try {
+    const mech = await Mech.findById(req.user.mechId, {
+      include: [
+        { model: Base },
+        { model: rightWeapon },
+        { model: leftWeapon },
+        { model: Armor }
+      ]
+    })
+    const inv = await Inventory.findById(req.user.inventoryId)
+    const right = await inv.getBases()
+    const armor = await inv.getArmors()
+    const base = await inv.getRightWeapons()
+    const left = await inv.getLeftWeapons()
+    const inventory = { right, armor, base, left }
+    const user = {
+      email: req.user.email,
+      id: req.user.id,
+      inventoryId: req.user.inventoryId,
+      mechId: req.user.mechId,
+      googleId: req.user.googleId,
+      mech,
+      inventory
+    }
 
-  const mech = await Mech.findById(req.user.mechId, {
-    attributes: ['id', 'level'],
-    include: [
-      { model: Base },
-      { model: Armor },
-      { model: rightWeapon },
-      { model: leftWeapon }
-    ]
-  })
-
-  const right = await inv.getBases()
-  const armor = await inv.getArmors()
-  const base = await inv.getRightWeapons()
-  const left = await inv.getLeftWeapons()
-  const inventory = { right, armor, base, left }
-
-  res.json({
-    email: req.user.email,
-    id: req.user.id,
-    mechId: req.user.mechId,
-    googleId: req.user.googleId,
-    mech,
-    inventory
-  })
+    res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 router.use('/google', require('./google'))

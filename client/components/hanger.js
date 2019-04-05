@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as PIXI from 'pixi.js'
 import { setPixi } from '../store/info'
-
 class Hanger extends Component {
   constructor () {
     super()
@@ -11,9 +10,9 @@ class Hanger extends Component {
     }
   }
   componentDidMount () {
-    const mech = this.props.user.mech
-
+    const mech = this.props.mech
     // Setup
+
     let app = new PIXI.Application({
       width: window.screen.availWidth, // default: 800
       height: window.screen.availHeight * 0.7, // default: 600
