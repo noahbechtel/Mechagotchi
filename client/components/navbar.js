@@ -34,7 +34,7 @@ const Navbar = props => {
 const mapState = state => {
   return {
     isLoggedIn: !!state.user.id,
-    mech: state.user.mech,
+    mech: state.info.mech,
     user: state.user,
     info: state.info
   }

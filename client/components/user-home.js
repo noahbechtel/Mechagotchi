@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Hanger from './hanger'
-import { me, setMech, setInv } from '../store'
+import { me } from '../store'
+import { Link } from 'react-router-dom'
+import { fetchMech, fetchStock } from '../store/info'
 
 class UserHome extends Component {
   constructor () {
@@ -10,6 +12,7 @@ class UserHome extends Component {
     this.state = { mech: null }
   }
   componentDidMount () {
+    this.props.fetchStock()
     this.setState({ mech: this.props.mech })
   }
   render () {
@@ -22,6 +25,8 @@ class UserHome extends Component {
               <div>
                 <Hanger />
               </div>
+              <Link to='/armory'>Armory</Link>
+              <Link to='/scan'>Scan</Link>
             </div>
           ) : (
             <div />
@@ -37,18 +42,18 @@ class UserHome extends Component {
  */
 const mapState = state => {
   return {
-    mech: state.user.mech,
+    mech: state.info.mech,
     user: state.user,
     info: state.info
   }
 }
 const mapDispatch = dispatch => {
   return {
-    setMech (id) {
-      dispatch(setMech(id))
+    fetchMech () {
+      dispatch(fetchMech())
     },
-    setInv (id) {
-      dispatch(setInv(id))
+    fetchStock () {
+      dispatch(fetchStock())
     }
   }
 }

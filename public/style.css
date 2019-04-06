@@ -36,6 +36,50 @@ form div {
   margin-top: 10%;
   
 }
+.catalog{
+  display:flex
+  
+}
+.tile{
+  border: 2px solid #135077;
+  margin: 1%;
+  display: flex;
+  width: 200px;
+  height: 200px;
+  background-color: #8495a5;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 4px;
+
+}
+
+.bigTile{
+  display: flex;
+  width: 200px;
+  height: 200px;
+  background-color: #8495a5;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 4px;
+
+}
+.bigTile img {
+  height: 6em;
+}
+  .legendary h3 {
+  color: darkorange;
+}
+ .rare h3{
+  color: blue;
+}
+ .uncommon h3{
+  color: forestgreen;
+}
+ .common h3{
+  color: black;
+}
 .info{
   display: flex;
   flex-flow: column;

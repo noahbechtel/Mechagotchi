@@ -118,6 +118,57 @@ exports.default = _default;
 
 /***/ }),
 
+/***/ "./client/components/armory.js":
+/*!*************************************!*\
+  !*** ./client/components/armory.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _multiview = _interopRequireDefault(__webpack_require__(/*! ./multiview */ "./client/components/multiview.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+var Armory = function Armory() {
+  return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
+    to: "/left"
+  }, "Left Arms"), _react.default.createElement(_reactRouterDom.Link, {
+    to: "/right"
+  }, "Right Arms"), _react.default.createElement(_reactRouterDom.Link, {
+    to: "/base"
+  }, "Mechs"), _react.default.createElement(_reactRouterDom.Link, {
+    to: "/armor"
+  }, "Armor"));
+};
+
+var mapState = function mapState(state) {
+  return {
+    inv: state.user.inv
+  };
+};
+
+var ArmoryConnected = (0, _reactRedux.connect)(mapState)(Armory);
+var _default = ArmoryConnected;
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./client/components/auth-form.js":
 /*!****************************************!*\
   !*** ./client/components/auth-form.js ***!
@@ -520,7 +571,10 @@ function (_Component) {
   _createClass(Hanger, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var mech = this.props.mech; // Setup
+      var mech = this.props.mech;
+      var defense = mech.base.defense + mech.armor.defense;
+      var attack = mech.leftWeapon.damage + mech.rightWeapon.damage;
+      var level = mech.level; // Setup
 
       var app = new PIXI.Application({
         width: window.screen.availWidth,
@@ -534,45 +588,70 @@ function (_Component) {
         resolution: 1 // default: 1
 
       });
+      PIXI.loader.reset();
       app.renderer.autoResize = true; // app.renderer.backgroundColor = 0x061639
 
       var element = document.getElementById('mechViewport');
       element.append(app.view); // Loader
 
       var assetAddresses;
+      assetAddresses = [//   mech.armor.imgUrl,
+      mech.base.imgUrl, mech.leftWeapon.imgUrl];
+      this.props.setPixi();
 
-      if (!this.props.pixi) {
-        assetAddresses = [//   mech.armor.imgUrl,
-        mech.base.imgUrl, mech.leftWeapon.imgUrl];
-        this.props.setPixi();
-      } else {
-        assetAddresses = [];
-      }
-
-      if (!mech.leftWeapon.imgUrl === mech.rightWeapon.imgUrl) {
+      if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
         assetAddresses.push(mech.rightWeapon.imgUrl);
       }
 
+      console.log(assetAddresses);
       this.setState({
         initilized: true
       });
       PIXI.loader.add(assetAddresses).load(function () {
         var base = new PIXI.Sprite(PIXI.loader.resources[mech.base.imgUrl].texture);
         var leftWeapon = new PIXI.Sprite(PIXI.loader.resources[mech.leftWeapon.imgUrl].texture);
-        var rightWeapon = new PIXI.Sprite(PIXI.loader.resources[mech.rightWeapon.imgUrl || mech.leftWeapon.imgUrl].texture); // const armor = new PIXI.Sprite(
+        var rightWeapon;
+
+        if (assetAddresses.length === 2) {
+          rightWeapon = new PIXI.Sprite(PIXI.loader.resources[mech.leftWeapon.imgUrl].texture);
+        } else {
+          rightWeapon = new PIXI.Sprite(PIXI.loader.resources[mech.rightWeapon.imgUrl].texture);
+        } // const armor = new PIXI.Sprite(
         //   PIXI.loader.resources[mech.armor.imgUrl].texture
         // )
+
 
         app.stage.addChild(base);
         app.stage.addChild(leftWeapon);
         app.stage.addChild(rightWeapon);
         base.x = window.screen.availWidth * 0.25;
         base.y = 100;
+        leftWeapon.anchor.set(0.5, 1);
         leftWeapon.x = base.x + mech.base.rightArm_X;
+        leftWeapon.scale.x = -1;
         leftWeapon.y = base.y + mech.base.rightArm_Y;
+        rightWeapon.anchor.set(1, 0.5);
         rightWeapon.x = base.x + mech.base.leftArm_X;
         rightWeapon.y = base.y + mech.base.leftArm_Y; //   app.stage.addChild(armor)
+        // TEXT
 
+        var attackText = new PIXI.Text("DMG:".concat(attack), {
+          fontFamily: 'Arial',
+          fontSize: 36
+        });
+        var defenseText = new PIXI.Text("DEF:".concat(defense), {
+          fontFamily: 'Arial',
+          fontSize: 36
+        });
+        var levelText = new PIXI.Text("LVL:".concat(level), {
+          fontFamily: 'Arial',
+          fontSize: 36
+        });
+        app.stage.addChild(defenseText);
+        app.stage.addChild(attackText);
+        app.stage.addChild(levelText);
+        defenseText.y = 50;
+        levelText.y = 100;
         console.log('setup finished');
       }); // Assignment
     }
@@ -596,7 +675,7 @@ function (_Component) {
 
 var mapState = function mapState(state) {
   return {
-    mech: state.user.mech,
+    mech: state.mech,
     user: state.user,
     info: state.info,
     pixi: state.info.pixi
@@ -665,6 +744,47 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /***/ }),
 
+/***/ "./client/components/multiview.js":
+/*!****************************************!*\
+  !*** ./client/components/multiview.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _tile = _interopRequireDefault(__webpack_require__(/*! ./tile */ "./client/components/tile.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+var Multiview = function Multiview(props) {
+  console.log(props);
+  var parts = props.part;
+  return _react.default.createElement("div", {
+    className: "catalog"
+  }, parts.length !== 0 ? parts.map(function (part) {
+    return _react.default.createElement(_tile.default, {
+      part: part,
+      key: "part.id"
+    });
+  }) : _react.default.createElement("p", null, "Nothing's here, dipshit"));
+};
+
+var _default = Multiview;
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./client/components/navbar.js":
 /*!*************************************!*\
   !*** ./client/components/navbar.js ***!
@@ -711,7 +831,7 @@ var Navbar = function Navbar(props) {
 var mapState = function mapState(state) {
   return {
     isLoggedIn: !!state.user.id,
-    mech: state.user.mech,
+    mech: state.info.mech,
     user: state.user,
     info: state.info
   };
@@ -739,6 +859,134 @@ Navbar.propTypes = {
 
 /***/ }),
 
+/***/ "./client/components/tile.js":
+/*!***********************************!*\
+  !*** ./client/components/tile.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _mech = __webpack_require__(/*! ../store/mech */ "./client/store/mech.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+var Tile = function Tile(props) {
+  var part = props.part;
+
+  var handleCLick = function handleCLick() {
+    console.log(part.id);
+    var _props$mech = props.mech,
+        armorId = _props$mech.armorId,
+        baseId = _props$mech.baseId,
+        id = _props$mech.id,
+        leftWeaponId = _props$mech.leftWeaponId,
+        rightWeaponId = _props$mech.rightWeaponId,
+        level = _props$mech.level;
+    var newMech;
+    console.log(_history.default.location.pathname);
+
+    switch (_history.default.location.pathname) {
+      case '/left':
+        newMech = {
+          leftWeaponId: part.id,
+          armorId: armorId,
+          baseId: baseId,
+          id: id,
+          rightWeaponId: rightWeaponId,
+          level: level
+        };
+        props.updateMech(newMech);
+        break;
+
+      case '/right':
+        newMech = {
+          leftWeaponId: leftWeaponId,
+          armorId: armorId,
+          baseId: baseId,
+          id: id,
+          rightWeaponId: part.id,
+          level: level
+        };
+        props.updateMech(newMech);
+        break;
+
+      case '/armor':
+        newMech = {
+          leftWeaponId: leftWeaponId,
+          armorId: part.id,
+          baseId: baseId,
+          id: id,
+          rightWeaponId: rightWeaponId,
+          level: level
+        };
+        props.updateMech(newMech);
+        break;
+
+      case '/base':
+        newMech = {
+          leftWeaponId: leftWeaponId,
+          armorId: armorId,
+          baseId: part.id,
+          id: id,
+          rightWeaponId: rightWeaponId,
+          level: level
+        };
+        props.updateMech(newMech);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  return _react.default.createElement("div", {
+    className: part.leftArm_X ? 'bigTile' : 'tile',
+    onClick: handleCLick,
+    key: part.id
+  }, _react.default.createElement("div", {
+    className: part.rarity > 3 ? 'legendary' : part.rarity === 3 ? 'rare' : part.rarity === 2 ? 'uncommon' : 'common'
+  }, _react.default.createElement("img", {
+    className: "tileImg",
+    src: part.imgUrl
+  }), _react.default.createElement("h3", null, part.name), _react.default.createElement("p", null, part.class ? part.class : ''), _react.default.createElement("h4", null, part.damage ? "Attack: ".concat(part.damage) : "Defense: ".concat(part.defense))));
+};
+
+var mapState = function mapState(state) {
+  return {
+    mech: state.mech
+  };
+};
+
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    updateMech: function updateMech(m) {
+      dispatch((0, _mech.updateMech)(m));
+    }
+  };
+};
+
+var TileConnected = (0, _reactRedux.connect)(mapState, mapDispatch)(Tile);
+var _default = TileConnected;
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./client/components/user-home.js":
 /*!****************************************!*\
   !*** ./client/components/user-home.js ***!
@@ -763,6 +1011,10 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 var _hanger = _interopRequireDefault(__webpack_require__(/*! ./hanger */ "./client/components/hanger.js"));
 
 var _store = __webpack_require__(/*! ../store */ "./client/store/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -806,6 +1058,7 @@ function (_Component) {
   _createClass(UserHome, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.props.fetchStock();
       this.setState({
         mech: this.props.mech
       });
@@ -814,7 +1067,11 @@ function (_Component) {
     key: "render",
     value: function render() {
       var mech = this.state.mech;
-      return _react.default.createElement("div", null, _react.default.createElement("div", null, mech !== null ? _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement(_hanger.default, null))) : _react.default.createElement("div", null)));
+      return _react.default.createElement("div", null, _react.default.createElement("div", null, mech !== null ? _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement(_hanger.default, null)), _react.default.createElement(_reactRouterDom.Link, {
+        to: "/armory"
+      }, "Armory"), _react.default.createElement(_reactRouterDom.Link, {
+        to: "/scan"
+      }, "Scan")) : _react.default.createElement("div", null)));
     }
   }]);
 
@@ -827,7 +1084,7 @@ function (_Component) {
 
 var mapState = function mapState(state) {
   return {
-    mech: state.user.mech,
+    mech: state.info.mech,
     user: state.user,
     info: state.info
   };
@@ -835,11 +1092,11 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
-    setMech: function setMech(id) {
-      dispatch((0, _store.setMech)(id));
+    fetchMech: function fetchMech() {
+      dispatch((0, _info.fetchMech)());
     },
-    setInv: function setInv(id) {
-      dispatch((0, _store.setInv)(id));
+    fetchStock: function fetchStock() {
+      dispatch((0, _info.fetchStock)());
     }
   };
 };
@@ -969,6 +1226,12 @@ var _store = __webpack_require__(/*! ./store */ "./client/store/index.js");
 
 var _camera = _interopRequireDefault(__webpack_require__(/*! ./components/camera */ "./client/components/camera.js"));
 
+var _armory = _interopRequireDefault(__webpack_require__(/*! ./components/armory */ "./client/components/armory.js"));
+
+var _multiview = _interopRequireDefault(__webpack_require__(/*! ./components/multiview */ "./client/components/multiview.js"));
+
+var _mech = __webpack_require__(/*! ./store/mech */ "./client/store/mech.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
@@ -1009,10 +1272,13 @@ function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.props.loadInitialData();
+      this.props.fetchMech();
     }
   }, {
     key: "render",
     value: function render() {
+      var _this = this;
+
       var isLoggedIn = this.props.isLoggedIn;
       return _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
         path: "/login",
@@ -1021,12 +1287,49 @@ function (_Component) {
         path: "/signup",
         component: _components.Signup
       }), isLoggedIn && _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
+        exact: true,
         path: "/home",
         component: _components.UserHome
       }), _react.default.createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/scan",
         component: _camera.default
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        exact: true,
+        path: "/armory",
+        component: _armory.default
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        exact: true,
+        path: "/armory",
+        component: _armory.default
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        path: "/left",
+        component: function component() {
+          return _react.default.createElement(_multiview.default, {
+            part: _this.props.inv.left
+          });
+        }
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        path: "/base",
+        component: function component() {
+          return _react.default.createElement(_multiview.default, {
+            part: _this.props.inv.base
+          });
+        }
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        path: "/right",
+        component: function component() {
+          return _react.default.createElement(_multiview.default, {
+            part: _this.props.inv.right
+          });
+        }
+      }), _react.default.createElement(_reactRouterDom.Route, {
+        path: "/armor",
+        component: function component() {
+          return _react.default.createElement(_multiview.default, {
+            part: _this.props.inv.armor
+          });
+        }
       })));
     }
   }]);
@@ -1042,7 +1345,8 @@ var mapState = function mapState(state) {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    inv: state.user.inventory
   };
 };
 
@@ -1050,6 +1354,9 @@ var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadInitialData: function loadInitialData() {
       dispatch((0, _store.me)());
+    },
+    fetchMech: function fetchMech() {
+      dispatch((0, _mech.fetchMech)());
     }
   };
 }; // The `withRouter` wrapper makes sure that updates are not blocked
@@ -1137,13 +1444,16 @@ Object.keys(_user).forEach(function (key) {
 
 var _info = _interopRequireDefault(__webpack_require__(/*! ./info */ "./client/store/info.js"));
 
+var _mech = _interopRequireDefault(__webpack_require__(/*! ./mech */ "./client/store/mech.js"));
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var reducer = (0, _redux.combineReducers)({
   user: _user.default,
-  info: _info.default
+  info: _info.default,
+  mech: _mech.default
 });
 var middleware = (0, _reduxDevtoolsExtension.composeWithDevTools)((0, _redux.applyMiddleware)(_reduxThunk.default, (0, _reduxLogger.default)({
   collapsed: true
@@ -1168,9 +1478,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _default;
-exports.setPixi = exports.setCode = void 0;
+exports.fetchStock = exports.setPixi = exports.setCode = void 0;
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
+var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1184,6 +1496,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var GET_CODE = 'GET_CODE';
 var GET_PIXI = 'GET_PIXI';
+var GET_STOCK = 'GET_STOCK';
 
 var getCode = function getCode(code) {
   return {
@@ -1196,6 +1509,13 @@ var getPixi = function getPixi(pixi) {
   return {
     type: GET_PIXI,
     pixi: pixi
+  };
+};
+
+var getStock = function getStock(stock) {
+  return {
+    type: GET_STOCK,
+    stock: stock
   };
 };
 
@@ -1266,12 +1586,58 @@ var setPixi = function setPixi() {
     }()
   );
 };
+
+exports.setPixi = setPixi;
+
+var fetchStock = function fetchStock() {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref3 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee3(dispatch) {
+        var _ref4, data;
+
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.get("api/inventory");
+
+              case 3:
+                _ref4 = _context3.sent;
+                data = _ref4.data;
+                dispatch(getStock(data));
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+                console.error(_context3.t0);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 8]]);
+      }));
+
+      return function (_x3) {
+        return _ref3.apply(this, arguments);
+      };
+    }()
+  );
+};
 /**
  * REDUCER
  */
 
 
-exports.setPixi = setPixi;
+exports.fetchStock = fetchStock;
 
 function _default() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -1287,6 +1653,159 @@ function _default() {
       return _objectSpread({
         pixi: action.pixi
       }, state);
+
+    case GET_STOCK:
+      return _objectSpread({
+        stock: action.stock
+      }, state);
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./client/store/mech.js":
+/*!******************************!*\
+  !*** ./client/store/mech.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+exports.fetchMech = exports.updateMech = exports.setMech = void 0;
+
+var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var GET_MECH = 'GET_MECH';
+
+var setMech = function setMech(mech) {
+  return {
+    type: GET_MECH,
+    mech: mech
+  };
+};
+
+exports.setMech = setMech;
+
+var updateMech = function updateMech(mech) {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee(dispatch) {
+        var _ref2, data;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                console.log(mech);
+                _context.next = 4;
+                return _axios.default.put("api/mech/".concat(mech.id), mech);
+
+              case 4:
+                _ref2 = _context.sent;
+                data = _ref2.data;
+                console.log('UPDATED MECH DATA', data);
+                dispatch(setMech(data));
+                _context.next = 13;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](0);
+                console.error(_context.t0);
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 10]]);
+      }));
+
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }()
+  );
+};
+
+exports.updateMech = updateMech;
+
+var fetchMech = function fetchMech(id) {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref3 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2(dispatch) {
+        var _ref4, data;
+
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.get("api/mech");
+
+              case 3:
+                _ref4 = _context2.sent;
+                data = _ref4.data;
+                dispatch(setMech(data));
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.error(_context2.t0);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 8]]);
+      }));
+
+      return function (_x2) {
+        return _ref3.apply(this, arguments);
+      };
+    }()
+  );
+};
+/**
+ * REDUCER
+ */
+
+
+exports.fetchMech = fetchMech;
+
+function _default() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case GET_MECH:
+      return action.mech;
 
     default:
       return state;
@@ -1315,6 +1834,8 @@ var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_mod
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
+var _info = __webpack_require__(/*! ./info */ "./client/store/info.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -1328,8 +1849,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /**
  * ACTION TYPES
  */
-// const GET_MECH = 'GET_MECH'
-// const GET_INV = 'GET_INV'
+var GET_MECH = 'GET_MECH'; // const GET_INV = 'GET_INV'
+
 var GET_USER = 'GET_USER';
 var REMOVE_USER = 'REMOVE_USER';
 /**
@@ -1341,7 +1862,7 @@ var defaultUser = {};
  * ACTION CREATORS
  */
 // const getInv = inv => ({ type: GET_INV, inv })
-// const getMech = mech => ({ type: GET_MECH, mech })
+// export const setMech = mech => ({ type: GET_MECH, mech })
 
 var getUser = function getUser(user) {
   return {
@@ -1437,7 +1958,7 @@ var auth = function auth(email, password, method) {
 
               case 9:
                 try {
-                  dispatch(getUser(res.data));
+                  dispatch(getUser(res.data)); // dispatch(setMech(res.data.mech))
 
                   _history.default.push('/home');
                 } catch (dispatchOrHistoryErr) {
@@ -1536,9 +2057,7 @@ function _default() {
     case GET_USER:
       return _objectSpread({}, action.user, state);
     // case GET_MECH:
-    //   return { ...state, mech: action.mech }
-    // case GET_INV:
-    //   return { ...state, inventory: action.inv }
+    //   return { mech: action.mech, ...state }
 
     case REMOVE_USER:
       return defaultUser;

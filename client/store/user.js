@@ -1,10 +1,10 @@
 import axios from 'axios'
 import history from '../history'
-
+import { setMech } from './info'
 /**
  * ACTION TYPES
  */
-// const GET_MECH = 'GET_MECH'
+const GET_MECH = 'GET_MECH'
 // const GET_INV = 'GET_INV'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
@@ -17,7 +17,7 @@ const defaultUser = {}
  * ACTION CREATORS
  */
 // const getInv = inv => ({ type: GET_INV, inv })
-// const getMech = mech => ({ type: GET_MECH, mech })
+// export const setMech = mech => ({ type: GET_MECH, mech })
 const getUser = user => ({ type: GET_USER, user })
 const removeUser = () => ({ type: REMOVE_USER })
 /**
@@ -26,7 +26,6 @@ const removeUser = () => ({ type: REMOVE_USER })
 export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
-
     dispatch(getUser(res.data || defaultUser))
   } catch (err) {
     console.error(err)
@@ -43,6 +42,7 @@ export const auth = (email, password, method) => async dispatch => {
 
   try {
     dispatch(getUser(res.data))
+    // dispatch(setMech(res.data.mech))
     history.push('/home')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -86,9 +86,7 @@ export default function (state = defaultUser, action) {
     case GET_USER:
       return { ...action.user, ...state }
     // case GET_MECH:
-    //   return { ...state, mech: action.mech }
-    // case GET_INV:
-    //   return { ...state, inventory: action.inv }
+    //   return { mech: action.mech, ...state }
     case REMOVE_USER:
       return defaultUser
     default:
