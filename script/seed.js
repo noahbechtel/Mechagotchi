@@ -146,12 +146,10 @@ async function seed () {
       mechId: 2,
       inventoryId: 1
     })
-    // await inv1.addArmor([armor]),
-    // await inv1.addBase(bases),
-    // await inv1.addRightWeapon(missilePodRight)
-    // await inv1.addLeftWeapon(empLeft)
   ])
-
+  // await inv1.addBase(bases)
+  // await inv1.addRightWeapon(missilePodRight)
+  await inv1.addLeftWeapon(empLeft)
   console.log(`seeded successfully`)
 }
 
