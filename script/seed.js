@@ -48,52 +48,52 @@ async function seed () {
   ])
   // Weapons
 
-  const chainGunRight = rightWeapon.create({
+  const chainGunRight = await rightWeapon.create({
     name: 'Chaingun',
     damage: 15,
     rarity: 1,
     imgUrl: './assets/weapons/chaingun.png'
   })
-  const gaussRight = rightWeapon.create({
+  const gaussRight = await rightWeapon.create({
     name: 'Gauss Rifle',
     damage: 50,
     rarity: 4,
     imgUrl: './assets/weapons/gauss.png'
   })
-  const empRight = rightWeapon.create({
+  const empRight = await rightWeapon.create({
     name: 'Emp Chaingun',
     damage: 50,
     rarity: 4,
     imgUrl: './assets/weapons/Empchain.png'
   })
-  const missilePodRight = rightWeapon.create({
+  const missilePodRight = await rightWeapon.create({
     name: 'Missile Pod',
     damage: 15,
     rarity: 1,
     imgUrl: './assets/weapons/MissilePodLeft.png'
   })
 
-  const gaussLeft = leftWeapon.create({
+  const gaussLeft = await leftWeapon.create({
     name: 'Gauss Rifle',
     damage: 50,
     rarity: 4,
     imgUrl: './assets/weapons/gauss.png'
   })
 
-  const missilePodLeft = leftWeapon.create({
+  const missilePodLeft = await leftWeapon.create({
     name: 'Missile Pod',
     damage: 15,
     rarity: 2,
     imgUrl: './assets/weapons/MissilePodLeft.png'
   })
-  const empLeft = leftWeapon.create({
+  const empLeft = await leftWeapon.create({
     name: 'Emp Chaingun',
     damage: 50,
     rarity: 4,
     imgUrl: './assets/weapons/Empchain.png'
   })
 
-  const chaingunLeft = leftWeapon.create({
+  const chaingunLeft = await leftWeapon.create({
     name: 'Chaingun',
     damage: 15,
     rarity: 1,
@@ -102,7 +102,7 @@ async function seed () {
 
   // Armor
 
-  const armor1 = Armor.create({
+  const armor1 = await Armor.create({
     name: 'Scavenger Armor MkI',
     defense: 30,
     rarity: 1,
