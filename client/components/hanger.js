@@ -5,9 +5,6 @@ import { setPixi } from '../store/info'
 class Hanger extends Component {
   constructor () {
     super()
-    this.state = {
-      initilized: false
-    }
   }
 
   componentDidMount () {
@@ -39,13 +36,11 @@ class Hanger extends Component {
       mech.base.imgUrl,
       mech.leftWeapon.imgUrl
     ]
-    this.props.setPixi()
 
     if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
       assetAddresses.push(mech.rightWeapon.imgUrl)
     }
     console.log(assetAddresses)
-    this.setState({ initilized: true })
     PIXI.loader.add(assetAddresses).load(() => {
       const base = new PIXI.Sprite(
         PIXI.loader.resources[mech.base.imgUrl].texture
@@ -126,16 +121,6 @@ const mapState = state => {
     pixi: state.info.pixi
   }
 }
-const mapDispatch = dispatch => {
-  return {
-    setPixi () {
-      dispatch(setPixi())
-    }
-  }
-}
 
-const ConnectedHanger = connect(
-  mapState,
-  mapDispatch
-)(Hanger)
+const ConnectedHanger = connect(mapState)(Hanger)
 export default ConnectedHanger

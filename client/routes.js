@@ -8,6 +8,8 @@ import Camera from './components/camera'
 import Armory from './components/armory'
 import Multiview from './components/multiview'
 import { fetchMech } from './store/mech'
+import { fetchStock } from './store/info'
+import Battle from './components/battle'
 
 /**
  * COMPONENT
@@ -16,6 +18,7 @@ class Routes extends Component {
   componentDidMount () {
     this.props.loadInitialData()
     this.props.fetchMech()
+    this.props.fetchStock()
   }
 
   render () {
@@ -58,6 +61,7 @@ class Routes extends Component {
                 return <Multiview part={this.props.inv.armor} />
               }}
             />
+            <Route path='/battle' component={Battle} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
@@ -85,6 +89,9 @@ const mapDispatch = dispatch => {
     },
     fetchMech () {
       dispatch(fetchMech())
+    },
+    fetchStock () {
+      dispatch(fetchStock())
     }
   }
 }

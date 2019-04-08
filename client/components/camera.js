@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Quagga from 'quagga'
 import { setCode } from '../store/info'
-import adapter from 'webrtc-adapter'
-
+import Battle from './battle'
 class Camera extends Component {
   constructor () {
     super()
     this.state = {
-      result: 'None',
-      done: false
+      scanned: false
     }
   }
 
@@ -104,9 +102,9 @@ class Camera extends Component {
     let i = 0
     const submit = async result => {
       if (i > 3) {
-        this.props.setCode(result)
-        this.props.history.push('/home')
         Quagga.stop()
+        this.props.setCode({ result, stock: this.props.stock })
+        this.setState({ scanned: true })
       } else {
         i++
         sleep(100)
@@ -126,16 +124,23 @@ class Camera extends Component {
     )
   }
 }
+
+const mapState = state => {
+  return {
+    stock: state.info.stock,
+    result: state.info.code
+  }
+}
 const mapDispatch = dispatch => {
   return {
-    setCode (code) {
-      dispatch(setCode(code))
+    async setCode (code) {
+      dispatch(await setCode(code))
     }
   }
 }
 
 export const ConnectedCamera = connect(
-  null,
+  mapState,
   mapDispatch
 )(Camera)
 

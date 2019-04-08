@@ -1,23 +1,46 @@
 const spawnAlgo = (code, stock) => {
-  let item = {}
-  let digit = ('' + code).split('')
+  let type
+  let digit = ('' + Number(code)).split('')
+  if (digit.length < 6) {
+    return 'too short'
+  }
+  digit[4] > 8
+    ? (type = 'base')
+    : digit[4] > 5
+      ? (type = 'leftWeapon')
+      : digit[4] > 3
+        ? (type = 'rightWeapon')
+        : (type = 'armor')
 
-  digit[3] > 8
-    ? (item.type = 'base')
-    : digit[3] > 5
-      ? (item.type = 'leftWeapon')
-      : digit[3] > 3
-        ? (item.type = 'rightWeapon')
-        : (item.type = 'armor')
+  const stockNum = stock[type]
+  let id = Math.round(stockNum / (1 + Number(digit[5])))
 
-  const stockNum = stock[item.type]
-  item.id = Math.round(stockNum / digit[3] + Number(digit[3 + 1]))
-  if (item.type === 'base') {
-    item.rightWeaponId = Math.round(stockNum / digit[2 + 1] + Number(digit[1]))
-    item.leftWeapon = Math.round(stockNum / digit[1 + 1] + Number(digit[2]))
-    item.armor = Math.round(stockNum / digit[3 + 1] + Number(digit[4]))
+  if (type === 'base') {
+    let rightWeapon = Math.round(
+      stock.rightWeapon / (digit[3] + Number(digit[2])) + 1
+    )
+    if (rightWeapon === 0) {
+      rightWeapon = 1
+    }
+    let leftWeapon = Math.round(
+      stock.leftWeapon / (digit[2] + Number(digit[3])) + 1
+    )
+    if (leftWeapon === 0) {
+      leftWeapon = 1
+    }
+    let armor = Math.round(stock.armor / (digit[4] + Number(digit[5])) + 1)
+    if (armor === 0) {
+      armor = 1
+    }
+    return { type, base: id, rightWeapon, leftWeapon, armor, leftWeapon }
+  } else {
+    if (id === 0) {
+      id = 1
+    }
+    return { type, id }
   }
 }
+export default spawnAlgo
 // enemy or item
 // rarity 1-5
 // id

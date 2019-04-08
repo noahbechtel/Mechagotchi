@@ -14,7 +14,7 @@ export const updateMech = mech => async dispatch => {
     console.error(err)
   }
 }
-export const fetchMech = id => async dispatch => {
+export const fetchMech = () => async dispatch => {
   try {
     const { data } = await axios.get(`api/mech`)
     dispatch(setMech(data))

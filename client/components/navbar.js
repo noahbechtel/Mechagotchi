@@ -13,8 +13,6 @@ const Navbar = props => {
             {/* The navbar will show these links after you log in */}
             <Link to='/home'>Home</Link>
             <Link to='/scan'>Scan Code</Link>
-
-            <h3>{props.info.code}</h3>
           </div>
         ) : (
           <div>
