@@ -34,7 +34,7 @@ class Battle extends Component {
 
     let assetAddresses
     assetAddresses = [
-      //   mech.armor.imgUrl,
+        mech.armor.imgUrl,
       mech.base.imgUrl,
       mech.leftWeapon.imgUrl
     ]
