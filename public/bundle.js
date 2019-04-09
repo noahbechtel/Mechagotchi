@@ -364,8 +364,7 @@ function (_Component) {
       element.append(app.view); // Loader
 
       var assetAddresses;
-      assetAddresses = [//   mech.armor.imgUrl,
-      mech.base.imgUrl, mech.leftWeapon.imgUrl];
+      assetAddresses = [mech.armor.imgUrl, mech.base.imgUrl, mech.leftWeapon.imgUrl];
 
       if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
         assetAddresses.push(mech.rightWeapon.imgUrl);

@@ -44,6 +44,17 @@ async function seed () {
       leftArm_X: 28,
       leftArm_Y: 80,
       imgUrl: './assets/bases/Puma.png'
+    }),
+    Base.create({
+      class: 'Medium Mech',
+      name: 'Argon',
+      rarity: 3,
+      defense: 30,
+      rightArm_X: 138,
+      rightArm_Y: 108,
+      leftArm_X: 28,
+      leftArm_Y: 80,
+      imgUrl: './assets/bases/Argon.png'
     })
   ])
   // Weapons
@@ -125,7 +136,7 @@ async function seed () {
       level: 15
     }),
     Mech.create({
-      baseId: 2,
+      baseId: 3,
       rightWeaponId: 2,
       leftWeaponId: 2,
       armorId: 1,
@@ -143,7 +154,7 @@ async function seed () {
     User.create({
       email: 'noah@email.com',
       password: 'yeet',
-      mechId: 2,
+      mechId: 3,
       inventoryId: 1
     })
   ])
