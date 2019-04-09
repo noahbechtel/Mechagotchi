@@ -50,10 +50,10 @@ async function seed () {
       name: 'Argon',
       rarity: 3,
       defense: 30,
-      rightArm_X: 138,
-      rightArm_Y: 108,
-      leftArm_X: 28,
-      leftArm_Y: 80,
+      rightArm_X: 125,
+      rightArm_Y: 65,
+      leftArm_X: 17,
+      leftArm_Y: 40,
       imgUrl: './assets/bases/Argon.png'
     })
   ])
