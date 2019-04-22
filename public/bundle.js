@@ -1162,7 +1162,7 @@ function (_Component) {
         app.stage.addChild(base);
         app.stage.addChild(leftWeapon);
         app.stage.addChild(rightWeapon);
-        base.x = window.screen.availWidth * 0.25;
+        base.x = app.screen.width / 2;
         base.y = 100;
 
         if (mech.base["class"] === 'Heavy Mech') {
