@@ -46,15 +46,48 @@ async function seed () {
       imgUrl: './assets/bases/Puma.png'
     }),
     Base.create({
-      class: 'Medium Mech',
+      class: 'Heavy Mech',
       name: 'Argon',
       rarity: 3,
-      defense: 30,
+      defense: 40,
       rightArm_X: 125,
       rightArm_Y: 65,
       leftArm_X: 17,
       leftArm_Y: 40,
       imgUrl: './assets/bases/Argon.png'
+    }),
+    Base.create({
+      class: 'Heavy Mech',
+      name: 'T4NK',
+      rarity: 4,
+      defense: 70,
+      rightArm_X: 200,
+      rightArm_Y: 115,
+      leftArm_X: 60,
+      leftArm_Y: 92,
+      imgUrl: './assets/bases/T4NK.png'
+    }),
+    Base.create({
+      class: 'Light Mech',
+      name: 'Sentinal',
+      rarity: 2,
+      defense: 20,
+      rightArm_X: 130,
+      rightArm_Y: 75,
+      leftArm_X: 18,
+      leftArm_Y: 50,
+      imgUrl: './assets/base/Sentinal.png'
+    }),
+    Base.create({
+      class: 'Medium Mech',
+      name: 'Foreman',
+      rarity: 2,
+      defense: 30,
+      rightArm_X: 138,
+      rightArm_Y: 108,
+      leftArm_X: 28,
+      leftArm_Y: 80,
+      imgUrl: './assets/bases/Forman.png'
     })
   ])
   // Weapons
@@ -156,6 +189,12 @@ async function seed () {
       password: 'yeet',
       mechId: 3,
       inventoryId: 1
+    }),
+    User.create({
+      email: 'asher@email.com',
+      password: 'yeet',
+      mechId: 2,
+      inventoryId: 3
     })
   ])
   // await inv1.addBase(bases)

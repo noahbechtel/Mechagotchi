@@ -67,6 +67,14 @@ class Hanger extends Component {
       app.stage.addChild(rightWeapon)
       base.x = window.screen.availWidth * 0.25
       base.y = 100
+
+      if (mech.base.class === 'Heavy Mech') {
+        console.log(base.scale)
+        base.scale.set(1.5)
+      } else {
+        base.scale.set(1)
+      }
+
       leftWeapon.anchor.set(0.5, 1)
       leftWeapon.x = base.x + mech.base.rightArm_X
       leftWeapon.scale.x = -1
