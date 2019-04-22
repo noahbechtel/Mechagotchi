@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Hanger from './hanger'
-import { me } from '../store'
 import { Link } from 'react-router-dom'
-import { fetchMech, fetchStock } from '../store/info'
+import { fetchStock } from '../store/info'
+import { fetchMech } from '../store/mech'
 
 class UserHome extends Component {
   constructor () {
@@ -13,6 +13,7 @@ class UserHome extends Component {
   }
   componentDidMount () {
     this.props.fetchStock()
+    this.props.fetchMech()
     this.setState({ mech: this.props.mech })
   }
   render () {

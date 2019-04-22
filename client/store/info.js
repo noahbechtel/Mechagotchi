@@ -27,7 +27,7 @@ export const addPart = part => async dispatch => {
     console.log(part)
     await axios.post(`api/inventory/${part.type}/${part.id}`)
     dispatch(me())
-    history.push('/home')
+    history.push('/hanger')
   } catch (err) {
     console.error(err)
   }

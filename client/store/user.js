@@ -1,13 +1,14 @@
 import axios from 'axios'
 import history from '../history'
-import { setMech } from './info'
+import { fetchMech } from './mech'
+import { fetchStock } from './info'
 /**
  * ACTION TYPES
  */
-const GET_MECH = 'GET_MECH'
 // const GET_INV = 'GET_INV'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+
 /**
  * INITIAL STATE
  */
@@ -41,9 +42,11 @@ export const auth = (email, password, method) => async dispatch => {
   }
 
   try {
-    dispatch(getUser(res.data))
-    // dispatch(setMech(res.data.mech))
-    history.push('/home')
+    console.log(res.data)
+    await dispatch(getUser(res.data))
+
+    dispatch(fetchMech())
+    history.push('/builder')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
   }

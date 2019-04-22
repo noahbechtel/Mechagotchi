@@ -214,7 +214,7 @@ class Battle extends Component {
               winner.x = window.screen.availWidth * 0.07
               winner.y = 150
               winner.on('click', () => {
-                this.props.history.push('/home')
+                this.props.history.push('/hanger')
               })
 
               return
@@ -236,7 +236,7 @@ class Battle extends Component {
             youDied.interactive = true
             youDied.buttonMode = true
             youDied.on('click', () => {
-              this.props.history.push('/home')
+              this.props.history.push('/hanger')
             })
           }
         }

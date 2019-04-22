@@ -6,9 +6,7 @@ export const setMech = mech => ({ type: GET_MECH, mech })
 
 export const updateMech = mech => async dispatch => {
   try {
-    console.log(mech)
     const { data } = await axios.put(`api/mech/${mech.id}`, mech)
-    console.log('UPDATED MECH DATA', data)
     dispatch(setMech(data))
   } catch (err) {
     console.error(err)

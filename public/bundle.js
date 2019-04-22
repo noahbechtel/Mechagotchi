@@ -529,7 +529,7 @@ function (_Component) {
                 winner.x = window.screen.availWidth * 0.07;
                 winner.y = 150;
                 winner.on('click', function () {
-                  _this.props.history.push('/home');
+                  _this.props.history.push('/hanger');
                 });
                 return;
               }
@@ -553,7 +553,7 @@ function (_Component) {
               youDied.interactive = true;
               youDied.buttonMode = true;
               youDied.on('click', function () {
-                _this.props.history.push('/home');
+                _this.props.history.push('/hanger');
               });
             }
           };
@@ -652,6 +652,135 @@ var mapDispatch = function mapDispatch(dispatch) {
 
 var ConnectedBattle = (0, _reactRedux.connect)(mapState, mapDispatch)(Battle);
 var _default = ConnectedBattle;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ "./client/components/builder.js":
+/*!**************************************!*\
+  !*** ./client/components/builder.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/index.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Builder =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Builder, _Component);
+
+  function Builder() {
+    _classCallCheck(this, Builder);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Builder).call(this));
+  }
+
+  _createClass(Builder, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this = this;
+
+      console.log('wtf');
+      var app = new PIXI.Application({
+        width: window.screen.availWidth,
+        // default: 800
+        height: window.screen.availHeight * 0.7,
+        // default: 600
+        antialias: true,
+        // default: false
+        transparent: true,
+        // default: false
+        resolution: 1 // default: 1
+
+      });
+      app.renderer.autoResize = true; // app.renderer.backgroundColor = 0x061639
+
+      var element = document.getElementById('builderViewport');
+      element.append(app.view);
+      var build = new PIXI.Text("BUILD", {
+        fontFamily: 'Arial',
+        fontSize: 36
+      }); // Set the initial position
+
+      build.anchor.set(0.5);
+      build.x = app.screen.width / 2;
+      build.y = app.screen.height / 2; // Opt-in to interactivity
+
+      build.interactive = true; // Shows hand cursor
+
+      build.buttonMode = true; // Pointers normalize touch and mouse
+
+      build.on('pointerdown', function () {
+        _this.props.history.push('/hanger');
+      }); // Alternatively, use the mouse & touch events:
+      // sprite.on('click', onClick); // mouse-only
+      // sprite.on('tap', onClick); // touch-only
+
+      app.stage.addChild(build);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      console.log('wtf');
+      return _react["default"].createElement("div", {
+        className: "pixi"
+      }, _react["default"].createElement("div", {
+        id: "builderViewport"
+      }, '   '));
+    }
+  }]);
+
+  return Builder;
+}(_react.Component);
+/**
+ * CONTAINER
+ */
+
+
+var mapState = function mapState(state) {
+  return {
+    mech: state.mech,
+    user: state.user,
+    info: state.info,
+    pixi: state.info.pixi
+  };
+};
+
+var ConnectedBuilder = (0, _reactRedux.connect)(mapState)(Builder);
+var _default = ConnectedBuilder;
 exports["default"] = _default;
 
 /***/ }),
@@ -1035,6 +1164,14 @@ function (_Component) {
         app.stage.addChild(rightWeapon);
         base.x = window.screen.availWidth * 0.25;
         base.y = 100;
+
+        if (mech.base["class"] === 'Heavy Mech') {
+          console.log(base.scale);
+          base.scale.set(1.5);
+        } else {
+          base.scale.set(1);
+        }
+
         leftWeapon.anchor.set(0.5, 1);
         leftWeapon.x = base.x + mech.base.rightArm_X;
         leftWeapon.scale.x = -1;
@@ -1215,8 +1352,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var Navbar = function Navbar(props) {
   return _react["default"].createElement("div", null, _react["default"].createElement("nav", null, props.isLoggedIn ? _react["default"].createElement("div", null, _react["default"].createElement(_reactRouterDom.Link, {
-    to: "/home"
-  }, "Home"), _react["default"].createElement(_reactRouterDom.Link, {
+    to: "/hanger"
+  }, "Hanger"), _react["default"].createElement(_reactRouterDom.Link, {
     to: "/scan"
   }, "Scan Code")) : _react["default"].createElement("div", null, _react["default"].createElement(_reactRouterDom.Link, {
     to: "/login"
@@ -1411,11 +1548,11 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var _hanger = _interopRequireDefault(__webpack_require__(/*! ./hanger */ "./client/components/hanger.js"));
 
-var _store = __webpack_require__(/*! ../store */ "./client/store/index.js");
-
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
 var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
+
+var _mech = __webpack_require__(/*! ../store/mech */ "./client/store/mech.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -1460,6 +1597,7 @@ function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.props.fetchStock();
+      this.props.fetchMech();
       this.setState({
         mech: this.props.mech
       });
@@ -1494,7 +1632,7 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     fetchMech: function fetchMech() {
-      dispatch((0, _info.fetchMech)());
+      dispatch((0, _mech.fetchMech)());
     },
     fetchStock: function fetchStock() {
       dispatch((0, _info.fetchStock)());
@@ -1627,6 +1765,8 @@ var _store = __webpack_require__(/*! ./store */ "./client/store/index.js");
 
 var _camera = _interopRequireDefault(__webpack_require__(/*! ./components/camera */ "./client/components/camera.js"));
 
+var _builder = _interopRequireDefault(__webpack_require__(/*! ./components/builder */ "./client/components/builder.js"));
+
 var _armory = _interopRequireDefault(__webpack_require__(/*! ./components/armory */ "./client/components/armory.js"));
 
 var _multiview = _interopRequireDefault(__webpack_require__(/*! ./components/multiview */ "./client/components/multiview.js"));
@@ -1642,6 +1782,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1675,11 +1819,35 @@ function (_Component) {
 
   _createClass(Routes, [{
     key: "componentDidMount",
-    value: function componentDidMount() {
-      this.props.loadInitialData();
-      this.props.fetchMech();
-      this.props.fetchStock();
-    }
+    value: function () {
+      var _componentDidMount = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.props.fetchStock();
+                _context.next = 3;
+                return this.props.loadInitialData();
+
+              case 3:
+                this.props.fetchMech();
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
+      }
+
+      return componentDidMount;
+    }()
   }, {
     key: "render",
     value: function render() {
@@ -1694,16 +1862,15 @@ function (_Component) {
         component: _components.Signup
       }), isLoggedIn && _react["default"].createElement(_reactRouterDom.Switch, null, _react["default"].createElement(_reactRouterDom.Route, {
         exact: true,
-        path: "/home",
+        path: "/hanger",
         component: _components.UserHome
+      }), _react["default"].createElement(_reactRouterDom.Route, {
+        path: "/builder",
+        component: _builder["default"]
       }), _react["default"].createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/scan",
         component: _camera["default"]
-      }), _react["default"].createElement(_reactRouterDom.Route, {
-        exact: true,
-        path: "/armory",
-        component: _armory["default"]
       }), _react["default"].createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/armory",
@@ -1999,7 +2166,7 @@ var addPart = function addPart(part) {
               case 4:
                 dispatch((0, _user.me)());
 
-                _history["default"].push('/home');
+                _history["default"].push('/hanger');
 
                 _context2.next = 11;
                 break;
@@ -2152,29 +2319,27 @@ var updateMech = function updateMech(mech) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                console.log(mech);
-                _context.next = 4;
+                _context.next = 3;
                 return _axios["default"].put("api/mech/".concat(mech.id), mech);
 
-              case 4:
+              case 3:
                 _ref2 = _context.sent;
                 data = _ref2.data;
-                console.log('UPDATED MECH DATA', data);
                 dispatch(setMech(data));
-                _context.next = 13;
+                _context.next = 11;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](0);
                 console.error(_context.t0);
 
-              case 13:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 10]]);
+        }, _callee, null, [[0, 8]]);
       }));
 
       return function (_x) {
@@ -2271,6 +2436,8 @@ var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_mod
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
+var _mech = __webpack_require__(/*! ./mech */ "./client/store/mech.js");
+
 var _info = __webpack_require__(/*! ./info */ "./client/store/info.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -2286,8 +2453,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /**
  * ACTION TYPES
  */
-var GET_MECH = 'GET_MECH'; // const GET_INV = 'GET_INV'
-
+// const GET_INV = 'GET_INV'
 var GET_USER = 'GET_USER';
 var REMOVE_USER = 'REMOVE_USER';
 /**
@@ -2394,20 +2560,30 @@ var auth = function auth(email, password, method) {
                 })));
 
               case 9:
-                try {
-                  dispatch(getUser(res.data)); // dispatch(setMech(res.data.mech))
+                _context2.prev = 9;
+                console.log(res.data);
+                _context2.next = 13;
+                return dispatch(getUser(res.data));
 
-                  _history["default"].push('/home');
-                } catch (dispatchOrHistoryErr) {
-                  console.error(dispatchOrHistoryErr);
-                }
+              case 13:
+                dispatch((0, _mech.fetchMech)());
 
-              case 10:
+                _history["default"].push('/builder');
+
+                _context2.next = 20;
+                break;
+
+              case 17:
+                _context2.prev = 17;
+                _context2.t1 = _context2["catch"](9);
+                console.error(_context2.t1);
+
+              case 20:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 6]]);
+        }, _callee2, null, [[0, 6], [9, 17]]);
       }));
 
       return function (_x2) {
