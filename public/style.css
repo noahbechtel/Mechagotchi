@@ -51,6 +51,7 @@ form div {
   background-color: #8495a5;
   justify-content: center;
   align-items: center;
+  line-height: 4px;
   text-align: center;
 
 }
@@ -150,6 +151,8 @@ form div {
   display: flex;
   width: 50%;
   height: 200px;
+  line-height: 4px;
+
   background-color: #8495a5;
   justify-content: center;
   align-items: center;
