@@ -1173,15 +1173,14 @@ function (_Component) {
       };
 
       var app = new PIXI.Application({
-        width: window.screen.availWidth,
-        // default: 800
-        height: window.screen.availHeight,
+        width: window.screen.availWidth - 1,
+        height: window.screen.availHeight - 10,
         // default: 600
-        antialias: true,
+        antialias: false,
         // default: false
         transparent: true,
         // default: false
-        resolution: 1 // default: 1
+        resolution: 0.96 // default: 1
 
       });
       PIXI.loader.reset();

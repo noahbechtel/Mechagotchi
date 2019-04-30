@@ -20,11 +20,11 @@ class Hanger extends Component {
       history.push('/armory')
     }
     let app = new PIXI.Application({
-      width: window.screen.availWidth, // default: 800
-      height: window.screen.availHeight, // default: 600
-      antialias: true, // default: false
+      width: window.screen.availWidth - 1,
+      height: window.screen.availHeight - 10, // default: 600
+      antialias: false, // default: false
       transparent: true, // default: false
-      resolution: 1 // default: 1
+      resolution: 0.96 // default: 1
     })
 
     PIXI.loader.reset()
