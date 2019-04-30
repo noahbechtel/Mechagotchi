@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Hanger from './hanger'
-import { Link } from 'react-router-dom'
 import { fetchStock } from '../store/info'
 import { fetchMech } from '../store/mech'
 
@@ -23,11 +22,7 @@ class UserHome extends Component {
         <div>
           {mech !== null ? (
             <div>
-              <div>
-                <Hanger />
-              </div>
-              <Link to='/armory'>Armory</Link>
-              <Link to='/scan'>Scan</Link>
+              <Hanger />
             </div>
           ) : (
             <div />

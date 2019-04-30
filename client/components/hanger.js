@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as PIXI from 'pixi.js'
-import { setPixi } from '../store/info'
+import history from '../history'
 class Hanger extends Component {
   constructor () {
     super()
@@ -13,10 +13,15 @@ class Hanger extends Component {
     const attack = mech.leftWeapon.damage + mech.rightWeapon.damage
     const level = mech.level
     // Setup
-
+    const goScan = () => {
+      history.push('/scan')
+    }
+    const goArmory = () => {
+      history.push('/armory')
+    }
     let app = new PIXI.Application({
       width: window.screen.availWidth, // default: 800
-      height: window.screen.availHeight * 0.7, // default: 600
+      height: window.screen.availHeight, // default: 600
       antialias: true, // default: false
       transparent: true, // default: false
       resolution: 1 // default: 1
@@ -34,7 +39,9 @@ class Hanger extends Component {
     assetAddresses = [
       //   mech.armor.imgUrl,
       mech.base.imgUrl,
-      mech.leftWeapon.imgUrl
+      mech.leftWeapon.imgUrl,
+      './assets/format/logo.png',
+      './assets/format/hanger.png'
     ]
 
     if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
@@ -42,6 +49,12 @@ class Hanger extends Component {
     }
     console.log(assetAddresses)
     PIXI.loader.add(assetAddresses).load(() => {
+      const logo = new PIXI.Sprite(
+        PIXI.loader.resources['./assets/format/logo.png'].texture
+      )
+      const hanger = new PIXI.Sprite(
+        PIXI.loader.resources['./assets/format/hanger.png'].texture
+      )
       const base = new PIXI.Sprite(
         PIXI.loader.resources[mech.base.imgUrl].texture
       )
@@ -61,13 +74,21 @@ class Hanger extends Component {
       // const armor = new PIXI.Sprite(
       //   PIXI.loader.resources[mech.armor.imgUrl].texture
       // )
-
+      app.stage.addChild(hanger)
       app.stage.addChild(base)
+      // app.stage.addChild(logo)
       app.stage.addChild(leftWeapon)
       app.stage.addChild(rightWeapon)
-      base.x = app.screen.width / 2
-      base.y = 100
 
+      // logo.scale.set(0.25)
+      logo.x = app.screen.width - 400
+      logo.y = 10
+      hanger.anchor.set(0.5, 0.5)
+      hanger.scale.set(0.22)
+      hanger.x = app.screen.width / 2
+      hanger.y = app.screen.height / 2
+      base.x = app.screen.width / 2.55
+      base.y = hanger.y - 200
       if (mech.base.class === 'Heavy Mech') {
         console.log(base.scale)
         base.scale.set(1.5)
@@ -86,16 +107,17 @@ class Hanger extends Component {
       //   app.stage.addChild(armor)
 
       // TEXT
+
       let attackText = new PIXI.Text(`DMG:${attack}`, {
-        fontFamily: 'Arial',
+        fontFamily: 'helvetica',
         fontSize: 36
       })
       let defenseText = new PIXI.Text(`DEF:${defense}`, {
-        fontFamily: 'Arial',
+        fontFamily: 'helvetica',
         fontSize: 36
       })
       let levelText = new PIXI.Text(`LVL:${level}`, {
-        fontFamily: 'Arial',
+        fontFamily: 'helvetica',
         fontSize: 36
       })
       app.stage.addChild(defenseText)
@@ -103,6 +125,32 @@ class Hanger extends Component {
       app.stage.addChild(levelText)
       defenseText.y = 50
       levelText.y = 100
+      attackText.x = app.screen.width / 2.7
+      levelText.x = app.screen.width / 2.7
+      defenseText.x = app.screen.width / 2.7
+
+      // buttons
+      const armory = new PIXI.Sprite.fromImage('./assets/format/armory.png')
+      armory.scale.set(0.4)
+      armory.interactive = true
+      armory.buttonMode = true
+      armory.on('click', goArmory)
+      armory.on('touchend', goArmory)
+      app.stage.addChild(armory)
+      armory.anchor.set(0.5, 0.5)
+      armory.y = app.screen.width + 100
+      armory.x = app.screen.width / 2
+
+      const scan = new PIXI.Sprite.fromImage('./assets/format/scan.png')
+      scan.scale.set(0.4)
+      scan.interactive = true
+      scan.buttonMode = true
+      scan.on('click', goScan)
+      scan.on('touchend', goScan)
+      app.stage.addChild(scan)
+      scan.anchor.set(0.5, 0.5)
+      scan.y = app.screen.width + 200
+      scan.x = app.screen.width / 2
       console.log('setup finished')
     })
 

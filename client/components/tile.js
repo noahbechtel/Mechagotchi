@@ -6,8 +6,7 @@ import { updateMech } from '../store/mech'
 const Tile = props => {
   const part = props.part
 
-  const handleCLick = () => {
-    console.log(part.id)
+  const handleCLick = async () => {
     const {
       armorId,
       baseId,
@@ -17,7 +16,6 @@ const Tile = props => {
       level
     } = props.mech
     let newMech
-    console.log(history.location.pathname)
     switch (history.location.pathname) {
       case '/left':
         newMech = {
@@ -28,7 +26,7 @@ const Tile = props => {
           rightWeaponId,
           level
         }
-        props.updateMech(newMech)
+        await props.updateMech(newMech)
         break
       case '/right':
         newMech = {
@@ -39,7 +37,7 @@ const Tile = props => {
           rightWeaponId: part.id,
           level
         }
-        props.updateMech(newMech)
+        await props.updateMech(newMech)
         break
       case '/armor':
         newMech = {
@@ -50,7 +48,7 @@ const Tile = props => {
           rightWeaponId,
           level
         }
-        props.updateMech(newMech)
+        await props.updateMech(newMech)
         break
       case '/base':
         newMech = {
@@ -61,7 +59,7 @@ const Tile = props => {
           rightWeaponId,
           level
         }
-        props.updateMech(newMech)
+        await props.updateMech(newMech)
         break
 
       default:
@@ -76,21 +74,41 @@ const Tile = props => {
     >
       <div
         className={
-          part.rarity > 3
-            ? 'legendary'
-            : part.rarity === 3
-              ? 'rare'
-              : part.rarity === 2
-                ? 'uncommon'
-                : 'common'
+          history.location.pathname === '/left' &&
+          props.mech.leftWeapon.id === props.part.id
+            ? 'on'
+            : history.location.pathname === '/right' &&
+              props.mech.rightWeapon.id === props.part.id
+              ? 'on'
+              : history.location.pathname === '/base' &&
+              props.mech.base.id === props.part.id
+                ? 'on'
+                : history.location.pathname === '/armor' &&
+              props.mech.armor.id === props.part.id
+                  ? 'on'
+                  : 'off'
         }
       >
-        <img className='tileImg' src={part.imgUrl} />
-        <h3>{part.name}</h3>
-        <p>{part.class ? part.class : ''}</p>
-        <h4>
-          {part.damage ? `Attack: ${part.damage}` : `Defense: ${part.defense}`}
-        </h4>
+        <div
+          className={
+            part.rarity > 3
+              ? 'legendary'
+              : part.rarity === 3
+                ? 'rare'
+                : part.rarity === 2
+                  ? 'uncommon'
+                  : 'common'
+          }
+        >
+          <img className='tileImg' src={part.imgUrl} />
+          <h3>{part.name}</h3>
+          <p>{part.class ? part.class : ''}</p>
+          <h4>
+            {part.damage
+              ? `Attack: ${part.damage}`
+              : `Defense: ${part.defense}`}
+          </h4>
+        </div>
       </div>
     </div>
   )

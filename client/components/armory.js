@@ -4,13 +4,44 @@ import { Link } from 'react-router-dom'
 import { withRouter, Route, Switch } from 'react-router-dom'
 import Multiview from './multiview'
 
-const Armory = () => {
+const Armory = props => {
   return (
-    <div>
-      <Link to='/left'>Left Arms</Link>
-      <Link to='/right'>Right Arms</Link>
-      <Link to='/base'>Mechs</Link>
-      <Link to='/armor'>Armor</Link>
+    <div className='hanger'>
+      <img
+        className='back'
+        src='./assets/format/left.png'
+        onClick={() => {
+          props.history.push('/left')
+        }}
+      />
+      <img
+        className='back'
+        src='./assets/format/right.png'
+        onClick={() => {
+          props.history.push('/right')
+        }}
+      />
+      <img
+        className='back'
+        src='./assets/format/mechs.png'
+        onClick={() => {
+          props.history.push('/base')
+        }}
+      />
+      <img
+        className='back'
+        src='./assets/format/armors.png'
+        onClick={() => {
+          props.history.push('/armor')
+        }}
+      />
+      <img
+        className='back'
+        src='./assets/format/back.png'
+        onClick={() => {
+          props.history.push('/hanger')
+        }}
+      />
     </div>
   )
 }
