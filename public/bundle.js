@@ -1029,7 +1029,7 @@ function (_Component) {
         className: "hanger"
       }, _react["default"].createElement("img", {
         className: "back",
-        src: "./assets/format/confirm.png",
+        src: "./assets/format/back.png",
         onClick: function onClick() {
           _history["default"].push('/hanger');
         }

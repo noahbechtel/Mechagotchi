@@ -124,7 +124,7 @@ class Camera extends Component {
         <div className='hanger'>
           <img
             className='back'
-            src='./assets/format/confirm.png'
+            src='./assets/format/back.png'
             onClick={() => {
               history.push('/hanger')
             }}

@@ -39,13 +39,14 @@ form div {
 }
 .catalog{
   display:flex;
+  flex-flow: wrap;
   
 }
 .tile{
   border: 2px solid #135077;
   margin: 1%;
   display: flex;
-  width: 50%;
+  width: 47%;
   height: 200px;
   background-color: #8495a5;
   justify-content: center;
@@ -57,7 +58,7 @@ form div {
 .bigTile{
   border: 2px solid #135077;
   display: flex;
-  width: 50%;
+  width: 47%;
   margin: 1%;
   height: 200px;
   background-color: #8495a5;
@@ -72,7 +73,7 @@ form div {
 .bigTileOn{
   border: 2px solid #ffffff;
   display: flex;
-  width: 50%;
+  width: 47%;
   margin: 1%;
   height: 200px;
   background-color: #8495a5;
