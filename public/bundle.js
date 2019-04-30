@@ -110,7 +110,7 @@ var _navbar = _interopRequireDefault(__webpack_require__(/*! ./components/navbar
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var App = function App() {
-  return _react["default"].createElement("div", null, _react["default"].createElement(_routes["default"], null), _react["default"].createElement(_navbar["default"], null));
+  return _react["default"].createElement("div", null, _react["default"].createElement(_routes["default"], null));
 };
 
 var _default = App;
@@ -145,16 +145,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
-var Armory = function Armory() {
-  return _react["default"].createElement("div", null, _react["default"].createElement(_reactRouterDom.Link, {
-    to: "/left"
-  }, "Left Arms"), _react["default"].createElement(_reactRouterDom.Link, {
-    to: "/right"
-  }, "Right Arms"), _react["default"].createElement(_reactRouterDom.Link, {
-    to: "/base"
-  }, "Mechs"), _react["default"].createElement(_reactRouterDom.Link, {
-    to: "/armor"
-  }, "Armor"));
+var Armory = function Armory(props) {
+  return _react["default"].createElement("div", {
+    className: "hanger"
+  }, _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/left.png",
+    onClick: function onClick() {
+      props.history.push('/left');
+    }
+  }), _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/right.png",
+    onClick: function onClick() {
+      props.history.push('/right');
+    }
+  }), _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/mechs.png",
+    onClick: function onClick() {
+      props.history.push('/base');
+    }
+  }), _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/armors.png",
+    onClick: function onClick() {
+      props.history.push('/armor');
+    }
+  }), _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/back.png",
+    onClick: function onClick() {
+      props.history.push('/hanger');
+    }
+  }));
 };
 
 var mapState = function mapState(state) {
@@ -1077,7 +1101,9 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/index.js"));
 
-var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
@@ -1118,10 +1144,18 @@ function (_Component) {
       var attack = mech.leftWeapon.damage + mech.rightWeapon.damage;
       var level = mech.level; // Setup
 
+      var goScan = function goScan() {
+        _history["default"].push('/scan');
+      };
+
+      var goArmory = function goArmory() {
+        _history["default"].push('/armory');
+      };
+
       var app = new PIXI.Application({
         width: window.screen.availWidth,
         // default: 800
-        height: window.screen.availHeight * 0.7,
+        height: window.screen.availHeight,
         // default: 600
         antialias: true,
         // default: false
@@ -1138,7 +1172,7 @@ function (_Component) {
 
       var assetAddresses;
       assetAddresses = [//   mech.armor.imgUrl,
-      mech.base.imgUrl, mech.leftWeapon.imgUrl];
+      mech.base.imgUrl, mech.leftWeapon.imgUrl, './assets/format/logo.png', './assets/format/hanger.png'];
 
       if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
         assetAddresses.push(mech.rightWeapon.imgUrl);
@@ -1146,6 +1180,8 @@ function (_Component) {
 
       console.log(assetAddresses);
       PIXI.loader.add(assetAddresses).load(function () {
+        var logo = new PIXI.Sprite(PIXI.loader.resources['./assets/format/logo.png'].texture);
+        var hanger = new PIXI.Sprite(PIXI.loader.resources['./assets/format/hanger.png'].texture);
         var base = new PIXI.Sprite(PIXI.loader.resources[mech.base.imgUrl].texture);
         var leftWeapon = new PIXI.Sprite(PIXI.loader.resources[mech.leftWeapon.imgUrl].texture);
         var rightWeapon;
@@ -1159,11 +1195,20 @@ function (_Component) {
         // )
 
 
-        app.stage.addChild(base);
+        app.stage.addChild(hanger);
+        app.stage.addChild(base); // app.stage.addChild(logo)
+
         app.stage.addChild(leftWeapon);
-        app.stage.addChild(rightWeapon);
-        base.x = app.screen.width / 2;
-        base.y = 100;
+        app.stage.addChild(rightWeapon); // logo.scale.set(0.25)
+
+        logo.x = app.screen.width - 400;
+        logo.y = 10;
+        hanger.anchor.set(0.5, 0.5);
+        hanger.scale.set(0.22);
+        hanger.x = app.screen.width / 2;
+        hanger.y = app.screen.height / 2;
+        base.x = app.screen.width / 2.55;
+        base.y = hanger.y - 200;
 
         if (mech.base["class"] === 'Heavy Mech') {
           console.log(base.scale);
@@ -1182,15 +1227,15 @@ function (_Component) {
         // TEXT
 
         var attackText = new PIXI.Text("DMG:".concat(attack), {
-          fontFamily: 'Arial',
+          fontFamily: 'helvetica',
           fontSize: 36
         });
         var defenseText = new PIXI.Text("DEF:".concat(defense), {
-          fontFamily: 'Arial',
+          fontFamily: 'helvetica',
           fontSize: 36
         });
         var levelText = new PIXI.Text("LVL:".concat(level), {
-          fontFamily: 'Arial',
+          fontFamily: 'helvetica',
           fontSize: 36
         });
         app.stage.addChild(defenseText);
@@ -1198,6 +1243,30 @@ function (_Component) {
         app.stage.addChild(levelText);
         defenseText.y = 50;
         levelText.y = 100;
+        attackText.x = app.screen.width / 2.7;
+        levelText.x = app.screen.width / 2.7;
+        defenseText.x = app.screen.width / 2.7; // buttons
+
+        var armory = new PIXI.Sprite.fromImage('./assets/format/armory.png');
+        armory.scale.set(0.4);
+        armory.interactive = true;
+        armory.buttonMode = true;
+        armory.on('click', goArmory);
+        armory.on('touchend', goArmory);
+        app.stage.addChild(armory);
+        armory.anchor.set(0.5, 0.5);
+        armory.y = app.screen.width + 100;
+        armory.x = app.screen.width / 2;
+        var scan = new PIXI.Sprite.fromImage('./assets/format/scan.png');
+        scan.scale.set(0.4);
+        scan.interactive = true;
+        scan.buttonMode = true;
+        scan.on('click', goScan);
+        scan.on('touchend', goScan);
+        app.stage.addChild(scan);
+        scan.anchor.set(0.5, 0.5);
+        scan.y = app.screen.width + 200;
+        scan.x = app.screen.width / 2;
         console.log('setup finished');
       }); // Assignment
     }
@@ -1301,6 +1370,10 @@ var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_mo
 
 var _tile = _interopRequireDefault(__webpack_require__(/*! ./tile */ "./client/components/tile.js"));
 
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -1308,14 +1381,20 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var Multiview = function Multiview(props) {
   console.log(props);
   var parts = props.part;
-  return _react["default"].createElement("div", {
+  return _react["default"].createElement("div", null, _react["default"].createElement("div", {
     className: "catalog"
   }, parts.length !== 0 ? parts.map(function (part) {
     return _react["default"].createElement(_tile["default"], {
       part: part,
       key: "part.id"
     });
-  }) : _react["default"].createElement("p", null, "Nothing's here, dipshit"));
+  }) : _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Nothing's here, dipshit"))), _react["default"].createElement("img", {
+    className: "back",
+    src: "./assets/format/confirm.png",
+    onClick: function onClick() {
+      _history["default"].push('/armory');
+    }
+  }));
 };
 
 var _default = Multiview;
@@ -1424,85 +1503,118 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var Tile = function Tile(props) {
   var part = props.part;
 
-  var handleCLick = function handleCLick() {
-    console.log(part.id);
-    var _props$mech = props.mech,
-        armorId = _props$mech.armorId,
-        baseId = _props$mech.baseId,
-        id = _props$mech.id,
-        leftWeaponId = _props$mech.leftWeaponId,
-        rightWeaponId = _props$mech.rightWeaponId,
-        level = _props$mech.level;
-    var newMech;
-    console.log(_history["default"].location.pathname);
+  var handleCLick =
+  /*#__PURE__*/
+  function () {
+    var _ref = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee() {
+      var _props$mech, armorId, baseId, id, leftWeaponId, rightWeaponId, level, newMech;
 
-    switch (_history["default"].location.pathname) {
-      case '/left':
-        newMech = {
-          leftWeaponId: part.id,
-          armorId: armorId,
-          baseId: baseId,
-          id: id,
-          rightWeaponId: rightWeaponId,
-          level: level
-        };
-        props.updateMech(newMech);
-        break;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _props$mech = props.mech, armorId = _props$mech.armorId, baseId = _props$mech.baseId, id = _props$mech.id, leftWeaponId = _props$mech.leftWeaponId, rightWeaponId = _props$mech.rightWeaponId, level = _props$mech.level;
+              _context.t0 = _history["default"].location.pathname;
+              _context.next = _context.t0 === '/left' ? 4 : _context.t0 === '/right' ? 8 : _context.t0 === '/armor' ? 12 : _context.t0 === '/base' ? 16 : 20;
+              break;
 
-      case '/right':
-        newMech = {
-          leftWeaponId: leftWeaponId,
-          armorId: armorId,
-          baseId: baseId,
-          id: id,
-          rightWeaponId: part.id,
-          level: level
-        };
-        props.updateMech(newMech);
-        break;
+            case 4:
+              newMech = {
+                leftWeaponId: part.id,
+                armorId: armorId,
+                baseId: baseId,
+                id: id,
+                rightWeaponId: rightWeaponId,
+                level: level
+              };
+              _context.next = 7;
+              return props.updateMech(newMech);
 
-      case '/armor':
-        newMech = {
-          leftWeaponId: leftWeaponId,
-          armorId: part.id,
-          baseId: baseId,
-          id: id,
-          rightWeaponId: rightWeaponId,
-          level: level
-        };
-        props.updateMech(newMech);
-        break;
+            case 7:
+              return _context.abrupt("break", 21);
 
-      case '/base':
-        newMech = {
-          leftWeaponId: leftWeaponId,
-          armorId: armorId,
-          baseId: part.id,
-          id: id,
-          rightWeaponId: rightWeaponId,
-          level: level
-        };
-        props.updateMech(newMech);
-        break;
+            case 8:
+              newMech = {
+                leftWeaponId: leftWeaponId,
+                armorId: armorId,
+                baseId: baseId,
+                id: id,
+                rightWeaponId: part.id,
+                level: level
+              };
+              _context.next = 11;
+              return props.updateMech(newMech);
 
-      default:
-        break;
-    }
-  };
+            case 11:
+              return _context.abrupt("break", 21);
+
+            case 12:
+              newMech = {
+                leftWeaponId: leftWeaponId,
+                armorId: part.id,
+                baseId: baseId,
+                id: id,
+                rightWeaponId: rightWeaponId,
+                level: level
+              };
+              _context.next = 15;
+              return props.updateMech(newMech);
+
+            case 15:
+              return _context.abrupt("break", 21);
+
+            case 16:
+              newMech = {
+                leftWeaponId: leftWeaponId,
+                armorId: armorId,
+                baseId: part.id,
+                id: id,
+                rightWeaponId: rightWeaponId,
+                level: level
+              };
+              _context.next = 19;
+              return props.updateMech(newMech);
+
+            case 19:
+              return _context.abrupt("break", 21);
+
+            case 20:
+              return _context.abrupt("break", 21);
+
+            case 21:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function handleCLick() {
+      return _ref.apply(this, arguments);
+    };
+  }();
 
   return _react["default"].createElement("div", {
     className: part.leftArm_X ? 'bigTile' : 'tile',
     onClick: handleCLick,
     key: part.id
   }, _react["default"].createElement("div", {
+    className: _history["default"].location.pathname === '/left' && props.mech.leftWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/right' && props.mech.rightWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/base' && props.mech.base.id === props.part.id ? 'on' : _history["default"].location.pathname === '/armor' && props.mech.armor.id === props.part.id ? 'on' : 'off'
+  }, _react["default"].createElement("div", {
     className: part.rarity > 3 ? 'legendary' : part.rarity === 3 ? 'rare' : part.rarity === 2 ? 'uncommon' : 'common'
   }, _react["default"].createElement("img", {
     className: "tileImg",
     src: part.imgUrl
-  }), _react["default"].createElement("h3", null, part.name), _react["default"].createElement("p", null, part["class"] ? part["class"] : ''), _react["default"].createElement("h4", null, part.damage ? "Attack: ".concat(part.damage) : "Defense: ".concat(part.defense))));
+  }), _react["default"].createElement("h3", null, part.name), _react["default"].createElement("p", null, part["class"] ? part["class"] : ''), _react["default"].createElement("h4", null, part.damage ? "Attack: ".concat(part.damage) : "Defense: ".concat(part.defense)))));
 };
 
 var mapState = function mapState(state) {
@@ -1547,8 +1659,6 @@ var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ ".
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 var _hanger = _interopRequireDefault(__webpack_require__(/*! ./hanger */ "./client/components/hanger.js"));
-
-var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
 var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
 
@@ -1606,11 +1716,7 @@ function (_Component) {
     key: "render",
     value: function render() {
       var mech = this.state.mech;
-      return _react["default"].createElement("div", null, _react["default"].createElement("div", null, mech !== null ? _react["default"].createElement("div", null, _react["default"].createElement("div", null, _react["default"].createElement(_hanger["default"], null)), _react["default"].createElement(_reactRouterDom.Link, {
-        to: "/armory"
-      }, "Armory"), _react["default"].createElement(_reactRouterDom.Link, {
-        to: "/scan"
-      }, "Scan")) : _react["default"].createElement("div", null)));
+      return _react["default"].createElement("div", null, _react["default"].createElement("div", null, mech !== null ? _react["default"].createElement("div", null, _react["default"].createElement(_hanger["default"], null)) : _react["default"].createElement("div", null)));
     }
   }]);
 
@@ -2288,6 +2394,8 @@ exports.fetchMech = exports.updateMech = exports.setMech = void 0;
 
 var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2378,7 +2486,8 @@ var fetchMech = function fetchMech() {
               case 8:
                 _context2.prev = 8;
                 _context2.t0 = _context2["catch"](0);
-                console.error(_context2.t0);
+
+                _history["default"].push('/login');
 
               case 11:
               case "end":
