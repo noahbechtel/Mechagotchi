@@ -92,6 +92,8 @@ class Hanger extends Component {
       if (mech.base.class === 'Heavy Mech') {
         console.log(base.scale)
         base.scale.set(1.5)
+        base.x = app.screen.width / 4.4
+        base.y = hanger.y - 275
       } else {
         base.scale.set(1)
       }
@@ -109,22 +111,22 @@ class Hanger extends Component {
       // TEXT
 
       let attackText = new PIXI.Text(`DMG:${attack}`, {
-        fontFamily: 'helvetica',
+        fontFamily: 'courier',
         fontSize: 36
       })
       let defenseText = new PIXI.Text(`DEF:${defense}`, {
-        fontFamily: 'helvetica',
+        fontFamily: 'courier',
         fontSize: 36
       })
       let levelText = new PIXI.Text(`LVL:${level}`, {
-        fontFamily: 'helvetica',
+        fontFamily: 'courier',
         fontSize: 36
       })
       app.stage.addChild(defenseText)
       app.stage.addChild(attackText)
       app.stage.addChild(levelText)
-      defenseText.y = 50
-      levelText.y = 100
+      defenseText.y = 30
+      levelText.y = 60
       attackText.x = app.screen.width / 2.7
       levelText.x = app.screen.width / 2.7
       defenseText.x = app.screen.width / 2.7

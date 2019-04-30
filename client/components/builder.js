@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as PIXI from 'pixi.js'
+import me, { getInv } from '../store/user'
 
 class Builder extends Component {
   constructor () {
@@ -8,6 +9,7 @@ class Builder extends Component {
   }
 
   componentDidMount () {
+    this.props.getInv(this.props.user.inventoryId)
     let app = new PIXI.Application({
       width: window.screen.availWidth, // default: 800
       height: window.screen.availHeight * 0.7, // default: 600
@@ -68,6 +70,16 @@ const mapState = state => {
     pixi: state.info.pixi
   }
 }
+const mapDispatch = dispatch => {
+  return {
+    getInv (id) {
+      dispatch(getInv(id))
+    }
+  }
+}
 
-const ConnectedBuilder = connect(mapState)(Builder)
+const ConnectedBuilder = connect(
+  mapState,
+  mapDispatch
+)(Builder)
 export default ConnectedBuilder

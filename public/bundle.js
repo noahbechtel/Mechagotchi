@@ -703,6 +703,8 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/index.js"));
 
+var _user = _interopRequireWildcard(__webpack_require__(/*! ../store/user */ "./client/store/user.js"));
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -739,6 +741,7 @@ function (_Component) {
     value: function componentDidMount() {
       var _this = this;
 
+      this.props.getInv(this.props.user.inventoryId);
       var app = new PIXI.Application({
         width: window.screen.availWidth,
         // default: 800
@@ -804,7 +807,15 @@ var mapState = function mapState(state) {
   };
 };
 
-var ConnectedBuilder = (0, _reactRedux.connect)(mapState)(Builder);
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    getInv: function getInv(id) {
+      dispatch((0, _user.getInv)(id));
+    }
+  };
+};
+
+var ConnectedBuilder = (0, _reactRedux.connect)(mapState, mapDispatch)(Builder);
 var _default = ConnectedBuilder;
 exports["default"] = _default;
 
@@ -1222,6 +1233,8 @@ function (_Component) {
         if (mech.base["class"] === 'Heavy Mech') {
           console.log(base.scale);
           base.scale.set(1.5);
+          base.x = app.screen.width / 4.4;
+          base.y = hanger.y - 275;
         } else {
           base.scale.set(1);
         }
@@ -1236,22 +1249,22 @@ function (_Component) {
         // TEXT
 
         var attackText = new PIXI.Text("DMG:".concat(attack), {
-          fontFamily: 'helvetica',
+          fontFamily: 'courier',
           fontSize: 36
         });
         var defenseText = new PIXI.Text("DEF:".concat(defense), {
-          fontFamily: 'helvetica',
+          fontFamily: 'courier',
           fontSize: 36
         });
         var levelText = new PIXI.Text("LVL:".concat(level), {
-          fontFamily: 'helvetica',
+          fontFamily: 'courier',
           fontSize: 36
         });
         app.stage.addChild(defenseText);
         app.stage.addChild(attackText);
         app.stage.addChild(levelText);
-        defenseText.y = 50;
-        levelText.y = 100;
+        defenseText.y = 30;
+        levelText.y = 60;
         attackText.x = app.screen.width / 2.7;
         levelText.x = app.screen.width / 2.7;
         defenseText.x = app.screen.width / 2.7; // buttons
@@ -2550,7 +2563,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = _default;
-exports.logout = exports.auth = exports.me = void 0;
+exports.getInv = exports.logout = exports.auth = exports.me = void 0;
 
 var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -2576,6 +2589,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // const GET_INV = 'GET_INV'
 var GET_USER = 'GET_USER';
 var REMOVE_USER = 'REMOVE_USER';
+var GET_INV = 'GET_INV';
 /**
  * INITIAL STATE
  */
@@ -2591,6 +2605,13 @@ var getUser = function getUser(user) {
   return {
     type: GET_USER,
     user: user
+  };
+};
+
+var setInv = function setInv(inventory) {
+  return {
+    type: GET_INV,
+    inventory: inventory
   };
 };
 
@@ -2686,24 +2707,26 @@ var auth = function auth(email, password, method) {
                 return dispatch(getUser(res.data));
 
               case 13:
-                dispatch((0, _mech.fetchMech)());
+                _context2.next = 15;
+                return dispatch((0, _mech.fetchMech)());
 
+              case 15:
                 _history["default"].push('/builder');
 
-                _context2.next = 20;
+                _context2.next = 21;
                 break;
 
-              case 17:
-                _context2.prev = 17;
+              case 18:
+                _context2.prev = 18;
                 _context2.t1 = _context2["catch"](9);
                 console.error(_context2.t1);
 
-              case 20:
+              case 21:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 6], [9, 17]]);
+        }, _callee2, null, [[0, 6], [9, 18]]);
       }));
 
       return function (_x2) {
@@ -2765,22 +2788,58 @@ var logout = function logout() {
 //     console.error(err)
 //   }
 // }
-// export const setInv = id => async dispatch => {
-//   try {
-//     const res = await axios.get(`api/inventory/${id}`)
-//     dispatch(getInv(res.data))
-//     console.log(res.data)
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
 
+
+exports.logout = logout;
+
+var getInv = function getInv(id) {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref4 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee4(dispatch) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios["default"].get("api/inventory/".concat(id));
+
+              case 3:
+                res = _context4.sent;
+                dispatch(setInv(res.data));
+                console.log(res.data);
+                _context4.next = 11;
+                break;
+
+              case 8:
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
+                console.error(_context4.t0);
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 8]]);
+      }));
+
+      return function (_x4) {
+        return _ref4.apply(this, arguments);
+      };
+    }()
+  );
+};
 /**
  * REDUCER
  */
 
 
-exports.logout = logout;
+exports.getInv = getInv;
 
 function _default() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultUser;
@@ -2789,8 +2848,11 @@ function _default() {
   switch (action.type) {
     case GET_USER:
       return _objectSpread({}, action.user, state);
-    // case GET_MECH:
-    //   return { mech: action.mech, ...state }
+
+    case GET_INV:
+      return _objectSpread({
+        inventory: action.inventory
+      }, state);
 
     case REMOVE_USER:
       return defaultUser;

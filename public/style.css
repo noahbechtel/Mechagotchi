@@ -149,10 +149,9 @@ form div {
   border: 2px solid #ffffff;
   margin: 1%;
   display: flex;
-  width: 50%;
+  width: 47%;
   height: 200px;
   line-height: 4px;
-
   background-color: #8495a5;
   justify-content: center;
   align-items: center;

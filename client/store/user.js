@@ -8,6 +8,7 @@ import { fetchStock } from './info'
 // const GET_INV = 'GET_INV'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const GET_INV = 'GET_INV'
 
 /**
  * INITIAL STATE
@@ -20,6 +21,8 @@ const defaultUser = {}
 // const getInv = inv => ({ type: GET_INV, inv })
 // export const setMech = mech => ({ type: GET_MECH, mech })
 const getUser = user => ({ type: GET_USER, user })
+const setInv = inventory => ({ type: GET_INV, inventory })
+
 const removeUser = () => ({ type: REMOVE_USER })
 /**
  * THUNK CREATORS
@@ -44,8 +47,7 @@ export const auth = (email, password, method) => async dispatch => {
   try {
     console.log(res.data)
     await dispatch(getUser(res.data))
-
-    dispatch(fetchMech())
+    await dispatch(fetchMech())
     history.push('/builder')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -71,15 +73,15 @@ export const logout = () => async dispatch => {
 //     console.error(err)
 //   }
 // }
-// export const setInv = id => async dispatch => {
-//   try {
-//     const res = await axios.get(`api/inventory/${id}`)
-//     dispatch(getInv(res.data))
-//     console.log(res.data)
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
+export const getInv = id => async dispatch => {
+  try {
+    const res = await axios.get(`api/inventory/${id}`)
+    dispatch(setInv(res.data))
+    console.log(res.data)
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 /**
  * REDUCER
@@ -88,8 +90,8 @@ export default function (state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
       return { ...action.user, ...state }
-    // case GET_MECH:
-    //   return { mech: action.mech, ...state }
+    case GET_INV:
+      return { inventory: action.inventory, ...state }
     case REMOVE_USER:
       return defaultUser
     default:
