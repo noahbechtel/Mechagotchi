@@ -38,35 +38,57 @@ form div {
   
 }
 .catalog{
-  display:flex
+  display:flex;
   
 }
 .tile{
   border: 2px solid #135077;
   margin: 1%;
   display: flex;
-  width: 200px;
+  width: 50%;
   height: 200px;
   background-color: #8495a5;
   justify-content: center;
   align-items: center;
   text-align: center;
-  line-height: 4px;
 
 }
 
 .bigTile{
+  border: 2px solid #135077;
   display: flex;
-  width: 200px;
+  width: 50%;
+  margin: 1%;
   height: 200px;
   background-color: #8495a5;
   justify-content: center;
   align-items: center;
   text-align: center;
   line-height: 4px;
+  align-items: center;
+
 
 }
+.bigTileOn{
+  border: 2px solid #ffffff;
+  display: flex;
+  width: 50%;
+  margin: 1%;
+  height: 200px;
+  background-color: #8495a5;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 4px;
+  align-items: center;
+
+
+}
+
 .bigTile img {
+  height: 6em;
+}
+.bigTileOn img {
   height: 6em;
 }
   .legendary h3 {
@@ -123,4 +145,12 @@ form div {
 }
 .on{
   border: 2px solid #ffffff;
+  margin: 1%;
+  display: flex;
+  width: 50%;
+  height: 200px;
+  background-color: #8495a5;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }

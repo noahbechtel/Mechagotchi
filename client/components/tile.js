@@ -68,47 +68,43 @@ const Tile = props => {
   }
   return (
     <div
-      className={part.leftArm_X ? 'bigTile' : 'tile'}
+      className={
+        history.location.pathname === '/left' &&
+        props.mech.leftWeapon.id === props.part.id
+          ? 'on'
+          : history.location.pathname === '/right' &&
+            props.mech.rightWeapon.id === props.part.id
+            ? 'on'
+            : history.location.pathname === '/base' &&
+            props.mech.base.id === props.part.id
+              ? 'bigTileOn'
+              : history.location.pathname === '/armor' &&
+            props.mech.armor.id === props.part.id
+                ? 'on'
+                : part.leftArm_X
+                  ? 'bigTile'
+                  : 'tile'
+      }
       onClick={handleCLick}
       key={part.id}
     >
       <div
         className={
-          history.location.pathname === '/left' &&
-          props.mech.leftWeapon.id === props.part.id
-            ? 'on'
-            : history.location.pathname === '/right' &&
-              props.mech.rightWeapon.id === props.part.id
-              ? 'on'
-              : history.location.pathname === '/base' &&
-              props.mech.base.id === props.part.id
-                ? 'on'
-                : history.location.pathname === '/armor' &&
-              props.mech.armor.id === props.part.id
-                  ? 'on'
-                  : 'off'
+          part.rarity > 3
+            ? 'legendary'
+            : part.rarity === 3
+              ? 'rare'
+              : part.rarity === 2
+                ? 'uncommon'
+                : 'common'
         }
       >
-        <div
-          className={
-            part.rarity > 3
-              ? 'legendary'
-              : part.rarity === 3
-                ? 'rare'
-                : part.rarity === 2
-                  ? 'uncommon'
-                  : 'common'
-          }
-        >
-          <img className='tileImg' src={part.imgUrl} />
-          <h3>{part.name}</h3>
-          <p>{part.class ? part.class : ''}</p>
-          <h4>
-            {part.damage
-              ? `Attack: ${part.damage}`
-              : `Defense: ${part.defense}`}
-          </h4>
-        </div>
+        <img className='tileImg' src={part.imgUrl} />
+        <h3>{part.name}</h3>
+        <p>{part.class ? part.class : ''}</p>
+        <h4>
+          {part.damage ? `Attack: ${part.damage}` : `Defense: ${part.defense}`}
+        </h4>
       </div>
     </div>
   )

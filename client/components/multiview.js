@@ -19,13 +19,15 @@ const Multiview = props => {
           </div>
         )}
       </div>
-      <img
-        className='back'
-        src='./assets/format/confirm.png'
-        onClick={() => {
-          history.push('/armory')
-        }}
-      />
+      <div className='hanger'>
+        <img
+          className='back'
+          src='./assets/format/confirm.png'
+          onClick={() => {
+            history.push('/armory')
+          }}
+        />
+      </div>
     </div>
   )
 }

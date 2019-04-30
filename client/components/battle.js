@@ -61,6 +61,7 @@ class Battle extends Component {
         )
       }
       let incomingMech
+      console.log(incoming)
       let right, left, ar, bs
       switch (incoming.type) {
         case 'armor':
@@ -139,7 +140,7 @@ class Battle extends Component {
         app.stage.addChild(base)
         app.stage.addChild(leftWeapon)
         app.stage.addChild(rightWeapon)
-        base.x = window.screen.availWidth * 0.07
+        base.x = app.screen.width * 0.07
         base.y = 150
         leftWeapon.anchor.set(0.5, 1)
         leftWeapon.x = base.x + mech.base.rightArm_X
@@ -154,7 +155,7 @@ class Battle extends Component {
         app.stage.addChild(incomingMech.base)
         app.stage.addChild(incomingMech.leftWeapon)
         app.stage.addChild(incomingMech.rightWeapon)
-        incomingMech.base.x = window.screen.availWidth * 0.25
+        incomingMech.base.x = app.screen.width * 0.25
         incomingMech.base.y = 50
         incomingMech.leftWeapon.anchor.set(0.5, 1)
 
@@ -189,7 +190,7 @@ class Battle extends Component {
         app.stage.addChild(fight)
         app.stage.addChild(enemyHp)
         app.stage.addChild(playerHp)
-        fight.x = window.screen.availWidth * 0.12
+        fight.x = app.screen.width * 0.12
         fight.y = 150
         enemyHp.y = incomingMech.base.y + 15
         enemyHp.x = incomingMech.base.x + 100
@@ -211,7 +212,7 @@ class Battle extends Component {
                 fontSize: 36
               })
               app.stage.addChild(winner)
-              winner.x = window.screen.availWidth * 0.07
+              winner.x = app.screen.width * 0.07
               winner.y = 150
               winner.on('click', () => {
                 this.props.history.push('/hanger')
@@ -248,10 +249,18 @@ class Battle extends Component {
           while (currentTime + miliseconds >= new Date().getTime()) {}
         }
       } else {
-        this.props.addPart(incoming)
+        // const part = new PIXI.Sprite.fromImage(incoming.imgUrl)
         app.stage.addChild(incomingMech)
-        incomingMech.x = 200
-        incomingMech.y = 200
+        incomingMech.x = app.screen.width / 2
+        incomingMech.y = app.screen.height / 2
+        incomingMech.interactive = true
+        incomingMech.buttonMode = true
+        incomingMech.on('click', () => {
+          this.props.addPart(incoming)
+        })
+        incomingMech.on('touchend', () => {
+          this.props.addPart(incoming)
+        })
       }
 
       // TEXT

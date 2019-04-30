@@ -406,6 +406,7 @@ function (_Component) {
         }
 
         var incomingMech;
+        console.log(incoming);
         var right, left, ar, bs;
 
         switch (incoming.type) {
@@ -480,7 +481,7 @@ function (_Component) {
           app.stage.addChild(base);
           app.stage.addChild(leftWeapon);
           app.stage.addChild(rightWeapon);
-          base.x = window.screen.availWidth * 0.07;
+          base.x = app.screen.width * 0.07;
           base.y = 150;
           leftWeapon.anchor.set(0.5, 1);
           leftWeapon.x = base.x + mech.base.rightArm_X;
@@ -495,7 +496,7 @@ function (_Component) {
           app.stage.addChild(incomingMech.base);
           app.stage.addChild(incomingMech.leftWeapon);
           app.stage.addChild(incomingMech.rightWeapon);
-          incomingMech.base.x = window.screen.availWidth * 0.25;
+          incomingMech.base.x = app.screen.width * 0.25;
           incomingMech.base.y = 50;
           incomingMech.leftWeapon.anchor.set(0.5, 1);
           incomingMech.leftWeapon.x = incomingMech.base.x + incoming.base.rightArm_X;
@@ -523,7 +524,7 @@ function (_Component) {
           app.stage.addChild(fight);
           app.stage.addChild(enemyHp);
           app.stage.addChild(playerHp);
-          fight.x = window.screen.availWidth * 0.12;
+          fight.x = app.screen.width * 0.12;
           fight.y = 150;
           enemyHp.y = incomingMech.base.y + 15;
           enemyHp.x = incomingMech.base.x + 100;
@@ -550,7 +551,7 @@ function (_Component) {
                   fontSize: 36
                 });
                 app.stage.addChild(winner);
-                winner.x = window.screen.availWidth * 0.07;
+                winner.x = app.screen.width * 0.07;
                 winner.y = 150;
                 winner.on('click', function () {
                   _this.props.history.push('/hanger');
@@ -590,11 +591,18 @@ function (_Component) {
             while (currentTime + miliseconds >= new Date().getTime()) {}
           };
         } else {
-          _this.props.addPart(incoming);
-
+          // const part = new PIXI.Sprite.fromImage(incoming.imgUrl)
           app.stage.addChild(incomingMech);
-          incomingMech.x = 200;
-          incomingMech.y = 200;
+          incomingMech.x = app.screen.width / 2;
+          incomingMech.y = app.screen.height / 2;
+          incomingMech.interactive = true;
+          incomingMech.buttonMode = true;
+          incomingMech.on('click', function () {
+            _this.props.addPart(incoming);
+          });
+          incomingMech.on('touchend', function () {
+            _this.props.addPart(incoming);
+          });
         } // TEXT
 
 
@@ -1207,7 +1215,7 @@ function (_Component) {
         hanger.scale.set(0.22);
         hanger.x = app.screen.width / 2;
         hanger.y = app.screen.height / 2;
-        base.x = app.screen.width / 2.55;
+        base.x = app.screen.width / 2.65;
         base.y = hanger.y - 200;
 
         if (mech.base["class"] === 'Heavy Mech') {
@@ -1388,13 +1396,15 @@ var Multiview = function Multiview(props) {
       part: part,
       key: "part.id"
     });
-  }) : _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Nothing's here, dipshit"))), _react["default"].createElement("img", {
+  }) : _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Nothing's here, dipshit"))), _react["default"].createElement("div", {
+    className: "hanger"
+  }, _react["default"].createElement("img", {
     className: "back",
     src: "./assets/format/confirm.png",
     onClick: function onClick() {
       _history["default"].push('/armory');
     }
-  }));
+  })));
 };
 
 var _default = Multiview;
@@ -1604,17 +1614,15 @@ var Tile = function Tile(props) {
   }();
 
   return _react["default"].createElement("div", {
-    className: part.leftArm_X ? 'bigTile' : 'tile',
+    className: _history["default"].location.pathname === '/left' && props.mech.leftWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/right' && props.mech.rightWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/base' && props.mech.base.id === props.part.id ? 'bigTileOn' : _history["default"].location.pathname === '/armor' && props.mech.armor.id === props.part.id ? 'on' : part.leftArm_X ? 'bigTile' : 'tile',
     onClick: handleCLick,
     key: part.id
-  }, _react["default"].createElement("div", {
-    className: _history["default"].location.pathname === '/left' && props.mech.leftWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/right' && props.mech.rightWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/base' && props.mech.base.id === props.part.id ? 'on' : _history["default"].location.pathname === '/armor' && props.mech.armor.id === props.part.id ? 'on' : 'off'
   }, _react["default"].createElement("div", {
     className: part.rarity > 3 ? 'legendary' : part.rarity === 3 ? 'rare' : part.rarity === 2 ? 'uncommon' : 'common'
   }, _react["default"].createElement("img", {
     className: "tileImg",
     src: part.imgUrl
-  }), _react["default"].createElement("h3", null, part.name), _react["default"].createElement("p", null, part["class"] ? part["class"] : ''), _react["default"].createElement("h4", null, part.damage ? "Attack: ".concat(part.damage) : "Defense: ".concat(part.defense)))));
+  }), _react["default"].createElement("h3", null, part.name), _react["default"].createElement("p", null, part["class"] ? part["class"] : ''), _react["default"].createElement("h4", null, part.damage ? "Attack: ".concat(part.damage) : "Defense: ".concat(part.defense))));
 };
 
 var mapState = function mapState(state) {
