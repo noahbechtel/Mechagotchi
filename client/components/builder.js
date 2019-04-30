@@ -8,7 +8,6 @@ class Builder extends Component {
   }
 
   componentDidMount () {
-    console.log('wtf')
     let app = new PIXI.Application({
       width: window.screen.availWidth, // default: 800
       height: window.screen.availHeight * 0.7, // default: 600

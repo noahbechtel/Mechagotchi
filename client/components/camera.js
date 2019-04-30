@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Quagga from 'quagga'
 import { setCode } from '../store/info'
-import Battle from './battle'
+import history from '../history'
+
 class Camera extends Component {
   constructor () {
     super()
@@ -119,6 +120,15 @@ class Camera extends Component {
       <div>
         <div className='camera'>
           <div id='cameraViewport' />
+        </div>
+        <div className='hanger'>
+          <img
+            className='back'
+            src='./assets/format/confirm.png'
+            onClick={() => {
+              history.push('/hanger')
+            }}
+          />
         </div>
       </div>
     )

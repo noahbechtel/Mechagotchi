@@ -137,12 +137,6 @@ var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_mo
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-
-var _multiview = _interopRequireDefault(__webpack_require__(/*! ./multiview */ "./client/components/multiview.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
 var Armory = function Armory(props) {
@@ -745,7 +739,6 @@ function (_Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      console.log('wtf');
       var app = new PIXI.Application({
         width: window.screen.availWidth,
         // default: 800
@@ -840,7 +833,7 @@ var _quagga = _interopRequireDefault(__webpack_require__(/*! quagga */ "./node_m
 
 var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
 
-var _battle = _interopRequireDefault(__webpack_require__(/*! ./battle */ "./client/components/battle.js"));
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -1032,6 +1025,14 @@ function (_Component) {
         className: "camera"
       }, _react["default"].createElement("div", {
         id: "cameraViewport"
+      })), _react["default"].createElement("div", {
+        className: "hanger"
+      }, _react["default"].createElement("img", {
+        className: "back",
+        src: "./assets/format/confirm.png",
+        onClick: function onClick() {
+          _history["default"].push('/hanger');
+        }
       })));
     }
   }]);
@@ -1501,7 +1502,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
@@ -1510,8 +1511,6 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 var _mech = __webpack_require__(/*! ../store/mech */ "./client/store/mech.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -1977,6 +1976,10 @@ function (_Component) {
       }), isLoggedIn && _react["default"].createElement(_reactRouterDom.Switch, null, _react["default"].createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/hanger",
+        component: _components.UserHome
+      }), _react["default"].createElement(_reactRouterDom.Route, {
+        exact: true,
+        path: "/",
         component: _components.UserHome
       }), _react["default"].createElement(_reactRouterDom.Route, {
         path: "/builder",
