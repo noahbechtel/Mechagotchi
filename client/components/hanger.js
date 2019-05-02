@@ -20,8 +20,8 @@ class Hanger extends Component {
       history.push('/armory')
     }
     let app = new PIXI.Application({
-      width: Screen.screen.availWidth - 1,
-      height: Screen.screen.availHeight - 10,
+      width: window.screen.availWidth,
+      height: window.screen.availHeight - 10,
       antialias: false,
       transparent: true,
       resolution: 0.96
@@ -29,7 +29,6 @@ class Hanger extends Component {
 
     PIXI.loader.reset()
     app.renderer.autoResize = true
-    // app.renderer.backgroundColor = 0x061639
     let element = document.getElementById('mechViewport')
     element.append(app.view)
 
@@ -47,7 +46,7 @@ class Hanger extends Component {
     if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
       assetAddresses.push(mech.rightWeapon.imgUrl)
     }
-    console.log(assetAddresses)
+
     PIXI.loader.add(assetAddresses).load(() => {
       const logo = new PIXI.Sprite(
         PIXI.loader.resources['./assets/format/logo.png'].texture
@@ -80,7 +79,6 @@ class Hanger extends Component {
       app.stage.addChild(leftWeapon)
       app.stage.addChild(rightWeapon)
 
-      // logo.scale.set(0.25)
       logo.x = app.screen.width - 400
       logo.y = 10
       hanger.anchor.set(0.5, 0.5)
@@ -151,7 +149,7 @@ class Hanger extends Component {
       scan.on('touchend', goScan)
       app.stage.addChild(scan)
       scan.anchor.set(0.5, 0.5)
-      scan.y = app.screen.width + 200
+      scan.y = app.screen.width + 225
       scan.x = app.screen.width / 2
       console.log('setup finished')
     })
@@ -175,8 +173,7 @@ const mapState = state => {
   return {
     mech: state.mech,
     user: state.user,
-    info: state.info,
-    pixi: state.info.pixi
+    info: state.info
   }
 }
 
