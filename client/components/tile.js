@@ -86,7 +86,6 @@ const Tile = props => {
                   : 'tile'
       }
       onClick={handleCLick}
-      key={part.id}
     >
       <div
         className={

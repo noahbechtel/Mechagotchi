@@ -21,10 +21,10 @@ class Hanger extends Component {
     }
     let app = new PIXI.Application({
       width: window.screen.availWidth - 1,
-      height: window.screen.availHeight - 10, // default: 600
-      antialias: false, // default: false
-      transparent: true, // default: false
-      resolution: 0.96 // default: 1
+      height: window.innerHeight,
+      antialias: false,
+      transparent: true,
+      resolution: 0.96
     })
 
     PIXI.loader.reset()

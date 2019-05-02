@@ -8,7 +8,9 @@ a {
   text-decoration: none;
 }
 .back{
-  width : 60%}
+  width: 100%;
+  padding: 8%;
+}
 label {
   display: block;
 }
@@ -40,13 +42,14 @@ form div {
 .catalog{
   display:flex;
   flex-flow: wrap;
+  justify-content: space-between;  
   
 }
 .tile{
   border: 2px solid #135077;
   margin: 1%;
   display: flex;
-  width: 47%;
+  width: 45%;
   height: 200px;
   background-color: #8495a5;
   justify-content: center;
@@ -59,7 +62,7 @@ form div {
 .bigTile{
   border: 2px solid #135077;
   display: flex;
-  width: 47%;
+  width: 45%;
   margin: 1%;
   height: 200px;
   background-color: #8495a5;
@@ -74,7 +77,7 @@ form div {
 .bigTileOn{
   border: 2px solid #ffffff;
   display: flex;
-  width: 47%;
+  width: 45%;
   margin: 1%;
   height: 200px;
   background-color: #8495a5;
@@ -149,7 +152,7 @@ form div {
   border: 2px solid #ffffff;
   margin: 1%;
   display: flex;
-  width: 47%;
+  width: 45%;
   height: 200px;
   line-height: 4px;
   background-color: #8495a5;

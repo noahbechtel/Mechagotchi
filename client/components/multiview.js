@@ -10,9 +10,7 @@ const Multiview = props => {
     <div>
       <div className='catalog'>
         {parts.length !== 0 ? (
-          parts.map(part => {
-            return <Tile part={part} key='part.id' />
-          })
+          parts.map(part => <Tile part={part} key={part.id} />)
         ) : (
           <div>
             <p>Nothing's here, dipshit</p>

@@ -1174,14 +1174,10 @@ function (_Component) {
 
       var app = new PIXI.Application({
         width: window.screen.availWidth - 1,
-        height: window.screen.availHeight - 10,
-        // default: 600
+        height: window.innerHeight,
         antialias: false,
-        // default: false
         transparent: true,
-        // default: false
-        resolution: 0.96 // default: 1
-
+        resolution: 0.96
       });
       PIXI.loader.reset();
       app.renderer.autoResize = true; // app.renderer.backgroundColor = 0x061639
@@ -1407,7 +1403,7 @@ var Multiview = function Multiview(props) {
   }, parts.length !== 0 ? parts.map(function (part) {
     return _react["default"].createElement(_tile["default"], {
       part: part,
-      key: "part.id"
+      key: part.id
     });
   }) : _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Nothing's here, dipshit"))), _react["default"].createElement("div", {
     className: "hanger"
@@ -1626,8 +1622,7 @@ var Tile = function Tile(props) {
 
   return _react["default"].createElement("div", {
     className: _history["default"].location.pathname === '/left' && props.mech.leftWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/right' && props.mech.rightWeapon.id === props.part.id ? 'on' : _history["default"].location.pathname === '/base' && props.mech.base.id === props.part.id ? 'bigTileOn' : _history["default"].location.pathname === '/armor' && props.mech.armor.id === props.part.id ? 'on' : part.leftArm_X ? 'bigTile' : 'tile',
-    onClick: handleCLick,
-    key: part.id
+    onClick: handleCLick
   }, _react["default"].createElement("div", {
     className: part.rarity > 3 ? 'legendary' : part.rarity === 3 ? 'rare' : part.rarity === 2 ? 'uncommon' : 'common'
   }, _react["default"].createElement("img", {
