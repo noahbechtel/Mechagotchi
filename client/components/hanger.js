@@ -21,7 +21,7 @@ class Hanger extends Component {
     }
     let app = new PIXI.Application({
       width: window.screen.availWidth,
-      height: window.screen.availHeight - 10,
+      height: window.screen.availHeight,
       antialias: false,
       transparent: true,
       resolution: 0.96
@@ -85,7 +85,7 @@ class Hanger extends Component {
       hanger.scale.set(0.22)
       hanger.x = app.screen.width / 2
       hanger.y = app.screen.height / 2
-      base.x = app.screen.width / 2.65
+      base.x = hanger.x - 50
       base.y = hanger.y - 200
       if (mech.base.class === 'Heavy Mech') {
         console.log(base.scale)

@@ -9,29 +9,30 @@ class Battle extends Component {
 
   componentDidMount () {
     const mech = this.props.mech
-    const defense = mech.base.defense + mech.armor.defense
-    const attack = mech.leftWeapon.damage + mech.rightWeapon.damage
-    const level = mech.level
+    // const level = mech.level
     const incoming = this.props.incoming
     console.log(incoming)
+    if (!incoming) {
+      this.props.history.push('/scan')
+    }
     // Setup
 
     let app = new PIXI.Application({
       width: window.screen.availWidth, // default: 800
-      height: window.screen.availHeight * 0.7, // default: 600
+      height: window.screen.availHeight, // default: 600
       antialias: true, // default: false
       transparent: true, // default: false
       resolution: 1 // default: 1
     })
-
+    app.renderer.plugins.interaction.interactionFrequency = 1000
     PIXI.loader.reset()
     app.renderer.autoResize = true
-    // app.renderer.backgroundColor = 0x061639
     let element = document.getElementById('mechViewport')
     element.append(app.view)
 
     // Loader
 
+    // Your Mech
     let assetAddresses
     assetAddresses = [
       mech.armor.imgUrl,
@@ -60,9 +61,9 @@ class Battle extends Component {
           PIXI.loader.resources[mech.rightWeapon.imgUrl].texture
         )
       }
-      let incomingMech
-      console.log(incoming)
-      let right, left, ar, bs
+
+      // Enemy Mech
+      let incomingMech, right, left, ar, bs
       switch (incoming.type) {
         case 'armor':
           if (incoming.imgUrl !== mech.armor.imgUrl) {
@@ -90,14 +91,15 @@ class Battle extends Component {
               PIXI.loader.resources[mech.leftWeapon.imgUrl].texture
             )
           }
+          break
         case 'base':
-          if (incoming.armor.imgUrl !== mech.armor.imgUrl) {
-            ar = new PIXI.Sprite.fromImage(incoming.imgUrl)
-          } else {
-            ar = new PIXI.Sprite(
-              PIXI.loader.resources[mech.armor.imgUrl].texture
-            )
-          }
+          // if (incoming.armor.imgUrl !== mech.armor.imgUrl) {
+          //   ar = new PIXI.Sprite.fromImage(incoming.armor.imgUrl)
+          // } else {
+          //   ar = new PIXI.Sprite(
+          //     PIXI.loader.resources[mech.armor.imgUrl].texture
+          //   )
+          // }
           if (incoming.rightWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
             right = new PIXI.Sprite.fromImage(incoming.rightWeapon.imgUrl)
           } else {
@@ -119,6 +121,7 @@ class Battle extends Component {
               PIXI.loader.resources[mech.base.imgUrl].texture
             )
           }
+
           incomingMech = {
             rightWeapon: right,
             leftWeapon: left,
@@ -134,29 +137,40 @@ class Battle extends Component {
       // const armor = new PIXI.Sprite(
       //   PIXI.loader.resources[mech.armor.imgUrl].texture
       // )
+      // End Loader
 
-      //   app.stage.addChild(armor)
+      // PIXI render
       if (incoming.base) {
-        app.stage.addChild(base)
-        app.stage.addChild(leftWeapon)
-        app.stage.addChild(rightWeapon)
-        base.x = app.screen.width * 0.07
-        base.y = 150
-        leftWeapon.anchor.set(0.5, 1)
-        leftWeapon.x = base.x + mech.base.rightArm_X
-        leftWeapon.scale.x = -1
-        leftWeapon.y = base.y + mech.base.rightArm_Y
-        rightWeapon.anchor.set(1, 0.5)
-        rightWeapon.x = base.x + mech.base.leftArm_X
-        rightWeapon.y = base.y + mech.base.leftArm_Y
-        base.tint = 0x000000
-        rightWeapon.tint = 0x000000
-        leftWeapon.tint = 0x000000
+        // app.stage.addChild(base)
+        // app.stage.addChild(leftWeapon)
+        // app.stage.addChild(rightWeapon)
+        // base.x = app.screen.width / 3
+        // base.y = app.screen.height - 80
+        // leftWeapon.anchor.set(0.5, 1)
+        // leftWeapon.x = base.x + mech.base.rightArm_X
+        // leftWeapon.scale.x = -1
+        // leftWeapon.y = base.y + mech.base.rightArm_Y
+        // rightWeapon.anchor.set(1, 0.5)
+        // rightWeapon.x = base.x + mech.base.leftArm_X
+        // rightWeapon.y = base.y + mech.base.leftArm_Y
+        // base.tint = 0x000000
+        // if (mech.base.class === 'Heavy Mech') {
+        //   base.scale.set(1.5)
+        // } else {
+        //   base.scale.set(1)
+        // }
+        // rightWeapon.tint = 0x000000
+        // leftWeapon.tint = 0x000000
         app.stage.addChild(incomingMech.base)
         app.stage.addChild(incomingMech.leftWeapon)
         app.stage.addChild(incomingMech.rightWeapon)
-        incomingMech.base.x = app.screen.width * 0.25
+        incomingMech.base.x = app.screen.width / 2 - 75
         incomingMech.base.y = 50
+        if (incoming.base.class === 'Heavy Mech') {
+          incomingMech.base.scale.set(1.5)
+        } else {
+          incomingMech.base.scale.set(1)
+        }
         incomingMech.leftWeapon.anchor.set(0.5, 1)
 
         incomingMech.leftWeapon.x =
@@ -171,83 +185,208 @@ class Battle extends Component {
           incomingMech.base.y + incoming.base.leftArm_Y
 
         let playerHealth = mech.base.defense + mech.armor.defense + 100
-        let playerAtk = mech.rightWeapon.damage + mech.leftWeapon.damage
+        const leftAttack = mech.leftWeapon.damage
+        const rightAttack = mech.rightWeapon.damage
         let enemyHealth = incoming.base.defense + 100
-        let enemyAtk = incoming.rightWeapon.damage + incoming.leftWeapon.damage
-        const fight = new PIXI.Sprite.fromImage('./assets/format/start.png')
-        fight.scale.set(0.1)
-        fight.interactive = true
-        fight.buttonMode = true
-        const playerHp = new PIXI.Text(`Health:${playerHealth}`, {
-          fontFamily: 'Arial',
-          fontSize: 36
-        })
-        const enemyHp = new PIXI.Text(`Health:${enemyHealth}`, {
-          fontFamily: 'Arial',
-          fontSize: 36
-        })
+        const enemyRightAttack = incoming.rightWeapon.damage
+        const enemyLeftAttack = incoming.leftWeapon.damage
+        let state
 
-        app.stage.addChild(fight)
-        app.stage.addChild(enemyHp)
-        app.stage.addChild(playerHp)
-        fight.x = app.screen.width * 0.12
-        fight.y = 150
-        enemyHp.y = incomingMech.base.y + 15
-        enemyHp.x = incomingMech.base.x + 100
-        playerHp.y = mech.base.y + 15
-        playerHp.x = mech.base.x + 50
+        // const fight = new PIXI.Sprite.fromImage('./assets/format/start.png')
+        // fight.scale.set(0.1)
+        // fight.interactive = true
+        // fight.buttonMode = true
+        // const playerHp = new PIXI.Text(`Health:${playerDefense}`, {
+        //   fontFamily: 'Arial',
+        //   fontSize: 36
+        // })
+        // const enemyHp = new PIXI.Text(`Health:${enemyHealth}`, {
+        //   fontFamily: 'Arial',
+        //   fontSize: 36
+        // })
+        console.log(mech)
+        // Interactive GUI
+        const leftButton = new PIXI.Sprite.fromImage(
+          './assets/format/leftButton.png'
+        )
+        leftButton.scale.set(0.2)
+        leftButton.x = 10
+        leftButton.y = app.screen.height - 120
+        app.stage.addChild(leftButton)
 
-        const onClick = () => {
-          console.log(enemyAtk, enemyHealth, playerAtk, playerHealth)
-          if (playerHealth > 0) {
-            enemyHealth = enemyHealth - playerAtk
-            if (enemyHealth < 0) {
-              console.log('dead!')
-              app.stage.removeChild(incomingMech.base),
-              app.stage.removeChild(incomingMech.rightWeapon),
-              app.stage.removeChild(incomingMech.leftWeapon)
-              this.props.addPart({ id: incoming.base.id, type: 'base' })
-              const winner = new PIXI.Text(`You Won`, {
-                fontFamily: 'Arial',
-                fontSize: 36
-              })
-              app.stage.addChild(winner)
-              winner.x = app.screen.width * 0.07
-              winner.y = 150
-              winner.on('click', () => {
-                this.props.history.push('/hanger')
-              })
+        const rightButton = new PIXI.Sprite.fromImage(
+          './assets/format/rightButton.png'
+        )
+        rightButton.scale.set(0.2)
+        rightButton.x = app.screen.width - 130
+        rightButton.y = app.screen.height - 120
+        app.stage.addChild(rightButton)
 
-              return
-            }
-            console.log('still alive!')
-            sleep(10)
-            playerHealth = playerHealth - enemyAtk
-          } else {
-            const youDied = new PIXI.Text(`You Died`, {
-              fontFamily: 'Arial',
-              fontSize: 36
-            })
-            for (var i = app.stage.children.length - 1; i >= 0; i--) {
-              app.stage.removeChild(stage.children[i])
-            }
-            app.stage.addChild(YouDied)
-            youDied.x = window.screen.availWidth * 0.07
-            youDied.y = 150
-            youDied.interactive = true
-            youDied.buttonMode = true
-            youDied.on('click', () => {
-              this.props.history.push('/hanger')
-            })
+        rightButton.interactive = true
+        rightButton.buttonMode = true
+        leftButton.interactive = true
+        leftButton.buttonMode = true
+
+        // enemy healthbar
+        const enemyHealthBar = new PIXI.Container()
+        app.stage.addChild(enemyHealthBar)
+        const enemyInnerBar = new PIXI.Graphics()
+        enemyInnerBar.beginFill(0x000000)
+        enemyInnerBar.drawRect(0, 0, 15, enemyHealth * 2)
+        enemyInnerBar.endFill()
+        enemyHealthBar.addChild(enemyInnerBar)
+
+        const enemyOuterBar = new PIXI.Graphics()
+        enemyOuterBar.beginFill(0xff3300)
+        enemyOuterBar.drawRect(0, 0, 15, enemyHealth * 2)
+        enemyOuterBar.endFill()
+        enemyHealthBar.helth = enemyOuterBar.height
+        enemyHealthBar.addChild(enemyOuterBar)
+
+        // player healthbar
+        const playerHealthBar = new PIXI.Container()
+        app.stage.addChild(playerHealthBar)
+        const playerInnerBar = new PIXI.Graphics()
+        playerInnerBar.beginFill(0x000000)
+        playerInnerBar.drawRect(0, 0, 50, playerHealth)
+        playerInnerBar.endFill()
+        playerHealthBar.addChild(playerInnerBar)
+
+        const playerOuterBar = new PIXI.Graphics()
+        playerOuterBar.beginFill(0x6b8e23)
+        playerOuterBar.drawRect(0, 0, 50, playerHealth)
+        playerOuterBar.endFill()
+        playerHealthBar.health = playerOuterBar.height
+        playerHealthBar.addChild(playerOuterBar)
+
+        enemyHealthBar.y = enemyHealth / 2 - 10
+        enemyHealthBar.x = 10
+
+        playerHealthBar.y = leftButton.y - enemyHealth - 10
+        playerHealthBar.x = app.screen.width / 2 - 25
+
+        // left cooldown
+
+        const leftCoolDown = new PIXI.Container()
+        app.stage.addChild(leftCoolDown)
+        const leftInnerBar = new PIXI.Graphics()
+        leftInnerBar.beginFill(0x000000)
+        leftInnerBar.drawRect(0, 0, 90, 150)
+        leftInnerBar.endFill()
+        leftCoolDown.addChild(leftInnerBar)
+
+        const leftOuterBar = new PIXI.Graphics()
+        leftOuterBar.beginFill(0xff3300)
+        leftOuterBar.drawRect(0, 0, 90, 0)
+        leftOuterBar.endFill()
+        leftCoolDown.heat = leftOuterBar.height
+        leftCoolDown.addChild(leftOuterBar)
+
+        leftCoolDown.y = leftButton.y - leftInnerBar.height - 10
+        leftCoolDown.x = leftButton.x + 10
+
+        // right cooldown
+
+        const rightCoolDown = new PIXI.Container()
+        app.stage.addChild(rightCoolDown)
+        const rightInnerBar = new PIXI.Graphics()
+        rightInnerBar.beginFill(0x000000)
+        rightInnerBar.drawRect(0, 0, 90, 150)
+        rightInnerBar.endFill()
+        rightCoolDown.addChild(rightInnerBar)
+
+        const rightOuterBar = new PIXI.Graphics()
+        rightOuterBar.beginFill(0xff3300)
+        rightOuterBar.drawRect(0, 0, 90, 0)
+        rightOuterBar.endFill()
+        rightCoolDown.heat = rightOuterBar.height
+        rightCoolDown.addChild(rightOuterBar)
+
+        rightCoolDown.y = rightButton.y - rightInnerBar.height - 10
+        rightCoolDown.x = rightButton.x + 10
+
+        app.ticker.add(delta => gameLoop(delta))
+
+        let buffer = 0
+        let enemyCoolBuffer = 0
+        let leftCoolBuffer = 0
+        let rightCoolBuffer = 0
+        let arm = 0
+        let frames = 0
+        const gameLoop = delta => {
+          if (playerHealth < 0 || enemyHealth < 0) {
+            app.stop()
           }
-        }
-        fight.on('click', onClick)
 
-        const sleep = miliseconds => {
-          var currentTime = new Date().getTime()
+          // if (arm === 0) {
+          //   playerHealth -= enemyLeftAttack
+          //   arm = 1
+          //   enemyCooldown = frames + 75
+          // } else {
+          //   playerHealth -= enemyRightAttack
+          //   arm = 0
+          //   enemyCooldown = frames + 75
+          // }
+          if (leftCoolBuffer === 0) {
+            if (leftCoolDown.heat > 0) {
+              leftCoolDown.heat -= 5
+              leftCoolBuffer = 33
+            }
+          } else {
+            leftCoolBuffer - 1
+          }
+          if (rightCoolBuffer === 0) {
+            if (rightCoolDown.heat > 0) {
+              rightCoolDown.heat -= 5
+              rightCoolBuffer = 33
+            }
+          } else {
+            rightCoolBuffer - 1
+          }
 
-          while (currentTime + miliseconds >= new Date().getTime()) {}
+          rightButton.on('click', () => {
+            if (buffer + 33 < frames) {
+              if (rightCoolDown.heat < 90) {
+                enemyHealth -= rightAttack
+                rightCoolDown.heat += rightAttack
+                buffer = frames
+              }
+            }
+          })
+          rightButton.on('touchend', () => {
+            if (buffer + 33 < frames) {
+              if (rightCoolDown.heat < 90) {
+                enemyHealth -= rightAttack
+                rightCoolDown.heat += rightAttack
+                buffer = frames
+              }
+            }
+          })
+          leftButton.on('click', () => {
+            if (buffer + 33 < frames) {
+              if (rightCoolDown.heat < 90) {
+                enemyHealth -= leftAttack
+                leftCoolDown.heat += leftAttack
+                buffer = frames
+              }
+            }
+          })
+          leftButton.on('touchend', () => {
+            if (buffer + 33 < frames) {
+              if (rightCoolDown.heat < 90) {
+                enemyHealth -= leftAttack
+                leftCoolDown.heat += leftAttack
+                buffer = frames
+              }
+            }
+          })
+
+          frames += 1
+          console.log(playerHealth, enemyHealth, buffer, frames)
         }
+
+        // End PIXI Render Setup
+        // game functions
       } else {
         // const part = new PIXI.Sprite.fromImage(incoming.imgUrl)
         app.stage.addChild(incomingMech)
@@ -264,23 +403,23 @@ class Battle extends Component {
       }
 
       // TEXT
-      let attackText = new PIXI.Text(`DMG:${attack}`, {
-        fontFamily: 'Arial',
-        fontSize: 36
-      })
-      let defenseText = new PIXI.Text(`DEF:${defense}`, {
-        fontFamily: 'Arial',
-        fontSize: 36
-      })
-      let levelText = new PIXI.Text(`LVL:${level}`, {
-        fontFamily: 'Arial',
-        fontSize: 36
-      })
-      app.stage.addChild(defenseText)
-      app.stage.addChild(attackText)
-      app.stage.addChild(levelText)
-      defenseText.y = 50
-      levelText.y = 100
+      // let attackText = new PIXI.Text(`DMG:${attack}`, {
+      //   fontFamily: 'Arial',
+      //   fontSize: 36
+      // })
+      // let defenseText = new PIXI.Text(`DEF:${defense}`, {
+      //   fontFamily: 'Arial',
+      //   fontSize: 36
+      // })
+      // let levelText = new PIXI.Text(`LVL:${level}`, {
+      //   fontFamily: 'Arial',
+      //   fontSize: 36
+      // })
+      // app.stage.addChild(defenseText)
+      // app.stage.addChild(attackText)
+      // app.stage.addChild(levelText)
+      // defenseText.y = 50
+      // levelText.y = 100
       console.log('setup finished')
     })
 
