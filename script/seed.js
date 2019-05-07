@@ -150,7 +150,7 @@ async function seed () {
     name: 'Scavenger Armor MkI',
     defense: 30,
     rarity: 1,
-    imgUrl: './assets/bases/ScavMkI.png'
+    imgUrl: './assets/armors/ScavMkI.png'
   })
   const mechs = await Promise.all([
     // Mechs
