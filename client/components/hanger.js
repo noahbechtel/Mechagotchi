@@ -145,7 +145,7 @@ class Hanger extends Component {
       armory.on('click', goArmory)
       armory.on('touchend', goArmory)
       app.stage.addChild(armory)
-      armory.y = app.screen.height - 180
+      armory.y = app.screen.height - 100
       armory.x = app.screen.width / 2
 
       const scan = new PIXI.Sprite.fromImage('./assets/format/scan.png')
@@ -156,7 +156,7 @@ class Hanger extends Component {
       scan.on('touchend', goScan)
       app.stage.addChild(scan)
       scan.anchor.set(0.5, 0.5)
-      scan.y = app.screen.height - 270
+      scan.y = app.screen.height - 200
       scan.x = app.screen.width / 2
       console.log('setup finished')
     })
