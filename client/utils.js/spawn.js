@@ -13,7 +13,9 @@ const spawnAlgo = (code, stock) => {
         : (type = 'armor')
 
   const stockNum = stock[type]
-  let id = Math.round(stockNum / (1 + Number(digit[5])))
+  let id = Math.round(
+    stockNum / (Number(digit[5]) === 0 ? 1 : Number(digit[5]))
+  )
 
   if (type === 'base') {
     let rightWeapon = Math.round(
