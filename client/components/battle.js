@@ -133,237 +133,348 @@ class Battle extends Component {
 
       // PIXI render
       if (incoming.base) {
-        app.stage.addChild(incomingMech.base)
-        app.stage.addChild(incomingMech.leftWeapon)
-        app.stage.addChild(incomingMech.rightWeapon)
-        incomingMech.base.x = app.screen.width / 2 - 75
-        incomingMech.base.y = 50
-        if (incoming.base.class === 'Heavy Mech') {
-          incomingMech.base.scale.set(1.5)
-        } else {
-          incomingMech.base.scale.set(1)
-        }
-        incomingMech.leftWeapon.anchor.set(0.5, 1)
+        const start = new PIXI.Sprite.fromImage('./assets/format/start.png')
+        start.anchor.set(0.5, 0.5)
+        start.scale.set(0.2)
+        app.stage.addChild(start)
+        start.interactive = true
+        start.buttonMode = true
+        start.x = app.screen.width / 2
+        start.y = app.screen.height / 2
 
-        incomingMech.leftWeapon.x =
-          incomingMech.base.x + incoming.base.rightArm_X
-        incomingMech.leftWeapon.scale.x = -1
-        incomingMech.leftWeapon.y =
-          incomingMech.base.y + incoming.base.rightArm_Y
-        incomingMech.rightWeapon.anchor.set(1, 0.5)
-        incomingMech.rightWeapon.x =
-          incomingMech.base.x + incoming.base.leftArm_X
-        incomingMech.rightWeapon.y =
-          incomingMech.base.y + incoming.base.leftArm_Y
+        let startGame = () => {
+          app.stage.removeChild(start)
+          app.stage.addChild(incomingMech.base)
+          app.stage.addChild(incomingMech.leftWeapon)
+          app.stage.addChild(incomingMech.rightWeapon)
+          incomingMech.base.anchor.set(0.5, 0.5)
+          incomingMech.base.x = app.screen.width / 2
+          incomingMech.base.y = app.screen.height / 3
+          if (incoming.base.class === 'Heavy Mech') {
+            incomingMech.base.scale.set(1.5)
+          } else {
+            incomingMech.base.scale.set(1)
+          }
+          incomingMech.leftWeapon.anchor.set(1, 0.5)
 
-        let playerHealth = mech.base.defense + mech.armor.defense + 100
-        const leftAttack = mech.leftWeapon.damage
-        const rightAttack = mech.rightWeapon.damage
-        let enemyHealth = incoming.base.defense + 100
-        const enemyRightAttack = incoming.rightWeapon.damage
-        const enemyLeftAttack = incoming.leftWeapon.damage
+          incomingMech.leftWeapon.x =
+            incomingMech.base.x + incoming.base.rightArm_X
+          incomingMech.leftWeapon.scale.x = -1
+          incomingMech.leftWeapon.y =
+            incomingMech.base.y + incoming.base.rightArm_Y
+          incomingMech.rightWeapon.anchor.set(0, 0.5)
+          incomingMech.rightWeapon.x =
+            incomingMech.base.x + incoming.base.leftArm_X
+          incomingMech.rightWeapon.y =
+            incomingMech.base.y + incoming.base.leftArm_Y
 
-        console.log(mech)
-        // Interactive GUI
-        const leftButton = new PIXI.Sprite.fromImage(
-          './assets/format/leftButton.png'
-        )
-        leftButton.scale.set(0.2)
-        leftButton.x = 10
-        leftButton.y = app.screen.height - 120
-        app.stage.addChild(leftButton)
+          let playerHealth = mech.base.defense + mech.armor.defense + 100
+          const leftAttack = mech.leftWeapon.damage
+          const rightAttack = mech.rightWeapon.damage
+          let enemyHealth = incoming.base.defense + 100
+          const enemyRightAttack = incoming.rightWeapon.damage
+          const enemyLeftAttack = incoming.leftWeapon.damage
 
-        const rightButton = new PIXI.Sprite.fromImage(
-          './assets/format/rightButton.png'
-        )
-        rightButton.scale.set(0.2)
-        rightButton.x = app.screen.width - 130
-        rightButton.y = app.screen.height - 120
-        app.stage.addChild(rightButton)
+          console.log(mech)
+          // Interactive GUI
+          const leftButton = new PIXI.Sprite.fromImage(
+            './assets/format/leftButton.png'
+          )
+          leftButton.scale.set(0.2)
+          leftButton.anchor.set(0.5, 0.5)
+          leftButton.x = app.screen.width / 2 - 150
+          leftButton.y = app.screen.height - 100
+          app.stage.addChild(leftButton)
 
-        rightButton.interactive = true
-        rightButton.buttonMode = true
-        leftButton.interactive = true
-        leftButton.buttonMode = true
+          const rightButton = new PIXI.Sprite.fromImage(
+            './assets/format/rightButton.png'
+          )
+          rightButton.scale.set(0.2)
+          rightButton.anchor.set(0.5, 0.5)
+          rightButton.x = app.screen.width / 2 + 150
+          rightButton.y = app.screen.height - 100
 
-        const playerHealthBar = new PIXI.Container()
-        app.stage.addChild(playerHealthBar)
-        const enemyHealthBar = new PIXI.Container()
-        app.stage.addChild(enemyHealthBar)
+          app.stage.addChild(rightButton)
 
-        enemyHealthBar.y = enemyHealth / 2 - 10
-        enemyHealthBar.x = 10
+          rightButton.interactive = true
+          rightButton.buttonMode = true
+          leftButton.interactive = true
+          leftButton.buttonMode = true
 
-        playerHealthBar.y = leftButton.y - enemyHealth - 10
-        playerHealthBar.x = app.screen.width / 2 - 25
+          const playerHealthBar = new PIXI.Container()
+          app.stage.addChild(playerHealthBar)
+          const enemyHealthBar = new PIXI.Container()
+          app.stage.addChild(enemyHealthBar)
 
-        app.ticker.add(delta => gameLoop(delta))
+          enemyHealthBar.y = enemyHealth / 2 - 10
+          enemyHealthBar.x = 10
 
-        let buffer = 0
-        let rightHeat = 0
-        let leftHeat = 0
-        let leftEmergency = 0
-        let rightEmergency = 0
-        let enemyMaxHealth = enemyHealth
-        let playerMaxHealth = playerHealth
-        let counter = 0
+          playerHealthBar.y = leftButton.y - playerHealth - 10
+          playerHealthBar.x = app.screen.width / 2 - 26
 
-        const gameLoop = delta => {
-          // enemy healthbar
+          const leftOverlay = new PIXI.Sprite.fromImage(
+            './assets/format/heat.png'
+          )
+          leftOverlay.anchor.set(0.5, 0.5)
+          leftOverlay.scale.set(0.44)
 
-          const enemyInnerBar = new PIXI.Graphics()
-          enemyInnerBar.beginFill(0x000000)
-          enemyInnerBar.drawRect(0, 0, 15, enemyMaxHealth)
-          enemyInnerBar.endFill()
-          enemyHealthBar.addChild(enemyInnerBar)
+          const rightOverlay = new PIXI.Sprite.fromImage(
+            './assets/format/heat.png'
+          )
+          rightOverlay.anchor.set(0.5, 0.5)
+          rightOverlay.scale.set(0.44)
 
-          const enemyOuterBar = new PIXI.Graphics()
-          enemyOuterBar.beginFill(0xff3300)
-          enemyOuterBar.drawRect(0, 0, 15, enemyHealth)
-          enemyOuterBar.endFill()
-          enemyHealthBar.addChild(enemyOuterBar)
+          const playerHealthOverlay = new PIXI.Sprite.fromImage(
+            './assets/format/health.png'
+          )
+          playerHealthOverlay.anchor.set(0.5, 0.5)
+          playerHealthOverlay.scale.set(0.44)
 
-          // player healthbar
+          app.stage.addChild(leftOverlay)
+          app.stage.addChild(rightOverlay)
+          app.stage.addChild(playerHealthOverlay)
 
-          const playerInnerBar = new PIXI.Graphics()
-          playerInnerBar.beginFill(0x000000)
-          playerInnerBar.drawRect(0, 0, 50, playerMaxHealth)
-          playerInnerBar.endFill()
-          playerHealthBar.addChild(playerInnerBar)
+          app.ticker.add(delta => gameLoop(delta))
 
-          const playerOuterBar = new PIXI.Graphics()
-          playerOuterBar.beginFill(0x6b8e23)
-          playerOuterBar.drawRect(0, 0, 50, playerHealth)
-          playerOuterBar.endFill()
-          playerHealthBar.addChild(playerOuterBar)
+          let buffer = 0
+          let rightHeat = 0
+          let leftHeat = 0
+          let leftEmergency = 0
+          let rightEmergency = 0
+          const enemyMaxHealth = enemyHealth
+          const playerMaxHealth = playerHealth
+          let counter = 0
+          let enemyRightHeat = 0
+          let enemyLeftHeat = 0
+          let enemyBuffer = 30
+          let right = true
 
-          // left cooldown
+          const gameLoop = delta => {
+            // enemy healthbar
 
-          const leftCoolDown = new PIXI.Container()
-          app.stage.addChild(leftCoolDown)
-          const leftInnerBar = new PIXI.Graphics()
-          leftInnerBar.beginFill(0x000000)
-          leftInnerBar.drawRect(0, 0, 90, 150)
-          leftInnerBar.endFill()
-          leftCoolDown.addChild(leftInnerBar)
+            const enemyInnerBar = new PIXI.Graphics()
+            enemyInnerBar.beginFill(0x000000)
+            enemyInnerBar.drawRect(0, 0, 15, enemyMaxHealth)
+            enemyInnerBar.endFill()
+            enemyHealthBar.addChild(enemyInnerBar)
 
-          const leftOuterBar = new PIXI.Graphics()
-          leftOuterBar.beginFill(0xff3300)
-          leftOuterBar.drawRect(0, 0, 90, leftHeat)
-          leftOuterBar.endFill()
-          leftCoolDown.heat = leftOuterBar.height
-          leftCoolDown.addChild(leftOuterBar)
+            const enemyOuterBar = new PIXI.Graphics()
+            enemyOuterBar.beginFill(0xff3300)
+            enemyOuterBar.drawRect(0, 0, 15, enemyHealth)
+            enemyOuterBar.endFill()
+            enemyHealthBar.addChild(enemyOuterBar)
 
-          leftCoolDown.y = leftButton.y - leftInnerBar.height - 10
-          leftCoolDown.x = leftButton.x + 10
+            // player healthbar
 
-          // right cooldown
+            const playerInnerBar = new PIXI.Graphics()
+            playerInnerBar.beginFill(0x000000)
+            playerInnerBar.drawRect(0, 0, 50, playerMaxHealth)
+            playerInnerBar.endFill()
+            playerHealthBar.addChild(playerInnerBar)
 
-          const rightCoolDown = new PIXI.Container()
-          app.stage.addChild(rightCoolDown)
-          const rightInnerBar = new PIXI.Graphics()
-          rightInnerBar.beginFill(0x000000)
-          rightInnerBar.drawRect(0, 0, 90, 150)
-          rightInnerBar.endFill()
-          rightCoolDown.addChild(rightInnerBar)
+            const playerOuterBar = new PIXI.Graphics()
+            playerOuterBar.beginFill(0x6b8e23)
+            playerOuterBar.drawRect(0, 0, 50, playerHealth)
+            playerOuterBar.endFill()
+            playerHealthBar.addChild(playerOuterBar)
 
-          const rightOuterBar = new PIXI.Graphics()
-          rightOuterBar.beginFill(0xff3300)
-          rightOuterBar.drawRect(0, 0, 90, rightHeat)
-          rightOuterBar.endFill()
-          rightCoolDown.heat = rightOuterBar.height
-          rightCoolDown.addChild(rightOuterBar)
+            app.stage.addChild(playerHealthOverlay)
+            playerHealthOverlay.x = app.screen.width / 2
+            playerHealthOverlay.y = playerHealthBar.y + 100
+            app.stage.addChild(rightButton)
+            app.stage.addChild(leftButton)
 
-          rightCoolDown.y = rightButton.y - rightInnerBar.height - 10
-          rightCoolDown.x = rightButton.x + 10
+            // left cooldown
 
-          // player attack functions
-          const leftCallback = () => {
-            if (leftHeat < 150 && buffer === 0 && !leftEmergency) {
-              if (leftHeat + leftAttack * 3 > 150) {
-                leftEmergency = 150
-                leftHeat = 150
-              } else {
-                enemyHealth -= leftAttack
-                leftHeat += leftAttack * 3
-                buffer = 1
+            const leftCoolDown = new PIXI.Container()
+            app.stage.addChild(leftCoolDown)
+            const leftInnerBar = new PIXI.Graphics()
+            leftInnerBar.beginFill(0x000000)
+            leftInnerBar.drawRect(0, 0, 90, 150)
+            leftInnerBar.endFill()
+            leftCoolDown.addChild(leftInnerBar)
+
+            const leftOuterBar = new PIXI.Graphics()
+            leftOuterBar.beginFill(0xff3300)
+            leftOuterBar.drawRect(0, 0, 90, leftHeat)
+            leftOuterBar.endFill()
+            leftCoolDown.heat = leftOuterBar.height
+            leftCoolDown.addChild(leftOuterBar)
+
+            app.stage.addChild(leftOverlay)
+            leftCoolDown.y = leftButton.y - leftInnerBar.height - 80
+            leftCoolDown.x = leftButton.x - 45
+            leftOverlay.x = leftButton.x
+            leftOverlay.y = leftCoolDown.y + 65
+
+            // right cooldown
+
+            const rightCoolDown = new PIXI.Container()
+            app.stage.addChild(rightCoolDown)
+            const rightInnerBar = new PIXI.Graphics()
+            rightInnerBar.beginFill(0x000000)
+            rightInnerBar.drawRect(0, 0, 90, 150)
+            rightInnerBar.endFill()
+            rightCoolDown.addChild(rightInnerBar)
+
+            const rightOuterBar = new PIXI.Graphics()
+            rightOuterBar.beginFill(0xff3300)
+            rightOuterBar.drawRect(0, 0, 90, rightHeat)
+            rightOuterBar.endFill()
+            rightCoolDown.addChild(rightOuterBar)
+
+            app.stage.addChild(rightOverlay)
+            rightCoolDown.y = rightButton.y - rightInnerBar.height - 80
+            rightCoolDown.x = rightButton.x - 50
+            rightOverlay.x = rightButton.x
+            rightOverlay.y = rightCoolDown.y + 65
+
+            // player attack functions
+            const leftCallback = () => {
+              if (leftHeat < 150 && buffer === 0 && leftEmergency === 0) {
+                if (leftHeat + leftAttack * 3 > 150) {
+                  leftEmergency = 150
+                  leftHeat = 150
+                } else {
+                  enemyHealth -= leftAttack
+                  leftHeat += leftAttack * 3
+                  buffer = 1
+                }
               }
             }
-          }
-          const rightCallback = () => {
-            if (rightHeat < 150 && buffer === 0 && !rightEmergency) {
-              if (rightHeat + rightAttack * 3 > 150) {
-                rightEmergency = 150
-                rightHeat = 150
-              } else {
-                enemyHealth -= rightAttack
-                rightHeat += rightAttack * 3
-                buffer = 1
+            const rightCallback = () => {
+              if (rightHeat < 150 && buffer === 0 && rightEmergency === 0) {
+                if (rightHeat + rightAttack * 3 > 150) {
+                  rightEmergency = 150
+                  rightHeat = 150
+                } else {
+                  enemyHealth -= rightAttack
+                  rightHeat += rightAttack * 3
+                  buffer = 1
+                }
               }
             }
-          }
 
-          rightButton.on('click', rightCallback)
-          rightButton.on('touchend', rightCallback)
-          leftButton.on('click', leftCallback)
-          leftButton.on('touchend', leftCallback)
+            rightButton.on('click', rightCallback)
+            rightButton.on('touchend', rightCallback)
+            leftButton.on('click', leftCallback)
+            leftButton.on('touchend', leftCallback)
 
-          // OverHeat
+            // OverHeat
 
-          if (rightEmergency > 0 && rightHeat > 0) {
-            rightHeat -= 0.5
-            rightEmergency -= 0.5
-          } else {
-            if (rightHeat > 0) rightHeat -= 0.5
-          }
+            if (rightEmergency > 0 && rightHeat > 0) {
+              rightHeat -= 0.5
+              rightEmergency -= 0.5
+            } else {
+              if (rightHeat > 0) rightHeat -= 0.5
+            }
 
-          if (leftEmergency > 0 && leftHeat > 0) {
-            leftHeat -= 0.5
-            leftEmergency -= 0.5
-          } else {
-            if (leftHeat > 0) leftHeat -= 0.5
-          }
-          if (buffer > 0) buffer -= 1
+            if (leftEmergency > 0 && leftHeat > 0) {
+              leftHeat -= 0.5
+              leftEmergency -= 0.5
+            } else {
+              if (leftHeat > 0) leftHeat -= 0.5
+            }
+            if (buffer > 0) buffer -= 1
 
-          // EndGame
-
-          if (enemyHealth <= 0) {
-            enemyHealthBar.removeChild(enemyOuterBar)
-            const boom = new PIXI.Graphics()
-            boom.beginFill(0xffffff)
-            boom.drawRect(0, 0, app.screen.width, app.screen.height)
-            boom.endFill()
-            app.stage.addChild(boom)
-            boom.alpha = counter
-            if (counter >= 10) {
-              this.props.addPart({ type: 'base', ...incoming.base })
-              let prize = PIXI.Sprite.fromImage(incoming.base.imgUrl)
-              let text = new PIXI.Text(`Salvage aquired!`, {
-                fontFamily: 'courier',
-                fontSize: 20
-              })
-              prize.scale.set(0.6)
-              app.stage.addChild(text)
-              app.stage.addChild(prize)
-              text.x = app.screen.width / 2 - 100
-              text.y = app.screen.height / 2 + 100
-              prize.x = app.screen.width / 2 - 30
-              prize.y = app.screen.height / 2 - 100
-              prize.interactive = true
-              prize.buttonMode = true
-              let goHanger = () => {
-                this.props.history.push('/hanger')
+            // Enemy attacks
+            if (right) {
+              if (
+                enemyRightHeat + enemyRightAttack * 3 < 150 &&
+                enemyBuffer <= 0
+              ) {
+                playerHealth -= enemyRightAttack
+                enemyRightHeat += enemyRightAttack
+                enemyBuffer = 33
+                right = false
+              } else {
+                enemyRightHeat -= 0.3
+                --enemyBuffer
               }
-              prize.on('click', goHanger)
-              prize.on('touchend', goHanger)
-              app.stop()
+            } else {
+              if (
+                enemyLeftHeat + enemyLeftAttack * 3 < 150 &&
+                enemyBuffer <= 0
+              ) {
+                playerHealth -= enemyLeftAttack
+                enemyLeftHeat += enemyLeftAttack
+                enemyBuffer = 33
+                right = true
+              } else {
+                enemyLeftHeat -= 0.3
+                --enemyBuffer
+              }
+            }
+            // EndGame
+            if (playerHealth <= 0) {
+              const boom = new PIXI.Graphics()
+              boom.beginFill(0xffffff)
+              boom.drawRect(0, 0, app.screen.width, app.screen.height)
+              boom.endFill()
+              app.stage.addChild(boom)
+              boom.alpha = counter
+              if (counter >= 10) {
+                let text = new PIXI.Text(
+                  `Mech Destoryed. Commencing Repairs... \n Touch to return to Hanger`,
+                  {
+                    fontFamily: 'courier',
+                    fontSize: 20
+                  }
+                )
+                app.stage.addChild(text)
+                text.x = app.screen.width / 2
+                text.y = app.screen.height / 2 + 100
+                text.interactive = true
+                text.buttonMode = true
+                let goHanger = () => {
+                  this.props.history.push('/hanger')
+                }
+                text.on('click', goHanger)
+                text.on('touchend', goHanger)
+                app.stop()
+              }
             } else {
               counter += 0.5
             }
+            if (enemyHealth <= 0) {
+              enemyHealthBar.removeChild(enemyOuterBar)
+              const boom = new PIXI.Graphics()
+              boom.beginFill(0xffffff)
+              boom.drawRect(0, 0, app.screen.width, app.screen.height)
+              boom.endFill()
+              app.stage.addChild(boom)
+              boom.alpha = counter
+              if (counter >= 10) {
+                this.props.addPart({ type: 'base', ...incoming.base })
+                let prize = PIXI.Sprite.fromImage(incoming.base.imgUrl)
+                let text = new PIXI.Text(`Salvage aquired!`, {
+                  fontFamily: 'courier',
+                  fontSize: 20
+                })
+                prize.scale.set(0.6)
+                prize.anchor.set(0.5, 0.5)
+                app.stage.addChild(text)
+                app.stage.addChild(prize)
+                text.x = app.screen.width / 2 - 100
+                text.y = app.screen.height / 2 + 100
+                prize.x = app.screen.width / 2
+                prize.y = app.screen.height / 2 - 100
+                prize.interactive = true
+                prize.buttonMode = true
+                let goHanger = () => {
+                  this.props.history.push('/hanger')
+                }
+                prize.on('click', goHanger)
+                prize.on('touchend', goHanger)
+                app.stop()
+              } else {
+                counter += 0.5
+              }
+            }
           }
-
-          console.log('HP:', playerHealth, 'EH:', enemyHealth, counter)
         }
+        start.on('click', startGame)
+        start.on('touchend', startGame)
 
         // End PIXI Render Setup
       } else {

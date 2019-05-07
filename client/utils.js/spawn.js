@@ -4,7 +4,7 @@ const spawnAlgo = (code, stock) => {
   if (digit.length < 6) {
     return 'too short'
   }
-  digit[4] > 8
+  digit[4] >= 8
     ? (type = 'base')
     : digit[4] > 5
       ? (type = 'leftWeapon')

@@ -87,22 +87,24 @@ class Hanger extends Component {
       hanger.scale.set(0.22)
       hanger.x = app.screen.width / 2
       hanger.y = app.screen.height / 2
-      base.x = hanger.x - 50
-      base.y = hanger.y - 200
+      base.anchor.set(0.5, 0.5)
+
       if (mech.base.class === 'Heavy Mech') {
         base.scale.set(1.5)
-        base.x = app.screen.width / 4.4
-        base.y = hanger.y - 275
+        base.x = app.screen.width / 2
+        base.y = hanger.y - 120
       } else {
+        base.x = hanger.x
+        base.y = hanger.y - 100
         base.scale.set(1)
       }
 
-      leftWeapon.anchor.set(0.5, 1)
+      leftWeapon.anchor.set(1, 0.5)
       leftWeapon.x = base.x + mech.base.rightArm_X
       leftWeapon.scale.x = -1
       leftWeapon.y = base.y + mech.base.rightArm_Y
 
-      rightWeapon.anchor.set(1, 0.5)
+      rightWeapon.anchor.set(0, 0.5)
       rightWeapon.x = base.x + mech.base.leftArm_X
       rightWeapon.y = base.y + mech.base.leftArm_Y
       //   app.stage.addChild(armor)

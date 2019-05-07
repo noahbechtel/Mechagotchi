@@ -42,9 +42,10 @@ class Camera extends Component {
           decoder: {
             readers: [
               'upc_reader',
-              'codabar_reader',
-              'upc_reader',
-              'upc_e_reader'
+              'upc_e_reader',
+              'code_128_reader',
+              'ean_reader',
+              'ean_8_reader'
             ]
           },
           locate: true
@@ -60,7 +61,7 @@ class Camera extends Component {
       )
     }
 
-    Quagga.onProcessed(function (result) {
+    Quagga.onProcessed(result => {
       var drawingCtx = Quagga.canvas.ctx.overlay
 
       var drawingCanvas = Quagga.canvas.dom.overlay
@@ -105,7 +106,6 @@ class Camera extends Component {
       }
     })
   }
-
   handleSubmit = result => {
     Quagga.stop()
     this.props.setCode({ result, stock: this.props.stock })
@@ -174,8 +174,8 @@ const mapState = state => {
 }
 const mapDispatch = dispatch => {
   return {
-    async setCode (code) {
-      dispatch(await setCode(code))
+    setCode (code) {
+      dispatch(setCode(code))
     }
   }
 }

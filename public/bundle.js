@@ -469,214 +469,317 @@ function (_Component) {
 
 
         if (incoming.base) {
-          app.stage.addChild(incomingMech.base);
-          app.stage.addChild(incomingMech.leftWeapon);
-          app.stage.addChild(incomingMech.rightWeapon);
-          incomingMech.base.x = app.screen.width / 2 - 75;
-          incomingMech.base.y = 50;
+          var start = new PIXI.Sprite.fromImage('./assets/format/start.png');
+          start.anchor.set(0.5, 0.5);
+          start.scale.set(0.2);
+          app.stage.addChild(start);
+          start.interactive = true;
+          start.buttonMode = true;
+          start.x = app.screen.width / 2;
+          start.y = app.screen.height / 2;
 
-          if (incoming.base["class"] === 'Heavy Mech') {
-            incomingMech.base.scale.set(1.5);
-          } else {
-            incomingMech.base.scale.set(1);
-          }
+          var startGame = function startGame() {
+            app.stage.removeChild(start);
+            app.stage.addChild(incomingMech.base);
+            app.stage.addChild(incomingMech.leftWeapon);
+            app.stage.addChild(incomingMech.rightWeapon);
+            incomingMech.base.anchor.set(0.5, 0.5);
+            incomingMech.base.x = app.screen.width / 2;
+            incomingMech.base.y = app.screen.height / 3;
 
-          incomingMech.leftWeapon.anchor.set(0.5, 1);
-          incomingMech.leftWeapon.x = incomingMech.base.x + incoming.base.rightArm_X;
-          incomingMech.leftWeapon.scale.x = -1;
-          incomingMech.leftWeapon.y = incomingMech.base.y + incoming.base.rightArm_Y;
-          incomingMech.rightWeapon.anchor.set(1, 0.5);
-          incomingMech.rightWeapon.x = incomingMech.base.x + incoming.base.leftArm_X;
-          incomingMech.rightWeapon.y = incomingMech.base.y + incoming.base.leftArm_Y;
-          var playerHealth = mech.base.defense + mech.armor.defense + 100;
-          var leftAttack = mech.leftWeapon.damage;
-          var rightAttack = mech.rightWeapon.damage;
-          var enemyHealth = incoming.base.defense + 100;
-          var enemyRightAttack = incoming.rightWeapon.damage;
-          var enemyLeftAttack = incoming.leftWeapon.damage;
-          console.log(mech); // Interactive GUI
-
-          var leftButton = new PIXI.Sprite.fromImage('./assets/format/leftButton.png');
-          leftButton.scale.set(0.2);
-          leftButton.x = 10;
-          leftButton.y = app.screen.height - 120;
-          app.stage.addChild(leftButton);
-          var rightButton = new PIXI.Sprite.fromImage('./assets/format/rightButton.png');
-          rightButton.scale.set(0.2);
-          rightButton.x = app.screen.width - 130;
-          rightButton.y = app.screen.height - 120;
-          app.stage.addChild(rightButton);
-          rightButton.interactive = true;
-          rightButton.buttonMode = true;
-          leftButton.interactive = true;
-          leftButton.buttonMode = true;
-          var playerHealthBar = new PIXI.Container();
-          app.stage.addChild(playerHealthBar);
-          var enemyHealthBar = new PIXI.Container();
-          app.stage.addChild(enemyHealthBar);
-          enemyHealthBar.y = enemyHealth / 2 - 10;
-          enemyHealthBar.x = 10;
-          playerHealthBar.y = leftButton.y - enemyHealth - 10;
-          playerHealthBar.x = app.screen.width / 2 - 25;
-          app.ticker.add(function (delta) {
-            return gameLoop(delta);
-          });
-          var buffer = 0;
-          var rightHeat = 0;
-          var leftHeat = 0;
-          var leftEmergency = 0;
-          var rightEmergency = 0;
-          var enemyMaxHealth = enemyHealth;
-          var playerMaxHealth = playerHealth;
-          var counter = 0;
-
-          var gameLoop = function gameLoop(delta) {
-            // enemy healthbar
-            var enemyInnerBar = new PIXI.Graphics();
-            enemyInnerBar.beginFill(0x000000);
-            enemyInnerBar.drawRect(0, 0, 15, enemyMaxHealth);
-            enemyInnerBar.endFill();
-            enemyHealthBar.addChild(enemyInnerBar);
-            var enemyOuterBar = new PIXI.Graphics();
-            enemyOuterBar.beginFill(0xff3300);
-            enemyOuterBar.drawRect(0, 0, 15, enemyHealth);
-            enemyOuterBar.endFill();
-            enemyHealthBar.addChild(enemyOuterBar); // player healthbar
-
-            var playerInnerBar = new PIXI.Graphics();
-            playerInnerBar.beginFill(0x000000);
-            playerInnerBar.drawRect(0, 0, 50, playerMaxHealth);
-            playerInnerBar.endFill();
-            playerHealthBar.addChild(playerInnerBar);
-            var playerOuterBar = new PIXI.Graphics();
-            playerOuterBar.beginFill(0x6b8e23);
-            playerOuterBar.drawRect(0, 0, 50, playerHealth);
-            playerOuterBar.endFill();
-            playerHealthBar.addChild(playerOuterBar); // left cooldown
-
-            var leftCoolDown = new PIXI.Container();
-            app.stage.addChild(leftCoolDown);
-            var leftInnerBar = new PIXI.Graphics();
-            leftInnerBar.beginFill(0x000000);
-            leftInnerBar.drawRect(0, 0, 90, 150);
-            leftInnerBar.endFill();
-            leftCoolDown.addChild(leftInnerBar);
-            var leftOuterBar = new PIXI.Graphics();
-            leftOuterBar.beginFill(0xff3300);
-            leftOuterBar.drawRect(0, 0, 90, leftHeat);
-            leftOuterBar.endFill();
-            leftCoolDown.heat = leftOuterBar.height;
-            leftCoolDown.addChild(leftOuterBar);
-            leftCoolDown.y = leftButton.y - leftInnerBar.height - 10;
-            leftCoolDown.x = leftButton.x + 10; // right cooldown
-
-            var rightCoolDown = new PIXI.Container();
-            app.stage.addChild(rightCoolDown);
-            var rightInnerBar = new PIXI.Graphics();
-            rightInnerBar.beginFill(0x000000);
-            rightInnerBar.drawRect(0, 0, 90, 150);
-            rightInnerBar.endFill();
-            rightCoolDown.addChild(rightInnerBar);
-            var rightOuterBar = new PIXI.Graphics();
-            rightOuterBar.beginFill(0xff3300);
-            rightOuterBar.drawRect(0, 0, 90, rightHeat);
-            rightOuterBar.endFill();
-            rightCoolDown.heat = rightOuterBar.height;
-            rightCoolDown.addChild(rightOuterBar);
-            rightCoolDown.y = rightButton.y - rightInnerBar.height - 10;
-            rightCoolDown.x = rightButton.x + 10; // player attack functions
-
-            var leftCallback = function leftCallback() {
-              if (leftHeat < 150 && buffer === 0 && !leftEmergency) {
-                if (leftHeat + leftAttack * 3 > 150) {
-                  leftEmergency = 150;
-                  leftHeat = 150;
-                } else {
-                  enemyHealth -= leftAttack;
-                  leftHeat += leftAttack * 3;
-                  buffer = 1;
-                }
-              }
-            };
-
-            var rightCallback = function rightCallback() {
-              if (rightHeat < 150 && buffer === 0 && !rightEmergency) {
-                if (rightHeat + rightAttack * 3 > 150) {
-                  rightEmergency = 150;
-                  rightHeat = 150;
-                } else {
-                  enemyHealth -= rightAttack;
-                  rightHeat += rightAttack * 3;
-                  buffer = 1;
-                }
-              }
-            };
-
-            rightButton.on('click', rightCallback);
-            rightButton.on('touchend', rightCallback);
-            leftButton.on('click', leftCallback);
-            leftButton.on('touchend', leftCallback); // OverHeat
-
-            if (rightEmergency > 0 && rightHeat > 0) {
-              rightHeat -= 0.5;
-              rightEmergency -= 0.5;
+            if (incoming.base["class"] === 'Heavy Mech') {
+              incomingMech.base.scale.set(1.5);
             } else {
-              if (rightHeat > 0) rightHeat -= 0.5;
+              incomingMech.base.scale.set(1);
             }
 
-            if (leftEmergency > 0 && leftHeat > 0) {
-              leftHeat -= 0.5;
-              leftEmergency -= 0.5;
-            } else {
-              if (leftHeat > 0) leftHeat -= 0.5;
-            }
+            incomingMech.leftWeapon.anchor.set(1, 0.5);
+            incomingMech.leftWeapon.x = incomingMech.base.x + incoming.base.rightArm_X;
+            incomingMech.leftWeapon.scale.x = -1;
+            incomingMech.leftWeapon.y = incomingMech.base.y + incoming.base.rightArm_Y;
+            incomingMech.rightWeapon.anchor.set(0, 0.5);
+            incomingMech.rightWeapon.x = incomingMech.base.x + incoming.base.leftArm_X;
+            incomingMech.rightWeapon.y = incomingMech.base.y + incoming.base.leftArm_Y;
+            var playerHealth = mech.base.defense + mech.armor.defense + 100;
+            var leftAttack = mech.leftWeapon.damage;
+            var rightAttack = mech.rightWeapon.damage;
+            var enemyHealth = incoming.base.defense + 100;
+            var enemyRightAttack = incoming.rightWeapon.damage;
+            var enemyLeftAttack = incoming.leftWeapon.damage;
+            console.log(mech); // Interactive GUI
 
-            if (buffer > 0) buffer -= 1; // EndGame
+            var leftButton = new PIXI.Sprite.fromImage('./assets/format/leftButton.png');
+            leftButton.scale.set(0.2);
+            leftButton.anchor.set(0.5, 0.5);
+            leftButton.x = app.screen.width / 2 - 150;
+            leftButton.y = app.screen.height - 100;
+            app.stage.addChild(leftButton);
+            var rightButton = new PIXI.Sprite.fromImage('./assets/format/rightButton.png');
+            rightButton.scale.set(0.2);
+            rightButton.anchor.set(0.5, 0.5);
+            rightButton.x = app.screen.width / 2 + 150;
+            rightButton.y = app.screen.height - 100;
+            app.stage.addChild(rightButton);
+            rightButton.interactive = true;
+            rightButton.buttonMode = true;
+            leftButton.interactive = true;
+            leftButton.buttonMode = true;
+            var playerHealthBar = new PIXI.Container();
+            app.stage.addChild(playerHealthBar);
+            var enemyHealthBar = new PIXI.Container();
+            app.stage.addChild(enemyHealthBar);
+            enemyHealthBar.y = enemyHealth / 2 - 10;
+            enemyHealthBar.x = 10;
+            playerHealthBar.y = leftButton.y - playerHealth - 10;
+            playerHealthBar.x = app.screen.width / 2 - 26;
+            var leftOverlay = new PIXI.Sprite.fromImage('./assets/format/heat.png');
+            leftOverlay.anchor.set(0.5, 0.5);
+            leftOverlay.scale.set(0.44);
+            var rightOverlay = new PIXI.Sprite.fromImage('./assets/format/heat.png');
+            rightOverlay.anchor.set(0.5, 0.5);
+            rightOverlay.scale.set(0.44);
+            var playerHealthOverlay = new PIXI.Sprite.fromImage('./assets/format/health.png');
+            playerHealthOverlay.anchor.set(0.5, 0.5);
+            playerHealthOverlay.scale.set(0.44);
+            app.stage.addChild(leftOverlay);
+            app.stage.addChild(rightOverlay);
+            app.stage.addChild(playerHealthOverlay);
+            app.ticker.add(function (delta) {
+              return gameLoop(delta);
+            });
+            var buffer = 0;
+            var rightHeat = 0;
+            var leftHeat = 0;
+            var leftEmergency = 0;
+            var rightEmergency = 0;
+            var enemyMaxHealth = enemyHealth;
+            var playerMaxHealth = playerHealth;
+            var counter = 0;
+            var enemyRightHeat = 0;
+            var enemyLeftHeat = 0;
+            var enemyBuffer = 30;
+            var right = true;
 
-            if (enemyHealth <= 0) {
-              enemyHealthBar.removeChild(enemyOuterBar);
-              var boom = new PIXI.Graphics();
-              boom.beginFill(0xffffff);
-              boom.drawRect(0, 0, app.screen.width, app.screen.height);
-              boom.endFill();
-              app.stage.addChild(boom);
-              boom.alpha = counter;
+            var gameLoop = function gameLoop(delta) {
+              // enemy healthbar
+              var enemyInnerBar = new PIXI.Graphics();
+              enemyInnerBar.beginFill(0x000000);
+              enemyInnerBar.drawRect(0, 0, 15, enemyMaxHealth);
+              enemyInnerBar.endFill();
+              enemyHealthBar.addChild(enemyInnerBar);
+              var enemyOuterBar = new PIXI.Graphics();
+              enemyOuterBar.beginFill(0xff3300);
+              enemyOuterBar.drawRect(0, 0, 15, enemyHealth);
+              enemyOuterBar.endFill();
+              enemyHealthBar.addChild(enemyOuterBar); // player healthbar
 
-              if (counter >= 10) {
-                _this.props.addPart(_objectSpread({
-                  type: 'base'
-                }, incoming.base));
+              var playerInnerBar = new PIXI.Graphics();
+              playerInnerBar.beginFill(0x000000);
+              playerInnerBar.drawRect(0, 0, 50, playerMaxHealth);
+              playerInnerBar.endFill();
+              playerHealthBar.addChild(playerInnerBar);
+              var playerOuterBar = new PIXI.Graphics();
+              playerOuterBar.beginFill(0x6b8e23);
+              playerOuterBar.drawRect(0, 0, 50, playerHealth);
+              playerOuterBar.endFill();
+              playerHealthBar.addChild(playerOuterBar);
+              app.stage.addChild(playerHealthOverlay);
+              playerHealthOverlay.x = app.screen.width / 2;
+              playerHealthOverlay.y = playerHealthBar.y + 100;
+              app.stage.addChild(rightButton);
+              app.stage.addChild(leftButton); // left cooldown
 
-                var prize = PIXI.Sprite.fromImage(incoming.base.imgUrl);
-                var text = new PIXI.Text("Salvage aquired!", {
-                  fontFamily: 'courier',
-                  fontSize: 20
-                });
-                prize.scale.set(0.6);
-                app.stage.addChild(text);
-                app.stage.addChild(prize);
-                text.x = app.screen.width / 2 - 100;
-                text.y = app.screen.height / 2 + 100;
-                prize.x = app.screen.width / 2 - 30;
-                prize.y = app.screen.height / 2 - 100;
-                prize.interactive = true;
-                prize.buttonMode = true;
+              var leftCoolDown = new PIXI.Container();
+              app.stage.addChild(leftCoolDown);
+              var leftInnerBar = new PIXI.Graphics();
+              leftInnerBar.beginFill(0x000000);
+              leftInnerBar.drawRect(0, 0, 90, 150);
+              leftInnerBar.endFill();
+              leftCoolDown.addChild(leftInnerBar);
+              var leftOuterBar = new PIXI.Graphics();
+              leftOuterBar.beginFill(0xff3300);
+              leftOuterBar.drawRect(0, 0, 90, leftHeat);
+              leftOuterBar.endFill();
+              leftCoolDown.heat = leftOuterBar.height;
+              leftCoolDown.addChild(leftOuterBar);
+              app.stage.addChild(leftOverlay);
+              leftCoolDown.y = leftButton.y - leftInnerBar.height - 80;
+              leftCoolDown.x = leftButton.x - 45;
+              leftOverlay.x = leftButton.x;
+              leftOverlay.y = leftCoolDown.y + 65; // right cooldown
 
-                var goHanger = function goHanger() {
-                  _this.props.history.push('/hanger');
-                };
+              var rightCoolDown = new PIXI.Container();
+              app.stage.addChild(rightCoolDown);
+              var rightInnerBar = new PIXI.Graphics();
+              rightInnerBar.beginFill(0x000000);
+              rightInnerBar.drawRect(0, 0, 90, 150);
+              rightInnerBar.endFill();
+              rightCoolDown.addChild(rightInnerBar);
+              var rightOuterBar = new PIXI.Graphics();
+              rightOuterBar.beginFill(0xff3300);
+              rightOuterBar.drawRect(0, 0, 90, rightHeat);
+              rightOuterBar.endFill();
+              rightCoolDown.addChild(rightOuterBar);
+              app.stage.addChild(rightOverlay);
+              rightCoolDown.y = rightButton.y - rightInnerBar.height - 80;
+              rightCoolDown.x = rightButton.x - 50;
+              rightOverlay.x = rightButton.x;
+              rightOverlay.y = rightCoolDown.y + 65; // player attack functions
 
-                prize.on('click', goHanger);
-                prize.on('touchend', goHanger);
-                app.stop();
+              var leftCallback = function leftCallback() {
+                if (leftHeat < 150 && buffer === 0 && leftEmergency === 0) {
+                  if (leftHeat + leftAttack * 3 > 150) {
+                    leftEmergency = 150;
+                    leftHeat = 150;
+                  } else {
+                    enemyHealth -= leftAttack;
+                    leftHeat += leftAttack * 3;
+                    buffer = 1;
+                  }
+                }
+              };
+
+              var rightCallback = function rightCallback() {
+                if (rightHeat < 150 && buffer === 0 && rightEmergency === 0) {
+                  if (rightHeat + rightAttack * 3 > 150) {
+                    rightEmergency = 150;
+                    rightHeat = 150;
+                  } else {
+                    enemyHealth -= rightAttack;
+                    rightHeat += rightAttack * 3;
+                    buffer = 1;
+                  }
+                }
+              };
+
+              rightButton.on('click', rightCallback);
+              rightButton.on('touchend', rightCallback);
+              leftButton.on('click', leftCallback);
+              leftButton.on('touchend', leftCallback); // OverHeat
+
+              if (rightEmergency > 0 && rightHeat > 0) {
+                rightHeat -= 0.5;
+                rightEmergency -= 0.5;
+              } else {
+                if (rightHeat > 0) rightHeat -= 0.5;
+              }
+
+              if (leftEmergency > 0 && leftHeat > 0) {
+                leftHeat -= 0.5;
+                leftEmergency -= 0.5;
+              } else {
+                if (leftHeat > 0) leftHeat -= 0.5;
+              }
+
+              if (buffer > 0) buffer -= 1; // Enemy attacks
+
+              if (right) {
+                if (enemyRightHeat + enemyRightAttack * 3 < 150 && enemyBuffer <= 0) {
+                  playerHealth -= enemyRightAttack;
+                  enemyRightHeat += enemyRightAttack;
+                  enemyBuffer = 33;
+                  right = false;
+                } else {
+                  enemyRightHeat -= 0.3;
+                  --enemyBuffer;
+                }
+              } else {
+                if (enemyLeftHeat + enemyLeftAttack * 3 < 150 && enemyBuffer <= 0) {
+                  playerHealth -= enemyLeftAttack;
+                  enemyLeftHeat += enemyLeftAttack;
+                  enemyBuffer = 33;
+                  right = true;
+                } else {
+                  enemyLeftHeat -= 0.3;
+                  --enemyBuffer;
+                }
+              } // EndGame
+
+
+              if (playerHealth <= 0) {
+                var boom = new PIXI.Graphics();
+                boom.beginFill(0xffffff);
+                boom.drawRect(0, 0, app.screen.width, app.screen.height);
+                boom.endFill();
+                app.stage.addChild(boom);
+                boom.alpha = counter;
+
+                if (counter >= 10) {
+                  var text = new PIXI.Text("Mech Destoryed. Commencing Repairs... \n Touch to return to Hanger", {
+                    fontFamily: 'courier',
+                    fontSize: 20
+                  });
+                  app.stage.addChild(text);
+                  text.x = app.screen.width / 2;
+                  text.y = app.screen.height / 2 + 100;
+                  text.interactive = true;
+                  text.buttonMode = true;
+
+                  var goHanger = function goHanger() {
+                    _this.props.history.push('/hanger');
+                  };
+
+                  text.on('click', goHanger);
+                  text.on('touchend', goHanger);
+                  app.stop();
+                }
               } else {
                 counter += 0.5;
               }
-            }
 
-            console.log('HP:', playerHealth, 'EH:', enemyHealth, counter);
-          }; // End PIXI Render Setup
+              if (enemyHealth <= 0) {
+                enemyHealthBar.removeChild(enemyOuterBar);
 
+                var _boom = new PIXI.Graphics();
+
+                _boom.beginFill(0xffffff);
+
+                _boom.drawRect(0, 0, app.screen.width, app.screen.height);
+
+                _boom.endFill();
+
+                app.stage.addChild(_boom);
+                _boom.alpha = counter;
+
+                if (counter >= 10) {
+                  _this.props.addPart(_objectSpread({
+                    type: 'base'
+                  }, incoming.base));
+
+                  var prize = PIXI.Sprite.fromImage(incoming.base.imgUrl);
+
+                  var _text = new PIXI.Text("Salvage aquired!", {
+                    fontFamily: 'courier',
+                    fontSize: 20
+                  });
+
+                  prize.scale.set(0.6);
+                  prize.anchor.set(0.5, 0.5);
+                  app.stage.addChild(_text);
+                  app.stage.addChild(prize);
+                  _text.x = app.screen.width / 2 - 100;
+                  _text.y = app.screen.height / 2 + 100;
+                  prize.x = app.screen.width / 2;
+                  prize.y = app.screen.height / 2 - 100;
+                  prize.interactive = true;
+                  prize.buttonMode = true;
+
+                  var _goHanger = function _goHanger() {
+                    _this.props.history.push('/hanger');
+                  };
+
+                  prize.on('click', _goHanger);
+                  prize.on('touchend', _goHanger);
+                  app.stop();
+                } else {
+                  counter += 0.5;
+                }
+              }
+            };
+          };
+
+          start.on('click', startGame);
+          start.on('touchend', startGame); // End PIXI Render Setup
         } else {
           var text = new PIXI.Text("Salvage aquired!", {
             fontFamily: 'courier',
@@ -990,6 +1093,8 @@ function (_Component) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
+        var _this2 = this;
+
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -1024,7 +1129,7 @@ function (_Component) {
                     numOfWorkers: 2,
                     frequency: 10,
                     decoder: {
-                      readers: ['upc_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader']
+                      readers: ['upc_reader', 'upc_e_reader', 'code_128_reader', 'ean_reader', 'ean_8_reader']
                     },
                     locate: true
                   }, function (err) {
@@ -1078,7 +1183,7 @@ function (_Component) {
                         lineWidth: 3
                       });
 
-                      this.handleSubmit(result.codeResult.code);
+                      _this2.handleSubmit(result.codeResult.code);
                     }
                   }
                 });
@@ -1144,36 +1249,9 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
-    setCode: function () {
-      var _setCode2 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(code) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.t0 = dispatch;
-                _context2.next = 3;
-                return (0, _info.setCode)(code);
-
-              case 3:
-                _context2.t1 = _context2.sent;
-                (0, _context2.t0)(_context2.t1);
-
-              case 5:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }));
-
-      function setCode(_x) {
-        return _setCode2.apply(this, arguments);
-      }
-
-      return setCode;
-    }()
+    setCode: function setCode(code) {
+      dispatch((0, _info.setCode)(code));
+    }
   };
 };
 
@@ -1305,22 +1383,23 @@ function (_Component) {
         hanger.scale.set(0.22);
         hanger.x = app.screen.width / 2;
         hanger.y = app.screen.height / 2;
-        base.x = hanger.x - 50;
-        base.y = hanger.y - 200;
+        base.anchor.set(0.5, 0.5);
 
         if (mech.base["class"] === 'Heavy Mech') {
           base.scale.set(1.5);
-          base.x = app.screen.width / 4.4;
-          base.y = hanger.y - 275;
+          base.x = app.screen.width / 2;
+          base.y = hanger.y - 120;
         } else {
+          base.x = hanger.x;
+          base.y = hanger.y - 100;
           base.scale.set(1);
         }
 
-        leftWeapon.anchor.set(0.5, 1);
+        leftWeapon.anchor.set(1, 0.5);
         leftWeapon.x = base.x + mech.base.rightArm_X;
         leftWeapon.scale.x = -1;
         leftWeapon.y = base.y + mech.base.rightArm_Y;
-        rightWeapon.anchor.set(1, 0.5);
+        rightWeapon.anchor.set(0, 0.5);
         rightWeapon.x = base.x + mech.base.leftArm_X;
         rightWeapon.y = base.y + mech.base.leftArm_Y; //   app.stage.addChild(armor)
         // TEXT
@@ -2960,7 +3039,7 @@ var spawnAlgo = function spawnAlgo(code, stock) {
     return 'too short';
   }
 
-  digit[4] > 8 ? type = 'base' : digit[4] > 5 ? type = 'leftWeapon' : digit[4] > 3 ? type = 'rightWeapon' : type = 'armor';
+  digit[4] >= 8 ? type = 'base' : digit[4] > 5 ? type = 'leftWeapon' : digit[4] > 3 ? type = 'rightWeapon' : type = 'armor';
   var stockNum = stock[type];
   var id = Math.round(stockNum / (1 + Number(digit[5])));
 

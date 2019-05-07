@@ -28,32 +28,32 @@ async function seed () {
       name: 'Scout',
       rarity: 0,
       defense: 10,
-      rightArm_X: 140,
-      rightArm_Y: 115,
-      leftArm_X: 28,
-      leftArm_Y: 80,
+      rightArm_X: 45,
+      rightArm_Y: -45,
+      leftArm_X: -100,
+      leftArm_Y: -45,
       imgUrl: './assets/bases/Scout.png'
     }),
     Base.create({
       class: 'Medium Mech',
       name: 'Puma',
       rarity: 1,
-      defense: 10,
-      rightArm_X: 138,
-      rightArm_Y: 115,
-      leftArm_X: 28,
-      leftArm_Y: 80,
+      defense: 20,
+      rightArm_X: 45,
+      rightArm_Y: -40,
+      leftArm_X: -100,
+      leftArm_Y: -40,
       imgUrl: './assets/bases/Puma.png'
     }),
     Base.create({
-      class: 'Heavy Mech',
+      class: 'Medium Mech',
       name: 'Argon',
       rarity: 3,
       defense: 40,
-      rightArm_X: 125,
-      rightArm_Y: 65,
-      leftArm_X: 17,
-      leftArm_Y: 40,
+      rightArm_X: 40,
+      rightArm_Y: -60,
+      leftArm_X: -95,
+      leftArm_Y: -60,
       imgUrl: './assets/bases/Argon.png'
     }),
     Base.create({
@@ -61,10 +61,10 @@ async function seed () {
       name: 'T4NK',
       rarity: 4,
       defense: 70,
-      rightArm_X: 200,
-      rightArm_Y: 115,
-      leftArm_X: 60,
-      leftArm_Y: 92,
+      rightArm_X: 60,
+      rightArm_Y: -45,
+      leftArm_X: -115,
+      leftArm_Y: -45,
       imgUrl: './assets/bases/T4NK.png'
     }),
     Base.create({
@@ -72,22 +72,22 @@ async function seed () {
       name: 'Sentinal',
       rarity: 2,
       defense: 20,
-      rightArm_X: 130,
-      rightArm_Y: 75,
-      leftArm_X: 18,
-      leftArm_Y: 50,
-      imgUrl: './assets/base/Sentinal.png'
+      rightArm_X: 40,
+      rightArm_Y: -55,
+      leftArm_X: -95,
+      leftArm_Y: -55,
+      imgUrl: './assets/bases/Sentinal.png'
     }),
     Base.create({
       class: 'Medium Mech',
       name: 'Foreman',
       rarity: 2,
       defense: 30,
-      rightArm_X: 138,
-      rightArm_Y: 115,
-      leftArm_X: 28,
-      leftArm_Y: 80,
-      imgUrl: './assets/bases/Forman.png'
+      rightArm_X: 45,
+      rightArm_Y: -45,
+      leftArm_X: -100,
+      leftArm_Y: -45,
+      imgUrl: './assets/bases/Foreman.png'
     })
   ])
   // Weapons
