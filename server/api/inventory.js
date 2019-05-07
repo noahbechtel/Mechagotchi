@@ -10,7 +10,7 @@ module.exports = router
 
 router.get('/me', async (req, res, next) => {
   try {
-    const inv = await Inventory.findById(req.user.inventoryId)
+    const inv = await Inventory.findByPk(req.user.inventoryId)
     const base = await inv.getBases()
     const armor = await inv.getArmors()
     const right = await inv.getRightWeapons()
@@ -38,8 +38,8 @@ router.get('/', async (req, res, next) => {
 
 router.post('/armor/:id', async (req, res, next) => {
   try {
-    const inv = await Inventory.findById(req.user.inventoryId)
-    const newArmor = await Armor.findById(req.params.id)
+    const inv = await Inventory.findByPk(req.user.inventoryId)
+    const newArmor = await Armor.findByPk(req.params.id)
     await inv.addArmor(newArmor)
     const base = await inv.getBases()
     const armor = await inv.getArmors()
@@ -83,8 +83,8 @@ router.post('/leftWeapon/:id', async (req, res, next) => {
 })
 router.post('/rightWeapon/:id', async (req, res, next) => {
   try {
-    const inv = await Inventory.findById(req.user.inventoryId)
-    const newRight = await rightWeapon.findById(req.params.id)
+    const inv = await Inventory.findByPk(req.user.inventoryId)
+    const newRight = await rightWeapon.findByPk(req.params.id)
     await inv.addRightWeapon(newRight)
     const base = await inv.getBases()
     const armor = await inv.getArmors()

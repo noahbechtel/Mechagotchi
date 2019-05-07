@@ -141,7 +141,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var Armory = function Armory(props) {
   return _react["default"].createElement("div", {
-    className: "hanger"
+    className: "menu"
   }, _react["default"].createElement("img", {
     className: "back",
     src: "./assets/format/left.png",
@@ -1117,7 +1117,7 @@ function (_Component) {
       })) : _react["default"].createElement("div", {
         id: "cameraViewport"
       })), _react["default"].createElement("div", {
-        className: "hanger"
+        className: "menu"
       }, this.state.pwa ? _react["default"].createElement("img", {
         src: "./assets/format/confirm.png",
         onClick: this.handleSubmitPwa,
@@ -1309,7 +1309,6 @@ function (_Component) {
         base.y = hanger.y - 200;
 
         if (mech.base["class"] === 'Heavy Mech') {
-          console.log(base.scale);
           base.scale.set(1.5);
           base.x = app.screen.width / 4.4;
           base.y = hanger.y - 275;
@@ -1349,13 +1348,13 @@ function (_Component) {
 
         var armory = new PIXI.Sprite.fromImage('./assets/format/armory.png');
         armory.scale.set(0.4);
+        armory.anchor.set(0.5, 0.5);
         armory.interactive = true;
         armory.buttonMode = true;
         armory.on('click', goArmory);
         armory.on('touchend', goArmory);
         app.stage.addChild(armory);
-        armory.anchor.set(0.5, 0.5);
-        armory.y = app.screen.width + 100;
+        armory.y = app.screen.height - 100;
         armory.x = app.screen.width / 2;
         var scan = new PIXI.Sprite.fromImage('./assets/format/scan.png');
         scan.scale.set(0.4);
@@ -1365,7 +1364,7 @@ function (_Component) {
         scan.on('touchend', goScan);
         app.stage.addChild(scan);
         scan.anchor.set(0.5, 0.5);
-        scan.y = app.screen.width + 225;
+        scan.y = app.screen.height - 225;
         scan.x = app.screen.width / 2;
         console.log('setup finished');
       }); // Assignment
@@ -1496,7 +1495,7 @@ var Multiview = function Multiview(props) {
       key: part.id
     });
   }) : _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Nothing's here, dipshit"))), _react["default"].createElement("div", {
-    className: "hanger"
+    className: "menu"
   }, _react["default"].createElement("img", {
     className: "back",
     src: "./assets/format/confirm.png",

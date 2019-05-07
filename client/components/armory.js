@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 const Armory = props => {
   return (
-    <div className='hanger'>
+    <div className='menu'>
       <img
         className='back'
         src='./assets/format/left.png'

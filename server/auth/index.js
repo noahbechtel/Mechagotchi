@@ -39,7 +39,7 @@ router.post('/signup', async (req, res, next) => {
       leftWeaponId: 1,
       armorId: 1
     })
-    const mech = await Mech.findById(newMech.id, {
+    const mech = await Mech.findByPk(newMech.id, {
       include: [
         { model: Base },
         { model: rightWeapon },
@@ -87,7 +87,7 @@ router.post('/logout', (req, res) => {
 
 router.get('/me', async (req, res) => {
   try {
-    const mech = await Mech.findById(req.user.mechId, {
+    const mech = await Mech.findByPk(req.user.mechId, {
       include: [
         { model: Base },
         { model: rightWeapon },
@@ -95,7 +95,7 @@ router.get('/me', async (req, res) => {
         { model: Armor }
       ]
     })
-    const inv = await Inventory.findById(req.user.inventoryId)
+    const inv = await Inventory.findByPk(req.user.inventoryId)
     const base = await inv.getBases()
     const armor = await inv.getArmors()
     const right = await inv.getRightWeapons()

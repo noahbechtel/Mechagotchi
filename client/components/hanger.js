@@ -90,7 +90,6 @@ class Hanger extends Component {
       base.x = hanger.x - 50
       base.y = hanger.y - 200
       if (mech.base.class === 'Heavy Mech') {
-        console.log(base.scale)
         base.scale.set(1.5)
         base.x = app.screen.width / 4.4
         base.y = hanger.y - 275
@@ -134,13 +133,13 @@ class Hanger extends Component {
       // buttons
       const armory = new PIXI.Sprite.fromImage('./assets/format/armory.png')
       armory.scale.set(0.4)
+      armory.anchor.set(0.5, 0.5)
       armory.interactive = true
       armory.buttonMode = true
       armory.on('click', goArmory)
       armory.on('touchend', goArmory)
       app.stage.addChild(armory)
-      armory.anchor.set(0.5, 0.5)
-      armory.y = app.screen.width + 100
+      armory.y = app.screen.height - 100
       armory.x = app.screen.width / 2
 
       const scan = new PIXI.Sprite.fromImage('./assets/format/scan.png')
@@ -151,7 +150,7 @@ class Hanger extends Component {
       scan.on('touchend', goScan)
       app.stage.addChild(scan)
       scan.anchor.set(0.5, 0.5)
-      scan.y = app.screen.width + 225
+      scan.y = app.screen.height - 225
       scan.x = app.screen.width / 2
       console.log('setup finished')
     })

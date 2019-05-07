@@ -11,7 +11,7 @@ module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const mech = await Mech.findById(req.user.mechId, {
+    const mech = await Mech.findByPk(req.user.mechId, {
       attributes: ['id', 'level'],
       include: [
         { model: Base },
@@ -33,7 +33,7 @@ router.post('/builder', async (req, res, next) => {
 
     switch (skele.type) {
       case 'armor':
-        let a = await Armor.findById(skele.id)
+        let a = await Armor.findByPk(skele.id)
         res.json({
           imgUrl: a.imgUrl,
           name: a.name,
@@ -44,7 +44,7 @@ router.post('/builder', async (req, res, next) => {
         })
         break
       case 'rightWeapon':
-        let r = await rightWeapon.findById(skele.id)
+        let r = await rightWeapon.findByPk(skele.id)
         res.json({
           imgUrl: r.imgUrl,
           name: r.name,
@@ -55,7 +55,7 @@ router.post('/builder', async (req, res, next) => {
         })
         break
       case 'leftWeapon':
-        let l = await leftWeapon.findById(skele.id)
+        let l = await leftWeapon.findByPk(skele.id)
         res.json({
           imgUrl: l.imgUrl,
           name: l.name,
@@ -66,10 +66,10 @@ router.post('/builder', async (req, res, next) => {
         })
         break
       case 'base':
-        let base = await Base.findById(skele.base)
-        let right = await rightWeapon.findById(skele.rightWeapon)
-        let left = await leftWeapon.findById(skele.leftWeapon)
-        let armor = await Armor.findById(skele.armor)
+        let base = await Base.findByPk(skele.base)
+        let right = await rightWeapon.findByPk(skele.rightWeapon)
+        let left = await leftWeapon.findByPk(skele.leftWeapon)
+        let armor = await Armor.findByPk(skele.armor)
         res.json({
           base,
           rightWeapon: right,
@@ -81,7 +81,7 @@ router.post('/builder', async (req, res, next) => {
       default:
         break
     }
-    // const mech = await Mech.findById(req.user.mechId, {
+    // const mech = await Mech.findByPk(req.user.mechId, {
     //   attributes: ['id', 'level'],
     //   include: [
     //     { model: Base },
@@ -98,14 +98,14 @@ router.post('/builder', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { baseId, leftWeaponId, rightWeaponId, armorId } = req.body
-    const oldMech = await Mech.findById(req.params.id)
+    const oldMech = await Mech.findByPk(req.params.id)
     const newMech = await oldMech.update({
       baseId,
       leftWeaponId,
       rightWeaponId,
       armorId
     })
-    const returnedMech = await Mech.findById(newMech.id, {
+    const returnedMech = await Mech.findByPk(newMech.id, {
       attributes: ['id', 'level'],
       include: [
         { model: Base },

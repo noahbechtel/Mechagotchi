@@ -142,7 +142,7 @@ class Camera extends Component {
             <div id='cameraViewport' />
           )}
         </div>
-        <div className='hanger'>
+        <div className='menu'>
           {this.state.pwa ? (
             <img
               src='./assets/format/confirm.png'

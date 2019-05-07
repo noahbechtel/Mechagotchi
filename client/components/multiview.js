@@ -17,7 +17,7 @@ const Multiview = props => {
           </div>
         )}
       </div>
-      <div className='hanger'>
+      <div className='menu'>
         <img
           className='back'
           src='./assets/format/confirm.png'
