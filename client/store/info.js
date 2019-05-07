@@ -22,14 +22,6 @@ export const setCode = code => async dispatch => {
     console.error(err)
   }
 }
-export const addPart = part => async dispatch => {
-  try {
-    await axios.post(`api/inventory/${part.type}/${part.id}`)
-    dispatch(me())
-  } catch (err) {
-    console.error(err)
-  }
-}
 
 export const fetchStock = () => async dispatch => {
   try {

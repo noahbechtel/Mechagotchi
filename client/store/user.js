@@ -22,7 +22,6 @@ const defaultUser = {}
 // export const setMech = mech => ({ type: GET_MECH, mech })
 const getUser = user => ({ type: GET_USER, user })
 const setInv = inventory => ({ type: GET_INV, inventory })
-
 const removeUser = () => ({ type: REMOVE_USER })
 /**
  * THUNK CREATORS
@@ -31,6 +30,14 @@ export const me = () => async dispatch => {
   try {
     const res = await axios.get('/auth/me')
     dispatch(getUser(res.data || defaultUser))
+  } catch (err) {
+    console.error(err)
+  }
+}
+export const addPart = part => async dispatch => {
+  try {
+    const { data } = await axios.post(`api/inventory/${part.type}/${part.id}`)
+    dispatch(setInv(data))
   } catch (err) {
     console.error(err)
   }
@@ -82,7 +89,7 @@ export default function (state = defaultUser, action) {
     case GET_USER:
       return { ...action.user, ...state }
     case GET_INV:
-      return { inventory: action.inventory, ...state }
+      return { ...state, inventory: action.inventory }
 
     case REMOVE_USER:
       return defaultUser

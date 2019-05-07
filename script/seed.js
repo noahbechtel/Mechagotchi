@@ -29,7 +29,7 @@ async function seed () {
       rarity: 0,
       defense: 10,
       rightArm_X: 140,
-      rightArm_Y: 108,
+      rightArm_Y: 115,
       leftArm_X: 28,
       leftArm_Y: 80,
       imgUrl: './assets/bases/Scout.png'
@@ -40,7 +40,7 @@ async function seed () {
       rarity: 1,
       defense: 10,
       rightArm_X: 138,
-      rightArm_Y: 108,
+      rightArm_Y: 115,
       leftArm_X: 28,
       leftArm_Y: 80,
       imgUrl: './assets/bases/Puma.png'
@@ -84,7 +84,7 @@ async function seed () {
       rarity: 2,
       defense: 30,
       rightArm_X: 138,
-      rightArm_Y: 108,
+      rightArm_Y: 115,
       leftArm_X: 28,
       leftArm_Y: 80,
       imgUrl: './assets/bases/Forman.png'

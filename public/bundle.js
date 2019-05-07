@@ -314,8 +314,6 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/index.js"));
 
-var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
-
 var _user = __webpack_require__(/*! ../store/user */ "./client/store/user.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -680,9 +678,17 @@ function (_Component) {
           }; // End PIXI Render Setup
 
         } else {
+          var text = new PIXI.Text("Salvage aquired!", {
+            fontFamily: 'courier',
+            fontSize: 20
+          });
+          app.stage.addChild(text);
+          text.x = app.screen.width / 2 - 100;
+          text.y = app.screen.height / 2 + 100;
           app.stage.addChild(incomingMech);
+          incomingMech.anchor.set(0.5, 0.5);
           incomingMech.x = app.screen.width / 2;
-          incomingMech.y = app.screen.height / 2;
+          incomingMech.y = app.screen.height / 2 - 100;
           incomingMech.interactive = true;
           incomingMech.buttonMode = true;
 
@@ -729,7 +735,7 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     addPart: function addPart(part) {
-      dispatch((0, _info.addPart)(part));
+      dispatch((0, _user.addPart)(part));
     },
     getInv: function getInv() {
       dispatch((0, _user.getInv)());
@@ -925,13 +931,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var Camera =
 /*#__PURE__*/
@@ -944,8 +952,34 @@ function (_Component) {
     _classCallCheck(this, Camera);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Camera).call(this));
+
+    _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (result) {
+      _quagga["default"].stop();
+
+      _this.props.setCode({
+        result: result,
+        stock: _this.props.stock
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleSubmitPwa", function (evt) {
+      evt.preventDefault();
+
+      _this.props.setCode({
+        result: _this.state.result,
+        stock: _this.props.stock
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleChange", function (evt) {
+      _this.setState({
+        result: evt.target.value
+      });
+    });
+
     _this.state = {
-      scanned: false
+      pwa: false,
+      result: ''
     };
     return _this;
   }
@@ -960,10 +994,93 @@ function (_Component) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return this.props.setCode({
-                  result: '110599686056',
-                  stock: this.props.stock
+                if (!window.matchMedia('(display-mode: standalone)').matches && !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) {
+                  this.setState({
+                    pwa: true
+                  });
+                } else {
+                  _quagga["default"].init({
+                    inputStream: {
+                      type: 'LiveStream',
+                      target: document.querySelector('#cameraViewport'),
+                      constraints: {
+                        width: {
+                          min: 640
+                        },
+                        height: {
+                          min: 480
+                        },
+                        facingMode: 'environment',
+                        aspectRatio: {
+                          min: 1,
+                          max: 2
+                        }
+                      }
+                    },
+                    locator: {
+                      patchSize: 'medium',
+                      halfSample: true
+                    },
+                    numOfWorkers: 2,
+                    frequency: 10,
+                    decoder: {
+                      readers: ['upc_reader', 'codabar_reader', 'upc_reader', 'upc_e_reader']
+                    },
+                    locate: true
+                  }, function (err) {
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }
+
+                    _quagga["default"].start();
+
+                    console.log('Initialization finished. Ready to start');
+                  });
+                }
+
+                _quagga["default"].onProcessed(function (result) {
+                  var drawingCtx = _quagga["default"].canvas.ctx.overlay;
+                  var drawingCanvas = _quagga["default"].canvas.dom.overlay;
+
+                  if (result) {
+                    if (result.boxes) {
+                      drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width')), parseInt(drawingCanvas.getAttribute('height')));
+                      result.boxes.filter(function (box) {
+                        return box !== result.box;
+                      }).forEach(function (box) {
+                        _quagga["default"].ImageDebug.drawPath(box, {
+                          x: 0,
+                          y: 1
+                        }, drawingCtx, {
+                          color: 'green',
+                          lineWidth: 2
+                        });
+                      });
+                    }
+
+                    if (result.box) {
+                      _quagga["default"].ImageDebug.drawPath(result.box, {
+                        x: 0,
+                        y: 1
+                      }, drawingCtx, {
+                        color: '#00F',
+                        lineWidth: 2
+                      });
+                    }
+
+                    if (result.codeResult && result.codeResult.code) {
+                      _quagga["default"].ImageDebug.drawPath(result.line, {
+                        x: 'x',
+                        y: 'y'
+                      }, drawingCtx, {
+                        color: 'red',
+                        lineWidth: 3
+                      });
+
+                      this.handleSubmit(result.codeResult.code);
+                    }
+                  }
                 });
 
               case 2:
@@ -982,18 +1099,30 @@ function (_Component) {
     }()
   }, {
     key: "componentWillUnmount",
-    value: function componentWillUnmount() {// Quagga.stop()
+    value: function componentWillUnmount() {
+      if (!this.state.pwa) _quagga["default"].stop();
     }
   }, {
     key: "render",
     value: function render() {
       return _react["default"].createElement("div", null, _react["default"].createElement("div", {
         className: "camera"
-      }, _react["default"].createElement("div", {
+      }, this.state.pwa ? _react["default"].createElement("form", {
+        onSubmit: this.handleSubmitPwa
+      }, _react["default"].createElement("h1", null, "If you can see this, your browser is a bitch. You'll have to type the codes in here until I find a better solution."), _react["default"].createElement("input", {
+        type: "number",
+        className: "textbox",
+        value: this.state.result,
+        onChange: this.handleChange
+      })) : _react["default"].createElement("div", {
         id: "cameraViewport"
       })), _react["default"].createElement("div", {
         className: "hanger"
-      }, _react["default"].createElement("img", {
+      }, this.state.pwa ? _react["default"].createElement("img", {
+        src: "./assets/format/confirm.png",
+        onClick: this.handleSubmitPwa,
+        className: "back"
+      }) : _react["default"].createElement("div", null), _react["default"].createElement("img", {
         className: "back",
         src: "./assets/format/back.png",
         onClick: function onClick() {
@@ -2139,7 +2268,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = _default;
-exports.fetchStock = exports.addPart = exports.setCode = void 0;
+exports.fetchStock = exports.setCode = void 0;
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
@@ -2229,87 +2358,45 @@ var setCode = function setCode(code) {
 
 exports.setCode = setCode;
 
-var addPart = function addPart(part) {
+var fetchStock = function fetchStock() {
   return (
     /*#__PURE__*/
     function () {
       var _ref3 = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2(dispatch) {
+        var _ref4, data;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
                 _context2.next = 3;
-                return _axios["default"].post("api/inventory/".concat(part.type, "/").concat(part.id));
+                return _axios["default"].get("api/inventory");
 
               case 3:
-                dispatch((0, _user.me)());
-                _context2.next = 9;
+                _ref4 = _context2.sent;
+                data = _ref4.data;
+                dispatch(getStock(data));
+                _context2.next = 11;
                 break;
 
-              case 6:
-                _context2.prev = 6;
+              case 8:
+                _context2.prev = 8;
                 _context2.t0 = _context2["catch"](0);
                 console.error(_context2.t0);
 
-              case 9:
+              case 11:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 6]]);
+        }, _callee2, null, [[0, 8]]);
       }));
 
       return function (_x2) {
         return _ref3.apply(this, arguments);
-      };
-    }()
-  );
-};
-
-exports.addPart = addPart;
-
-var fetchStock = function fetchStock() {
-  return (
-    /*#__PURE__*/
-    function () {
-      var _ref4 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(dispatch) {
-        var _ref5, data;
-
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
-                return _axios["default"].get("api/inventory");
-
-              case 3:
-                _ref5 = _context3.sent;
-                data = _ref5.data;
-                dispatch(getStock(data));
-                _context3.next = 11;
-                break;
-
-              case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
-                console.error(_context3.t0);
-
-              case 11:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, null, [[0, 8]]);
-      }));
-
-      return function (_x3) {
-        return _ref4.apply(this, arguments);
       };
     }()
   );
@@ -2511,7 +2598,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = _default;
-exports.getInv = exports.logout = exports.auth = exports.me = void 0;
+exports.getInv = exports.logout = exports.auth = exports.addPart = exports.me = void 0;
 
 var _axios = _interopRequireDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -2617,68 +2704,114 @@ var me = function me() {
 
 exports.me = me;
 
-var auth = function auth(email, password, method) {
+var addPart = function addPart(part) {
   return (
     /*#__PURE__*/
     function () {
       var _ref2 = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2(dispatch) {
-        var res;
+        var _ref3, data;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
                 _context2.next = 3;
+                return _axios["default"].post("api/inventory/".concat(part.type, "/").concat(part.id));
+
+              case 3:
+                _ref3 = _context2.sent;
+                data = _ref3.data;
+                dispatch(setInv(data));
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.error(_context2.t0);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 8]]);
+      }));
+
+      return function (_x2) {
+        return _ref2.apply(this, arguments);
+      };
+    }()
+  );
+};
+
+exports.addPart = addPart;
+
+var auth = function auth(email, password, method) {
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref4 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee3(dispatch) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
                 return _axios["default"].post("/auth/".concat(method), {
                   email: email,
                   password: password
                 });
 
               case 3:
-                res = _context2.sent;
-                _context2.next = 9;
+                res = _context3.sent;
+                _context3.next = 9;
                 break;
 
               case 6:
-                _context2.prev = 6;
-                _context2.t0 = _context2["catch"](0);
-                return _context2.abrupt("return", dispatch(getUser({
-                  error: _context2.t0
+                _context3.prev = 6;
+                _context3.t0 = _context3["catch"](0);
+                return _context3.abrupt("return", dispatch(getUser({
+                  error: _context3.t0
                 })));
 
               case 9:
-                _context2.prev = 9;
+                _context3.prev = 9;
                 console.log(res.data);
-                _context2.next = 13;
+                _context3.next = 13;
                 return dispatch(getUser(res.data));
 
               case 13:
-                _context2.next = 15;
+                _context3.next = 15;
                 return dispatch((0, _mech.fetchMech)());
 
               case 15:
                 _history["default"].push('/builder');
 
-                _context2.next = 21;
+                _context3.next = 21;
                 break;
 
               case 18:
-                _context2.prev = 18;
-                _context2.t1 = _context2["catch"](9);
-                console.error(_context2.t1);
+                _context3.prev = 18;
+                _context3.t1 = _context3["catch"](9);
+                console.error(_context3.t1);
 
               case 21:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, null, [[0, 6], [9, 18]]);
+        }, _callee3, null, [[0, 6], [9, 18]]);
       }));
 
-      return function (_x2) {
-        return _ref2.apply(this, arguments);
+      return function (_x3) {
+        return _ref4.apply(this, arguments);
       };
     }()
   );
@@ -2690,15 +2823,15 @@ var logout = function logout() {
   return (
     /*#__PURE__*/
     function () {
-      var _ref3 = _asyncToGenerator(
+      var _ref5 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(dispatch) {
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      regeneratorRuntime.mark(function _callee4(dispatch) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
+                _context4.prev = 0;
+                _context4.next = 3;
                 return _axios["default"].post('/auth/logout');
 
               case 3:
@@ -2706,24 +2839,24 @@ var logout = function logout() {
 
                 _history["default"].push('/login');
 
-                _context3.next = 10;
+                _context4.next = 10;
                 break;
 
               case 7:
-                _context3.prev = 7;
-                _context3.t0 = _context3["catch"](0);
-                console.error(_context3.t0);
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                console.error(_context4.t0);
 
               case 10:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, null, [[0, 7]]);
+        }, _callee4, null, [[0, 7]]);
       }));
 
-      return function (_x3) {
-        return _ref3.apply(this, arguments);
+      return function (_x4) {
+        return _ref5.apply(this, arguments);
       };
     }()
   );
@@ -2735,40 +2868,40 @@ var getInv = function getInv() {
   return (
     /*#__PURE__*/
     function () {
-      var _ref4 = _asyncToGenerator(
+      var _ref6 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4(dispatch) {
+      regeneratorRuntime.mark(function _callee5(dispatch) {
         var res;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.prev = 0;
-                _context4.next = 3;
+                _context5.prev = 0;
+                _context5.next = 3;
                 return _axios["default"].get("api/inventory/me");
 
               case 3:
-                res = _context4.sent;
+                res = _context5.sent;
                 dispatch(setInv(res.data));
                 console.log(res.data);
-                _context4.next = 11;
+                _context5.next = 11;
                 break;
 
               case 8:
-                _context4.prev = 8;
-                _context4.t0 = _context4["catch"](0);
-                console.error(_context4.t0);
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                console.error(_context5.t0);
 
               case 11:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, null, [[0, 8]]);
+        }, _callee5, null, [[0, 8]]);
       }));
 
-      return function (_x4) {
-        return _ref4.apply(this, arguments);
+      return function (_x5) {
+        return _ref6.apply(this, arguments);
       };
     }()
   );
@@ -2789,9 +2922,9 @@ function _default() {
       return _objectSpread({}, action.user, state);
 
     case GET_INV:
-      return _objectSpread({
+      return _objectSpread({}, state, {
         inventory: action.inventory
-      }, state);
+      });
 
     case REMOVE_USER:
       return defaultUser;

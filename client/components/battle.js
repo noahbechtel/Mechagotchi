@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as PIXI from 'pixi.js'
-import { addPart } from '../store/info'
+import { addPart } from '../store/user'
 import { getInv } from '../store/user'
 class Battle extends Component {
   constructor () {
@@ -367,9 +367,17 @@ class Battle extends Component {
 
         // End PIXI Render Setup
       } else {
+        let text = new PIXI.Text(`Salvage aquired!`, {
+          fontFamily: 'courier',
+          fontSize: 20
+        })
+        app.stage.addChild(text)
+        text.x = app.screen.width / 2 - 100
+        text.y = app.screen.height / 2 + 100
         app.stage.addChild(incomingMech)
+        incomingMech.anchor.set(0.5, 0.5)
         incomingMech.x = app.screen.width / 2
-        incomingMech.y = app.screen.height / 2
+        incomingMech.y = app.screen.height / 2 - 100
         incomingMech.interactive = true
         incomingMech.buttonMode = true
         this.props.addPart(incoming)
