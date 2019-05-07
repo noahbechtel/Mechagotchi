@@ -336,7 +336,7 @@ class Battle extends Component {
                   leftEmergency = 150
                   leftHeat = 150
                 } else {
-                  enemyHealth -= leftAttack
+                  enemyHealth -= leftAttack / 2
                   leftHeat += leftAttack * 3
                   buffer = 1
                 }
@@ -348,7 +348,7 @@ class Battle extends Component {
                   rightEmergency = 150
                   rightHeat = 150
                 } else {
-                  enemyHealth -= rightAttack
+                  enemyHealth -= rightAttack /2
                   rightHeat += rightAttack * 3
                   buffer = 1
                 }
@@ -383,8 +383,8 @@ class Battle extends Component {
                 enemyRightHeat + enemyRightAttack * 3 < 150 &&
                 enemyBuffer <= 0
               ) {
-                playerHealth -= enemyRightAttack
-                enemyRightHeat += enemyRightAttack
+                playerHealth -= enemyRightAttack /2
+                enemyRightHeat += enemyRightAttack*3
                 enemyBuffer = 33
                 right = false
               } else {
@@ -396,8 +396,8 @@ class Battle extends Component {
                 enemyLeftHeat + enemyLeftAttack * 3 < 150 &&
                 enemyBuffer <= 0
               ) {
-                playerHealth -= enemyLeftAttack
-                enemyLeftHeat += enemyLeftAttack
+                playerHealth -= enemyLeftAttack /2
+                enemyLeftHeat += enemyLeftAttack *3
                 enemyBuffer = 33
                 right = true
               } else {
