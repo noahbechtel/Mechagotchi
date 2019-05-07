@@ -48,9 +48,9 @@ router.post('/signup', async (req, res, next) => {
       ]
     })
     const inv = await Inventory.create({})
-    const myFirstMech = Base.findByPk(1)
-    const myFirstChaingun = rightWeapon.findByPk(1)
-    const mySecondChaingun = leftWeapon.findByPk(1)
+    const myFirstMech = await Base.findByPk(1)
+    const myFirstChaingun = await rightWeapon.findByPk(1)
+    const mySecondChaingun = await leftWeapon.findByPk(1)
     await inv.addBase(myFirstMech)
     await inv.addRightWeapon(myFirstChaingun)
     await inv.addLeftWeapon(mySecondChaingun)

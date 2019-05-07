@@ -1,5 +1,13 @@
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Press Start 2P Regular'), local('PressStart2P-Regular'), url(https://fonts.gstatic.com/s/pressstart2p/v7/e3t4euO8T-267oIAQAu6jDQyK3nYivNm4I81PZQ.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+      
 body {
-  font-family: sans-serif;
+  font-family: 'Press Start 2P' ;
   background-color: #616161;
   flex-direction: column;
 }
@@ -38,6 +46,18 @@ form div {
   width: 100%;
   margin-top: 10%;
   
+}
+.form{
+  font-family: 'Press Start 2P' ;
+  display: flex;
+  font-size: 30px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 10%;
 }
 .menu{
   display: flex;

@@ -18,7 +18,9 @@ export const fetchMech = () => async dispatch => {
     const { data } = await axios.get(`api/mech`)
     dispatch(setMech(data))
   } catch (err) {
-    history.push('/login')
+    if (history.location.pathname !== ('/login' || '/signup')) {
+      history.push('/signup')
+    }
   }
 }
 

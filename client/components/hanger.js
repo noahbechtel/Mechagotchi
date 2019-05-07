@@ -10,7 +10,11 @@ class Hanger extends Component {
   }
 
   componentDidMount () {
+    if (this.props.mech.base.imgurl) {
+      this.props.history.push('/login')
+    }
     const mech = this.props.mech
+
     const defense = mech.base.defense + mech.armor.defense
     const attack = mech.leftWeapon.damage + mech.rightWeapon.damage
     const level = mech.level

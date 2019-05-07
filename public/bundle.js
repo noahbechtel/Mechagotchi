@@ -222,22 +222,24 @@ var AuthForm = function AuthForm(props) {
       error = props.error;
   return _react["default"].createElement("div", null, _react["default"].createElement("form", {
     onSubmit: handleSubmit,
-    name: name
+    name: name,
+    className: "form"
   }, _react["default"].createElement("div", null, _react["default"].createElement("label", {
     htmlFor: "email"
   }, _react["default"].createElement("small", null, "Email")), _react["default"].createElement("input", {
     name: "email",
-    type: "text"
+    type: "text",
+    className: "textbox"
   })), _react["default"].createElement("div", null, _react["default"].createElement("label", {
     htmlFor: "password"
   }, _react["default"].createElement("small", null, "Password")), _react["default"].createElement("input", {
     name: "password",
-    type: "password"
+    type: "password",
+    className: "textbox"
   })), _react["default"].createElement("div", null, _react["default"].createElement("button", {
-    type: "submit"
-  }, displayName)), error && error.response && _react["default"].createElement("div", null, " ", error.response.data, " ")), _react["default"].createElement("a", {
-    href: "/auth/google"
-  }, displayName, " with Google"));
+    type: "submit",
+    className: "login"
+  }, displayName)), error && error.response && _react["default"].createElement("div", null, " ", error.response.data, " ")));
 };
 /**
  * CONTAINER
@@ -1323,6 +1325,10 @@ function (_Component) {
   _createClass(Hanger, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      if (this.props.mech.base.imgurl) {
+        this.props.history.push('/login');
+      }
+
       var mech = this.props.mech;
       var defense = mech.base.defense + mech.armor.defense;
       var attack = mech.leftWeapon.damage + mech.rightWeapon.damage;
@@ -2624,7 +2630,9 @@ var fetchMech = function fetchMech() {
                 _context2.prev = 8;
                 _context2.t0 = _context2["catch"](0);
 
-                _history["default"].push('/login');
+                if (_history["default"].location.pathname !== ('/login' || '/signup')) {
+                  _history["default"].push('/signup');
+                }
 
               case 11:
               case "end":
@@ -3041,7 +3049,7 @@ var spawnAlgo = function spawnAlgo(code, stock) {
 
   digit[4] >= 8 ? type = 'base' : digit[4] > 5 ? type = 'leftWeapon' : digit[4] > 3 ? type = 'rightWeapon' : type = 'armor';
   var stockNum = stock[type];
-  var id = Math.round(stockNum / (1 + Number(digit[5])));
+  var id = Math.round(stockNum / (Number(digit[5]) === 0 ? 1 : Number(digit[5])));
 
   if (type === 'base') {
     var rightWeapon = Math.round(stock.rightWeapon / (digit[3] + Number(digit[2])) + 1);
