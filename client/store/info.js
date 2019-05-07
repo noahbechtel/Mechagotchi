@@ -1,7 +1,7 @@
 import history from '../history'
 import axios from 'axios'
 import spawnAlgo from '../utils.js/spawn'
-import { me } from './user'
+import { me, additionalPart } from './user'
 
 const GET_CODE = 'GET_CODE'
 const GET_PIXI = 'GET_PIXI'
@@ -24,10 +24,8 @@ export const setCode = code => async dispatch => {
 }
 export const addPart = part => async dispatch => {
   try {
-    console.log(part)
     await axios.post(`api/inventory/${part.type}/${part.id}`)
     dispatch(me())
-    history.push('/hanger')
   } catch (err) {
     console.error(err)
   }

@@ -316,13 +316,15 @@ var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_mo
 
 var _info = __webpack_require__(/*! ../store/info */ "./client/store/info.js");
 
+var _user = __webpack_require__(/*! ../store/user */ "./client/store/user.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -435,13 +437,6 @@ function (_Component) {
             break;
 
           case 'base':
-            // if (incoming.armor.imgUrl !== mech.armor.imgUrl) {
-            //   ar = new PIXI.Sprite.fromImage(incoming.armor.imgUrl)
-            // } else {
-            //   ar = new PIXI.Sprite(
-            //     PIXI.loader.resources[mech.armor.imgUrl].texture
-            //   )
-            // }
             if (incoming.rightWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
               right = new PIXI.Sprite.fromImage(incoming.rightWeapon.imgUrl);
             } else {
@@ -471,34 +466,11 @@ function (_Component) {
 
           default:
             break;
-        } // const armor = new PIXI.Sprite(
-        //   PIXI.loader.resources[mech.armor.imgUrl].texture
-        // )
-        // End Loader
+        } // End Loader
         // PIXI render
 
 
         if (incoming.base) {
-          // app.stage.addChild(base)
-          // app.stage.addChild(leftWeapon)
-          // app.stage.addChild(rightWeapon)
-          // base.x = app.screen.width / 3
-          // base.y = app.screen.height - 80
-          // leftWeapon.anchor.set(0.5, 1)
-          // leftWeapon.x = base.x + mech.base.rightArm_X
-          // leftWeapon.scale.x = -1
-          // leftWeapon.y = base.y + mech.base.rightArm_Y
-          // rightWeapon.anchor.set(1, 0.5)
-          // rightWeapon.x = base.x + mech.base.leftArm_X
-          // rightWeapon.y = base.y + mech.base.leftArm_Y
-          // base.tint = 0x000000
-          // if (mech.base.class === 'Heavy Mech') {
-          //   base.scale.set(1.5)
-          // } else {
-          //   base.scale.set(1)
-          // }
-          // rightWeapon.tint = 0x000000
-          // leftWeapon.tint = 0x000000
           app.stage.addChild(incomingMech.base);
           app.stage.addChild(incomingMech.leftWeapon);
           app.stage.addChild(incomingMech.rightWeapon);
@@ -524,19 +496,6 @@ function (_Component) {
           var enemyHealth = incoming.base.defense + 100;
           var enemyRightAttack = incoming.rightWeapon.damage;
           var enemyLeftAttack = incoming.leftWeapon.damage;
-          var state; // const fight = new PIXI.Sprite.fromImage('./assets/format/start.png')
-          // fight.scale.set(0.1)
-          // fight.interactive = true
-          // fight.buttonMode = true
-          // const playerHp = new PIXI.Text(`Health:${playerDefense}`, {
-          //   fontFamily: 'Arial',
-          //   fontSize: 36
-          // })
-          // const enemyHp = new PIXI.Text(`Health:${enemyHealth}`, {
-          //   fontFamily: 'Arial',
-          //   fontSize: 36
-          // })
-
           console.log(mech); // Interactive GUI
 
           var leftButton = new PIXI.Sprite.fromImage('./assets/format/leftButton.png');
@@ -552,186 +511,190 @@ function (_Component) {
           rightButton.interactive = true;
           rightButton.buttonMode = true;
           leftButton.interactive = true;
-          leftButton.buttonMode = true; // enemy healthbar
-
-          var enemyHealthBar = new PIXI.Container();
-          app.stage.addChild(enemyHealthBar);
-          var enemyInnerBar = new PIXI.Graphics();
-          enemyInnerBar.beginFill(0x000000);
-          enemyInnerBar.drawRect(0, 0, 15, enemyHealth * 2);
-          enemyInnerBar.endFill();
-          enemyHealthBar.addChild(enemyInnerBar);
-          var enemyOuterBar = new PIXI.Graphics();
-          enemyOuterBar.beginFill(0xff3300);
-          enemyOuterBar.drawRect(0, 0, 15, enemyHealth * 2);
-          enemyOuterBar.endFill();
-          enemyHealthBar.helth = enemyOuterBar.height;
-          enemyHealthBar.addChild(enemyOuterBar); // player healthbar
-
+          leftButton.buttonMode = true;
           var playerHealthBar = new PIXI.Container();
           app.stage.addChild(playerHealthBar);
-          var playerInnerBar = new PIXI.Graphics();
-          playerInnerBar.beginFill(0x000000);
-          playerInnerBar.drawRect(0, 0, 50, playerHealth);
-          playerInnerBar.endFill();
-          playerHealthBar.addChild(playerInnerBar);
-          var playerOuterBar = new PIXI.Graphics();
-          playerOuterBar.beginFill(0x6b8e23);
-          playerOuterBar.drawRect(0, 0, 50, playerHealth);
-          playerOuterBar.endFill();
-          playerHealthBar.health = playerOuterBar.height;
-          playerHealthBar.addChild(playerOuterBar);
+          var enemyHealthBar = new PIXI.Container();
+          app.stage.addChild(enemyHealthBar);
           enemyHealthBar.y = enemyHealth / 2 - 10;
           enemyHealthBar.x = 10;
           playerHealthBar.y = leftButton.y - enemyHealth - 10;
-          playerHealthBar.x = app.screen.width / 2 - 25; // left cooldown
-
-          var leftCoolDown = new PIXI.Container();
-          app.stage.addChild(leftCoolDown);
-          var leftInnerBar = new PIXI.Graphics();
-          leftInnerBar.beginFill(0x000000);
-          leftInnerBar.drawRect(0, 0, 90, 150);
-          leftInnerBar.endFill();
-          leftCoolDown.addChild(leftInnerBar);
-          var leftOuterBar = new PIXI.Graphics();
-          leftOuterBar.beginFill(0xff3300);
-          leftOuterBar.drawRect(0, 0, 90, 0);
-          leftOuterBar.endFill();
-          leftCoolDown.heat = leftOuterBar.height;
-          leftCoolDown.addChild(leftOuterBar);
-          leftCoolDown.y = leftButton.y - leftInnerBar.height - 10;
-          leftCoolDown.x = leftButton.x + 10; // right cooldown
-
-          var rightCoolDown = new PIXI.Container();
-          app.stage.addChild(rightCoolDown);
-          var rightInnerBar = new PIXI.Graphics();
-          rightInnerBar.beginFill(0x000000);
-          rightInnerBar.drawRect(0, 0, 90, 150);
-          rightInnerBar.endFill();
-          rightCoolDown.addChild(rightInnerBar);
-          var rightOuterBar = new PIXI.Graphics();
-          rightOuterBar.beginFill(0xff3300);
-          rightOuterBar.drawRect(0, 0, 90, 0);
-          rightOuterBar.endFill();
-          rightCoolDown.heat = rightOuterBar.height;
-          rightCoolDown.addChild(rightOuterBar);
-          rightCoolDown.y = rightButton.y - rightInnerBar.height - 10;
-          rightCoolDown.x = rightButton.x + 10;
+          playerHealthBar.x = app.screen.width / 2 - 25;
           app.ticker.add(function (delta) {
             return gameLoop(delta);
           });
           var buffer = 0;
-          var enemyCoolBuffer = 0;
-          var leftCoolBuffer = 0;
-          var rightCoolBuffer = 0;
-          var arm = 0;
-          var frames = 0;
+          var rightHeat = 0;
+          var leftHeat = 0;
+          var leftEmergency = 0;
+          var rightEmergency = 0;
+          var enemyMaxHealth = enemyHealth;
+          var playerMaxHealth = playerHealth;
+          var counter = 0;
 
           var gameLoop = function gameLoop(delta) {
-            if (playerHealth < 0 || enemyHealth < 0) {
-              app.stop();
-            } // if (arm === 0) {
-            //   playerHealth -= enemyLeftAttack
-            //   arm = 1
-            //   enemyCooldown = frames + 75
-            // } else {
-            //   playerHealth -= enemyRightAttack
-            //   arm = 0
-            //   enemyCooldown = frames + 75
-            // }
+            // enemy healthbar
+            var enemyInnerBar = new PIXI.Graphics();
+            enemyInnerBar.beginFill(0x000000);
+            enemyInnerBar.drawRect(0, 0, 15, enemyMaxHealth);
+            enemyInnerBar.endFill();
+            enemyHealthBar.addChild(enemyInnerBar);
+            var enemyOuterBar = new PIXI.Graphics();
+            enemyOuterBar.beginFill(0xff3300);
+            enemyOuterBar.drawRect(0, 0, 15, enemyHealth);
+            enemyOuterBar.endFill();
+            enemyHealthBar.addChild(enemyOuterBar); // player healthbar
 
+            var playerInnerBar = new PIXI.Graphics();
+            playerInnerBar.beginFill(0x000000);
+            playerInnerBar.drawRect(0, 0, 50, playerMaxHealth);
+            playerInnerBar.endFill();
+            playerHealthBar.addChild(playerInnerBar);
+            var playerOuterBar = new PIXI.Graphics();
+            playerOuterBar.beginFill(0x6b8e23);
+            playerOuterBar.drawRect(0, 0, 50, playerHealth);
+            playerOuterBar.endFill();
+            playerHealthBar.addChild(playerOuterBar); // left cooldown
 
-            if (leftCoolBuffer === 0) {
-              if (leftCoolDown.heat > 0) {
-                leftCoolDown.heat -= 5;
-                leftCoolBuffer = 33;
+            var leftCoolDown = new PIXI.Container();
+            app.stage.addChild(leftCoolDown);
+            var leftInnerBar = new PIXI.Graphics();
+            leftInnerBar.beginFill(0x000000);
+            leftInnerBar.drawRect(0, 0, 90, 150);
+            leftInnerBar.endFill();
+            leftCoolDown.addChild(leftInnerBar);
+            var leftOuterBar = new PIXI.Graphics();
+            leftOuterBar.beginFill(0xff3300);
+            leftOuterBar.drawRect(0, 0, 90, leftHeat);
+            leftOuterBar.endFill();
+            leftCoolDown.heat = leftOuterBar.height;
+            leftCoolDown.addChild(leftOuterBar);
+            leftCoolDown.y = leftButton.y - leftInnerBar.height - 10;
+            leftCoolDown.x = leftButton.x + 10; // right cooldown
+
+            var rightCoolDown = new PIXI.Container();
+            app.stage.addChild(rightCoolDown);
+            var rightInnerBar = new PIXI.Graphics();
+            rightInnerBar.beginFill(0x000000);
+            rightInnerBar.drawRect(0, 0, 90, 150);
+            rightInnerBar.endFill();
+            rightCoolDown.addChild(rightInnerBar);
+            var rightOuterBar = new PIXI.Graphics();
+            rightOuterBar.beginFill(0xff3300);
+            rightOuterBar.drawRect(0, 0, 90, rightHeat);
+            rightOuterBar.endFill();
+            rightCoolDown.heat = rightOuterBar.height;
+            rightCoolDown.addChild(rightOuterBar);
+            rightCoolDown.y = rightButton.y - rightInnerBar.height - 10;
+            rightCoolDown.x = rightButton.x + 10; // player attack functions
+
+            var leftCallback = function leftCallback() {
+              if (leftHeat < 150 && buffer === 0 && !leftEmergency) {
+                if (leftHeat + leftAttack * 3 > 150) {
+                  leftEmergency = 150;
+                  leftHeat = 150;
+                } else {
+                  enemyHealth -= leftAttack;
+                  leftHeat += leftAttack * 3;
+                  buffer = 1;
+                }
               }
+            };
+
+            var rightCallback = function rightCallback() {
+              if (rightHeat < 150 && buffer === 0 && !rightEmergency) {
+                if (rightHeat + rightAttack * 3 > 150) {
+                  rightEmergency = 150;
+                  rightHeat = 150;
+                } else {
+                  enemyHealth -= rightAttack;
+                  rightHeat += rightAttack * 3;
+                  buffer = 1;
+                }
+              }
+            };
+
+            rightButton.on('click', rightCallback);
+            rightButton.on('touchend', rightCallback);
+            leftButton.on('click', leftCallback);
+            leftButton.on('touchend', leftCallback); // OverHeat
+
+            if (rightEmergency > 0 && rightHeat > 0) {
+              rightHeat -= 0.5;
+              rightEmergency -= 0.5;
             } else {
-              leftCoolBuffer - 1;
+              if (rightHeat > 0) rightHeat -= 0.5;
             }
 
-            if (rightCoolBuffer === 0) {
-              if (rightCoolDown.heat > 0) {
-                rightCoolDown.heat -= 5;
-                rightCoolBuffer = 33;
-              }
+            if (leftEmergency > 0 && leftHeat > 0) {
+              leftHeat -= 0.5;
+              leftEmergency -= 0.5;
             } else {
-              rightCoolBuffer - 1;
+              if (leftHeat > 0) leftHeat -= 0.5;
             }
 
-            rightButton.on('click', function () {
-              if (buffer + 33 < frames) {
-                if (rightCoolDown.heat < 90) {
-                  enemyHealth -= rightAttack;
-                  rightCoolDown.heat += rightAttack;
-                  buffer = frames;
-                }
+            if (buffer > 0) buffer -= 1; // EndGame
+
+            if (enemyHealth <= 0) {
+              enemyHealthBar.removeChild(enemyOuterBar);
+              var boom = new PIXI.Graphics();
+              boom.beginFill(0xffffff);
+              boom.drawRect(0, 0, app.screen.width, app.screen.height);
+              boom.endFill();
+              app.stage.addChild(boom);
+              boom.alpha = counter;
+
+              if (counter >= 10) {
+                _this.props.addPart(_objectSpread({
+                  type: 'base'
+                }, incoming.base));
+
+                var prize = PIXI.Sprite.fromImage(incoming.base.imgUrl);
+                var text = new PIXI.Text("Salvage aquired!", {
+                  fontFamily: 'courier',
+                  fontSize: 20
+                });
+                prize.scale.set(0.6);
+                app.stage.addChild(text);
+                app.stage.addChild(prize);
+                text.x = app.screen.width / 2 - 100;
+                text.y = app.screen.height / 2 + 100;
+                prize.x = app.screen.width / 2 - 30;
+                prize.y = app.screen.height / 2 - 100;
+                prize.interactive = true;
+                prize.buttonMode = true;
+
+                var goHanger = function goHanger() {
+                  _this.props.history.push('/hanger');
+                };
+
+                prize.on('click', goHanger);
+                prize.on('touchend', goHanger);
+                app.stop();
+              } else {
+                counter += 0.5;
               }
-            });
-            rightButton.on('touchend', function () {
-              if (buffer + 33 < frames) {
-                if (rightCoolDown.heat < 90) {
-                  enemyHealth -= rightAttack;
-                  rightCoolDown.heat += rightAttack;
-                  buffer = frames;
-                }
-              }
-            });
-            leftButton.on('click', function () {
-              if (buffer + 33 < frames) {
-                if (rightCoolDown.heat < 90) {
-                  enemyHealth -= leftAttack;
-                  leftCoolDown.heat += leftAttack;
-                  buffer = frames;
-                }
-              }
-            });
-            leftButton.on('touchend', function () {
-              if (buffer + 33 < frames) {
-                if (rightCoolDown.heat < 90) {
-                  enemyHealth -= leftAttack;
-                  leftCoolDown.heat += leftAttack;
-                  buffer = frames;
-                }
-              }
-            });
-            frames += 1;
-            console.log(playerHealth, enemyHealth, buffer, frames);
+            }
+
+            console.log('HP:', playerHealth, 'EH:', enemyHealth, counter);
           }; // End PIXI Render Setup
-          // game functions
 
         } else {
-          // const part = new PIXI.Sprite.fromImage(incoming.imgUrl)
           app.stage.addChild(incomingMech);
           incomingMech.x = app.screen.width / 2;
           incomingMech.y = app.screen.height / 2;
           incomingMech.interactive = true;
           incomingMech.buttonMode = true;
-          incomingMech.on('click', function () {
-            _this.props.addPart(incoming);
-          });
-          incomingMech.on('touchend', function () {
-            _this.props.addPart(incoming);
-          });
-        } // TEXT
-        // let attackText = new PIXI.Text(`DMG:${attack}`, {
-        //   fontFamily: 'Arial',
-        //   fontSize: 36
-        // })
-        // let defenseText = new PIXI.Text(`DEF:${defense}`, {
-        //   fontFamily: 'Arial',
-        //   fontSize: 36
-        // })
-        // let levelText = new PIXI.Text(`LVL:${level}`, {
-        //   fontFamily: 'Arial',
-        //   fontSize: 36
-        // })
-        // app.stage.addChild(defenseText)
-        // app.stage.addChild(attackText)
-        // app.stage.addChild(levelText)
-        // defenseText.y = 50
-        // levelText.y = 100
 
+          _this.props.addPart(incoming);
+
+          var goHanger = function goHanger() {
+            _this.props.history.push('/hanger');
+          };
+
+          incomingMech.on('click', goHanger);
+          incomingMech.on('touchend', goHanger);
+        }
 
         console.log('setup finished');
       }); // Assignment
@@ -765,30 +728,12 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
-    addPart: function () {
-      var _addPart2 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(part) {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                dispatch((0, _info.addPart)(part));
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
-
-      function addPart(_x) {
-        return _addPart2.apply(this, arguments);
-      }
-
-      return addPart;
-    }()
+    addPart: function addPart(part) {
+      dispatch((0, _info.addPart)(part));
+    },
+    getInv: function getInv() {
+      dispatch((0, _user.getInv)());
+    }
   };
 };
 
@@ -925,8 +870,8 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
-    getInv: function getInv(id) {
-      dispatch((0, _user.getInv)(id));
+    getInv: function getInv() {
+      dispatch((0, _user.getInv)());
     }
   };
 };
@@ -1133,6 +1078,8 @@ var PIXI = _interopRequireWildcard(__webpack_require__(/*! pixi.js */ "./node_mo
 
 var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
 
+var _user = _interopRequireDefault(__webpack_require__(/*! ../store/user */ "./client/store/user.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -1320,7 +1267,15 @@ var mapState = function mapState(state) {
   };
 };
 
-var ConnectedHanger = (0, _reactRedux.connect)(mapState)(Hanger);
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    getInv: function getInv() {
+      dispatch((0, _user["default"])());
+    }
+  };
+};
+
+var ConnectedHanger = (0, _reactRedux.connect)(mapState, mapDispatch)(Hanger);
 var _default = ConnectedHanger;
 exports["default"] = _default;
 
@@ -1954,13 +1909,10 @@ function (_Component) {
             switch (_context.prev = _context.next) {
               case 0:
                 this.props.fetchStock();
-                _context.next = 3;
-                return this.props.loadInitialData();
-
-              case 3:
+                this.props.loadInitialData();
                 this.props.fetchMech();
 
-              case 4:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -2289,29 +2241,25 @@ var addPart = function addPart(part) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                console.log(part);
-                _context2.next = 4;
+                _context2.next = 3;
                 return _axios["default"].post("api/inventory/".concat(part.type, "/").concat(part.id));
 
-              case 4:
+              case 3:
                 dispatch((0, _user.me)());
-
-                _history["default"].push('/hanger');
-
-                _context2.next = 11;
+                _context2.next = 9;
                 break;
 
-              case 8:
-                _context2.prev = 8;
+              case 6:
+                _context2.prev = 6;
                 _context2.t0 = _context2["catch"](0);
                 console.error(_context2.t0);
 
-              case 11:
+              case 9:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 8]]);
+        }, _callee2, null, [[0, 6]]);
       }));
 
       return function (_x2) {
@@ -2779,20 +2727,11 @@ var logout = function logout() {
       };
     }()
   );
-}; // export const setMech = id => async dispatch => {
-//   try {
-//     const res = await axios.get(`api/mech/${id}`)
-//     dispatch(getMech(res.data))
-//     console.log(res.data)
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
-
+};
 
 exports.logout = logout;
 
-var getInv = function getInv(id) {
+var getInv = function getInv() {
   return (
     /*#__PURE__*/
     function () {
@@ -2806,7 +2745,7 @@ var getInv = function getInv(id) {
               case 0:
                 _context4.prev = 0;
                 _context4.next = 3;
-                return _axios["default"].get("api/inventory/".concat(id));
+                return _axios["default"].get("api/inventory/me");
 
               case 3:
                 res = _context4.sent;

@@ -72,8 +72,8 @@ const mapState = state => {
 }
 const mapDispatch = dispatch => {
   return {
-    getInv (id) {
-      dispatch(getInv(id))
+    getInv () {
+      dispatch(getInv())
     }
   }
 }

@@ -18,7 +18,7 @@ import Battle from './components/battle'
 class Routes extends Component {
   async componentDidMount () {
     this.props.fetchStock()
-    await this.props.loadInitialData()
+    this.props.loadInitialData()
     this.props.fetchMech()
   }
 

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as PIXI from 'pixi.js'
 import history from '../history'
+import getInv from '../store/user'
+
 class Hanger extends Component {
   constructor () {
     super()
@@ -176,6 +178,16 @@ const mapState = state => {
     info: state.info
   }
 }
+const mapDispatch = dispatch => {
+  return {
+    getInv () {
+      dispatch(getInv())
+    }
+  }
+}
 
-const ConnectedHanger = connect(mapState)(Hanger)
+const ConnectedHanger = connect(
+  mapState,
+  mapDispatch
+)(Hanger)
 export default ConnectedHanger

@@ -8,7 +8,7 @@ const {
 } = require('../db/models')
 module.exports = router
 
-router.get('/:id', async (req, res, next) => {
+router.get('/me', async (req, res, next) => {
   try {
     const inv = await Inventory.findById(req.user.inventoryId)
     const base = await inv.getBases()

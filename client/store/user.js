@@ -64,18 +64,9 @@ export const logout = () => async dispatch => {
   }
 }
 
-// export const setMech = id => async dispatch => {
-//   try {
-//     const res = await axios.get(`api/mech/${id}`)
-//     dispatch(getMech(res.data))
-//     console.log(res.data)
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
-export const getInv = id => async dispatch => {
+export const getInv = () => async dispatch => {
   try {
-    const res = await axios.get(`api/inventory/${id}`)
+    const res = await axios.get(`api/inventory/me`)
     dispatch(setInv(res.data))
     console.log(res.data)
   } catch (err) {
@@ -92,6 +83,7 @@ export default function (state = defaultUser, action) {
       return { ...action.user, ...state }
     case GET_INV:
       return { inventory: action.inventory, ...state }
+
     case REMOVE_USER:
       return defaultUser
     default:
