@@ -21,6 +21,8 @@ class Builder extends Component {
     // app.renderer.backgroundColor = 0x061639
     let element = document.getElementById('builderViewport')
     element.append(app.view)
+    const logo = new PIXI.Sprite.fromImage('./assets/format/logo.png')
+    logo.anchor.set(0.5, 0.5)
     let build = new PIXI.Text(`BUILD`, {
       fontFamily: 'Arial',
       fontSize: 36
@@ -29,12 +31,11 @@ class Builder extends Component {
     // Set the initial position
     build.anchor.set(0.5)
     build.x = app.screen.width / 2
-    build.y = app.screen.height / 2
+    build.y = app.screen.height / 2 + 60
+    logo.y = app.screen.height / 2
+    logo.x = app.screen.width / 2
 
-    // Opt-in to interactivity
     build.interactive = true
-
-    // Shows hand cursor
     build.buttonMode = true
 
     // Pointers normalize touch and mouse
@@ -45,8 +46,9 @@ class Builder extends Component {
     // Alternatively, use the mouse & touch events:
     // sprite.on('click', onClick); // mouse-only
     // sprite.on('tap', onClick); // touch-only
-
+    logo.scale.set(0.5)
     app.stage.addChild(build)
+    app.stage.addChild(logo)
   }
 
   render () {

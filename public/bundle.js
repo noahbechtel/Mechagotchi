@@ -210,6 +210,8 @@ var _propTypes = _interopRequireDefault(__webpack_require__(/*! prop-types */ ".
 
 var _store = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
+var _history = _interopRequireDefault(__webpack_require__(/*! ../history */ "./client/history.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 /**
@@ -239,7 +241,15 @@ var AuthForm = function AuthForm(props) {
   })), _react["default"].createElement("div", null, _react["default"].createElement("button", {
     type: "submit",
     className: "login"
-  }, displayName)), error && error.response && _react["default"].createElement("div", null, " ", error.response.data, " ")));
+  }, displayName)), error && error.response && _react["default"].createElement("div", null, " ", error.response.data, " "), _history["default"].location.pathname === '/login' ? _react["default"].createElement("button", {
+    onClick: function onClick() {
+      _history["default"].push('/signup');
+    }
+  }, "Go to Sign Up") : _react["default"].createElement("button", {
+    onClick: function onClick() {
+      _history["default"].push('/login');
+    }
+  }, "Go to Login")));
 };
 /**
  * CONTAINER
@@ -930,6 +940,8 @@ function (_Component) {
 
       var element = document.getElementById('builderViewport');
       element.append(app.view);
+      var logo = new PIXI.Sprite.fromImage('./assets/format/logo.png');
+      logo.anchor.set(0.5, 0.5);
       var build = new PIXI.Text("BUILD", {
         fontFamily: 'Arial',
         fontSize: 36
@@ -937,10 +949,10 @@ function (_Component) {
 
       build.anchor.set(0.5);
       build.x = app.screen.width / 2;
-      build.y = app.screen.height / 2; // Opt-in to interactivity
-
-      build.interactive = true; // Shows hand cursor
-
+      build.y = app.screen.height / 2 + 60;
+      logo.y = app.screen.height / 2;
+      logo.x = app.screen.width / 2;
+      build.interactive = true;
       build.buttonMode = true; // Pointers normalize touch and mouse
 
       build.on('pointerdown', function () {
@@ -949,7 +961,9 @@ function (_Component) {
       // sprite.on('click', onClick); // mouse-only
       // sprite.on('tap', onClick); // touch-only
 
+      logo.scale.set(0.5);
       app.stage.addChild(build);
+      app.stage.addChild(logo);
     }
   }, {
     key: "render",

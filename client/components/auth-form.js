@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { auth } from '../store'
+import history from '../history'
 
 /**
  * COMPONENT
@@ -30,6 +31,23 @@ const AuthForm = props => {
           </button>
         </div>
         {error && error.response && <div> {error.response.data} </div>}
+        {history.location.pathname === '/login' ? (
+          <button
+            onClick={() => {
+              history.push('/signup')
+            }}
+          >
+            Go to Sign Up
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              history.push('/login')
+            }}
+          >
+            Go to Login
+          </button>
+        )}
       </form>
     </div>
   )
