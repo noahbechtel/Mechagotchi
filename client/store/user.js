@@ -52,7 +52,7 @@ export const auth = (email, password, method) => async dispatch => {
   }
 
   try {
-    console.log(res.data)
+    // console.log(res.data)
     await dispatch(getUser(res.data))
     await dispatch(fetchMech())
     history.push('/builder')
@@ -75,7 +75,7 @@ export const getInv = () => async dispatch => {
   try {
     const res = await axios.get(`api/inventory/me`)
     dispatch(setInv(res.data))
-    console.log(res.data)
+    // console.log(res.data)
   } catch (err) {
     console.error(err)
   }

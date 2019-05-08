@@ -52,7 +52,7 @@ class Builder extends Component {
   }
 
   render () {
-    console.log('wtf')
+    // console.log('wtf')
     return (
       <div className='pixi'>
         <div id='builderViewport'>{'   '}</div>

@@ -12,10 +12,10 @@ const getStock = stock => ({ type: GET_STOCK, stock })
 
 export const setCode = code => async dispatch => {
   try {
-    console.log(code)
+    // console.log(code)
     const mechSkele = spawnAlgo(String(code.result), code.stock)
     const { data } = await axios.post('api/mech/builder', mechSkele)
-    console.log(data)
+    // console.log(data)
     dispatch(getCode(data))
     history.push('/battle')
   } catch (err) {

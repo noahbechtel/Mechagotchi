@@ -40,126 +40,95 @@ class Hanger extends Component {
 
     // Loader
 
-    let assetAddresses
-    assetAddresses = [
-      //   mech.armor.imgUrl,
-      mech.base.imgUrl,
-      mech.leftWeapon.imgUrl,
-      './assets/format/logo.png',
-      './assets/format/hanger.png'
-    ]
+    const logo = new PIXI.Sprite.fromImage('./assets/format/logo.png')
+    const hanger = new PIXI.Sprite.fromImage('./assets/format/hanger.png')
+    const base = new PIXI.Sprite.fromImage(mech.base.imgUrl)
+    const leftWeapon = new PIXI.Sprite.fromImage(mech.leftWeapon.imgUrl)
+    const rightWeapon = new PIXI.Sprite.fromImage(mech.rightWeapon.imgUrl)
 
-    if (mech.leftWeapon.imgUrl !== mech.rightWeapon.imgUrl) {
-      assetAddresses.push(mech.rightWeapon.imgUrl)
+    app.stage.addChild(hanger)
+    app.stage.addChild(base)
+    // app.stage.addChild(logo)
+    app.stage.addChild(leftWeapon)
+    app.stage.addChild(rightWeapon)
+
+    logo.x = app.screen.width - 400
+    logo.y = 10
+    hanger.anchor.set(0.5, 0.5)
+    hanger.scale.set(0.22)
+    hanger.x = app.screen.width / 2
+    hanger.y = app.screen.height / 2
+    base.anchor.set(0.5, 0.5)
+
+    if (mech.base.class === 'Heavy Mech') {
+      base.scale.set(1.5)
+      base.x = app.screen.width / 2
+      base.y = hanger.y - 120
+    } else {
+      base.x = hanger.x
+      base.y = hanger.y - 100
+      base.scale.set(1)
     }
 
-    PIXI.loader.add(assetAddresses).load(() => {
-      const logo = new PIXI.Sprite(
-        PIXI.loader.resources['./assets/format/logo.png'].texture
-      )
-      const hanger = new PIXI.Sprite(
-        PIXI.loader.resources['./assets/format/hanger.png'].texture
-      )
-      const base = new PIXI.Sprite(
-        PIXI.loader.resources[mech.base.imgUrl].texture
-      )
-      const leftWeapon = new PIXI.Sprite(
-        PIXI.loader.resources[mech.leftWeapon.imgUrl].texture
-      )
-      let rightWeapon
-      if (assetAddresses.length === 2) {
-        rightWeapon = new PIXI.Sprite(
-          PIXI.loader.resources[mech.leftWeapon.imgUrl].texture
-        )
-      } else {
-        rightWeapon = new PIXI.Sprite(
-          PIXI.loader.resources[mech.rightWeapon.imgUrl].texture
-        )
-      }
-      // const armor = new PIXI.Sprite(
-      //   PIXI.loader.resources[mech.armor.imgUrl].texture
-      // )
-      app.stage.addChild(hanger)
-      app.stage.addChild(base)
-      // app.stage.addChild(logo)
-      app.stage.addChild(leftWeapon)
-      app.stage.addChild(rightWeapon)
+    leftWeapon.anchor.set(1, 0.5)
+    leftWeapon.x = base.x + mech.base.rightArm_X
+    leftWeapon.scale.x = -1
+    leftWeapon.y = base.y + mech.base.rightArm_Y
 
-      logo.x = app.screen.width - 400
-      logo.y = 10
-      hanger.anchor.set(0.5, 0.5)
-      hanger.scale.set(0.22)
-      hanger.x = app.screen.width / 2
-      hanger.y = app.screen.height / 2
-      base.anchor.set(0.5, 0.5)
+    rightWeapon.anchor.set(0, 0.5)
+    rightWeapon.x = base.x + mech.base.leftArm_X
+    rightWeapon.y = base.y + mech.base.leftArm_Y
+    //   app.stage.addChild(armor)
 
-      if (mech.base.class === 'Heavy Mech') {
-        base.scale.set(1.5)
-        base.x = app.screen.width / 2
-        base.y = hanger.y - 120
-      } else {
-        base.x = hanger.x
-        base.y = hanger.y - 100
-        base.scale.set(1)
-      }
+    // TEXT
 
-      leftWeapon.anchor.set(1, 0.5)
-      leftWeapon.x = base.x + mech.base.rightArm_X
-      leftWeapon.scale.x = -1
-      leftWeapon.y = base.y + mech.base.rightArm_Y
-
-      rightWeapon.anchor.set(0, 0.5)
-      rightWeapon.x = base.x + mech.base.leftArm_X
-      rightWeapon.y = base.y + mech.base.leftArm_Y
-      //   app.stage.addChild(armor)
-
-      // TEXT
-
-      let attackText = new PIXI.Text(`DMG:${attack}`, {
-        fontFamily: 'courier',
-        fontSize: 36
-      })
-      let defenseText = new PIXI.Text(`DEF:${defense}`, {
-        fontFamily: 'courier',
-        fontSize: 36
-      })
-      let levelText = new PIXI.Text(`LVL:${level}`, {
-        fontFamily: 'courier',
-        fontSize: 36
-      })
-      app.stage.addChild(defenseText)
-      app.stage.addChild(attackText)
-      app.stage.addChild(levelText)
-      defenseText.y = 30
-      levelText.y = 60
-      attackText.x = app.screen.width / 2.7
-      levelText.x = app.screen.width / 2.7
-      defenseText.x = app.screen.width / 2.7
-
-      // buttons
-      const armory = new PIXI.Sprite.fromImage('./assets/format/armory.png')
-      armory.scale.set(0.4)
-      armory.anchor.set(0.5, 0.5)
-      armory.interactive = true
-      armory.buttonMode = true
-      armory.on('click', goArmory)
-      armory.on('touchend', goArmory)
-      app.stage.addChild(armory)
-      armory.y = app.screen.height - 100
-      armory.x = app.screen.width / 2
-
-      const scan = new PIXI.Sprite.fromImage('./assets/format/scan.png')
-      scan.scale.set(0.4)
-      scan.interactive = true
-      scan.buttonMode = true
-      scan.on('click', goScan)
-      scan.on('touchend', goScan)
-      app.stage.addChild(scan)
-      scan.anchor.set(0.5, 0.5)
-      scan.y = app.screen.height - 200
-      scan.x = app.screen.width / 2
-      console.log('setup finished')
+    let attackText = new PIXI.Text(`DMG:${attack}`, {
+      fontFamily: 'courier',
+      fontSize: 36,
+      fill: 0xffffff
     })
+    let defenseText = new PIXI.Text(`DEF:${defense}`, {
+      fontFamily: 'courier',
+      fontSize: 36,
+      fill: 0xffffff
+    })
+    let levelText = new PIXI.Text(`LVL:${level}`, {
+      fontFamily: 'courier',
+      fontSize: 36,
+      fill: 0xffffff
+    })
+    app.stage.addChild(defenseText)
+    app.stage.addChild(attackText)
+    defenseText.y = 90
+    attackText.y = 40
+    levelText.y = 60
+    attackText.x = hanger.x - 150
+    levelText.x =  hanger.x - 100
+    defenseText.x =  hanger.x - 150
+
+    // buttons
+    const armory = new PIXI.Sprite.fromImage('./assets/format/armory.png')
+    armory.scale.set(0.4)
+    armory.anchor.set(0.5, 0.5)
+    armory.interactive = true
+    armory.buttonMode = true
+    armory.on('click', goArmory)
+    armory.on('touchend', goArmory)
+    app.stage.addChild(armory)
+    armory.y = app.screen.height - 100
+    armory.x = app.screen.width / 2
+
+    const scan = new PIXI.Sprite.fromImage('./assets/format/scan.png')
+    scan.scale.set(0.4)
+    scan.interactive = true
+    scan.buttonMode = true
+    scan.on('click', goScan)
+    scan.on('touchend', goScan)
+    app.stage.addChild(scan)
+    scan.anchor.set(0.5, 0.5)
+    scan.y = app.screen.height - 200
+    scan.x = app.screen.width / 2
+    // console.log('setup finished')
 
     // Assignment
   }

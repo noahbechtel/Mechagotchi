@@ -52,11 +52,11 @@ class Camera extends Component {
         },
         function (err) {
           if (err) {
-            console.log(err)
+            // console.log(err)
             return
           }
           Quagga.start()
-          console.log('Initialization finished. Ready to start')
+          // console.log('Initialization finished. Ready to start')
         }
       )
     }

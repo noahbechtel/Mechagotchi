@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import history from '../history'
 
 const Multiview = props => {
-  console.log(props)
+  // console.log(props)
   const parts = props.part
   return (
     <div>

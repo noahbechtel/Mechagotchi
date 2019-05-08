@@ -11,7 +11,7 @@ const {
 
 async function seed () {
   await db.sync({ force: true })
-  console.log('db synced!')
+  // console.log('db synced!')
   const inv1 = await Inventory.create()
 
   const bases = await Promise.all([
@@ -88,6 +88,17 @@ async function seed () {
       leftArm_X: -100,
       leftArm_Y: -45,
       imgUrl: './assets/bases/Foreman.png'
+    }),
+    Base.create({
+      class: 'Medium Mech',
+      name: 'DVA',
+      rarity: 3,
+      defense: 40,
+      rightArm_X: 45,
+      rightArm_Y: -45,
+      leftArm_X: -100,
+      leftArm_Y: -45,
+      imgUrl: './assets/bases/DVA.png'
     })
   ])
   // Weapons

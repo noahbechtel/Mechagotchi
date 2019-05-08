@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
 router.post('/builder', async (req, res, next) => {
   try {
     const skele = req.body
-    console.log(skele)
+    // console.log(skele)
 
     switch (skele.type) {
       case 'armor':

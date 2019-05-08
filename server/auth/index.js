@@ -119,7 +119,7 @@ router.get('/me', async (req, res) => {
 
     res.json(user)
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 })
 
